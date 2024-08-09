@@ -1,5 +1,5 @@
 import {Args, Command, Flags} from '@oclif/core'
-import {commonUniversalBrokerArgs} from '../../common/args.js'
+import {commonApiRelatedArgs, commonUniversalBrokerArgs} from '../../common/args.js'
 import {getDeployments} from '../../api/deployments.js'
 import {printFormattedJSON} from '../../utils/display.js'
 
@@ -7,6 +7,7 @@ export default class Deployments extends Command {
   public static enableJsonFlag = true
   static args = {
     ...commonUniversalBrokerArgs(),
+    ...commonApiRelatedArgs,
   }
 
   static description = 'Universal Broker Deployments - List operation'
