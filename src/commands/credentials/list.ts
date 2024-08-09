@@ -32,8 +32,8 @@ hello friend from oclif! (./src/commands/hello/index.ts)
     } else {
       this.log(`Getting Universal Broker Deployment for Tenant ${args.tenantId}, Install ${args.installId}`)
 
-      for (let i = 0; i < credentialsList.length; i++) {
-        printFormattedJSON(credentialsList[i])
+      for (const credential of credentialsList) {
+        printFormattedJSON(credential)
       }
     }
   }

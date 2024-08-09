@@ -1,5 +1,6 @@
-import {Args, Command, Flags} from '@oclif/core'
-import {commonUniversalBrokerArgs, commonUniversalBrokerDeploymentId} from '../../common/args.js'
+import {Command} from '@oclif/core'
+import {commonUniversalBrokerArgs, commonUniversalBrokerDeploymentId, getCommonIds} from '../../common/args.js'
+import {deleteDeployment} from '../../api/deployments.js'
 
 export default class Deployments extends Command {
   static args = {
@@ -10,9 +11,10 @@ export default class Deployments extends Command {
   static description = 'Universal Broker Deployments - Delete operation'
 
   static examples = [
-    `<%= config.bin %> <%= command.id %> friend --from oclif
-hello friend from oclif! (./src/commands/hello/index.ts)
-`,
+    `[with exported TENANT_ID,INSTALL_ID]`,
+    `<%= config.bin %> <%= command.id %> DEPLOYMENT_ID`,
+    `[inline TENANT_ID,INSTALL_ID]`,
+    `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID`,
   ]
 
   //   static flags = {
@@ -20,10 +22,19 @@ hello friend from oclif! (./src/commands/hello/index.ts)
   //   }
 
   async run(): Promise<void> {
-    const {args, flags} = await this.parse(Deployments)
+    const {args} = await this.parse(Deployments)
+    const {tenantId, installId} = getCommonIds({tenantId: args.tenantId, installId: args.installId})
+    this.log(`Deleting Universal Broker Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`)
 
-    this.log(
-      `Deleting Universal Broker Deployment ${args.deploymentId} for Tenant ${args.tenantId}, Install ${args.installId}`,
-    )
+    const deploymentResponseCode = await deleteDeployment(tenantId, installId, args.deploymentId!)
+    if (deploymentResponseCode === 204) {
+      if (this.jsonEnabled()) {
+        console.log(JSON.stringify({responseCode: deploymentResponseCode}))
+      } else {
+        this.log(`Deleted Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`)
+      }
+    } else {
+      this.error(`Error deleting deployment. Status code: ${deploymentResponseCode}.`)
+    }
   }
 }

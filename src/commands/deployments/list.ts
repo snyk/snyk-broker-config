@@ -1,5 +1,5 @@
-import {Args, Command, Flags} from '@oclif/core'
-import {commonApiRelatedArgs, commonUniversalBrokerArgs} from '../../common/args.js'
+import {Command} from '@oclif/core'
+import {commonApiRelatedArgs, commonUniversalBrokerArgs, getCommonIds} from '../../common/args.js'
 import {getDeployments} from '../../api/deployments.js'
 import {printFormattedJSON} from '../../utils/display.js'
 
@@ -13,9 +13,10 @@ export default class Deployments extends Command {
   static description = 'Universal Broker Deployments - List operation'
 
   static examples = [
-    `<%= config.bin %> <%= command.id %> friend --from oclif
-hello friend from oclif! (./src/commands/hello/index.ts)
-`,
+    `[with exported TENANT_ID,INSTALL_ID]`,
+    `<%= config.bin %> <%= command.id %>`,
+    `[inline TENANT_ID,INSTALL_ID]`,
+    `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID`,
   ]
 
   //   static flags = {
@@ -23,16 +24,17 @@ hello friend from oclif! (./src/commands/hello/index.ts)
   //   }
 
   async run(): Promise<void> {
-    const {args, flags} = await this.parse(Deployments)
-    const deployments = await getDeployments(args.tenantId, args.installId)
+    const {args} = await this.parse(Deployments)
+    const {tenantId, installId} = getCommonIds(args)
+    const deployments = await getDeployments(tenantId, installId)
     const deploymentsList = JSON.parse(deployments).data as Array<any>
     if (this.jsonEnabled()) {
       console.log(JSON.stringify(deploymentsList))
     } else {
-      this.log(`Getting Universal Broker Deployment for Tenant ${args.tenantId}, Install ${args.installId}`)
+      this.log(`Getting Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`)
 
-      for (let i = 0; i < deploymentsList.length; i++) {
-        printFormattedJSON(deploymentsList[i])
+      for (const deployment of deploymentsList) {
+        printFormattedJSON(deployment)
       }
     }
   }

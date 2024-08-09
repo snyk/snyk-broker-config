@@ -1,11 +1,11 @@
 import {Args, Command, Flags} from '@oclif/core'
+import {commonUniversalBrokerArgs, commonUniversalBrokerDeploymentId, commonApiRelatedArgs} from '../../common/args.js'
 
 export default class Deployments extends Command {
   static args = {
-    tenantId: Args.string({description: 'Tenant ID', required: true}),
-    installId: Args.string({description: 'Install ID', required: true}),
-    apiUrl: Args.string({description: 'API Url', required: false, default: 'https://api.snyk.io'}),
-    apiVersion: Args.string({description: 'API Version', required: false, default: '2024-07-18~experimental'}),
+    ...commonUniversalBrokerArgs(),
+    ...commonUniversalBrokerDeploymentId(true),
+    ...commonApiRelatedArgs,
   }
 
   static description = 'Universal Broker Deployments - Create operation'

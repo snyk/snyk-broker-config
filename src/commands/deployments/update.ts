@@ -1,5 +1,8 @@
-import {Args, Command, Flags} from '@oclif/core'
-import {commonUniversalBrokerArgs, commonUniversalBrokerDeploymentId} from '../../common/args.js'
+import {Command} from '@oclif/core'
+import {commonUniversalBrokerArgs, commonUniversalBrokerDeploymentId, getCommonIds} from '../../common/args.js'
+import {updateDeployment} from '../../api/deployments.js'
+import {deploymentMetadata} from './flags.js'
+import {printFormattedJSON} from '../../utils/display.js'
 
 export default class Deployments extends Command {
   static args = {
@@ -7,12 +10,17 @@ export default class Deployments extends Command {
     ...commonUniversalBrokerDeploymentId(true),
   }
 
+  static flags = {
+    ...deploymentMetadata,
+  }
+
   static description = 'Universal Broker Deployments - Update operation'
 
   static examples = [
-    `<%= config.bin %> <%= command.id %> friend --from oclif
-hello friend from oclif! (./src/commands/hello/index.ts)
-`,
+    `[with exported TENANT_ID,INSTALL_ID]`,
+    `<%= config.bin %> <%= command.id %> DEPLOYMENT_ID --data mykey=myvalue,mykey2=myvalue2`,
+    `[inline TENANT_ID,INSTALL_ID]`,
+    `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID --data mykey=myvalue,mykey2=myvalue2`,
   ]
 
   //   static flags = {
@@ -21,9 +29,28 @@ hello friend from oclif! (./src/commands/hello/index.ts)
 
   async run(): Promise<void> {
     const {args, flags} = await this.parse(Deployments)
+    const {tenantId, installId} = getCommonIds({tenantId: args.tenantId, installId: args.installId})
+    const dataValues = flags.data.split(',').map((x) => {
+      const dataSplit = x.split('=')
+      return {[dataSplit[0]]: dataSplit[1]}
+    })
 
-    this.log(
-      `Updating Universal Broker Deployment ${args.deploymentId} for Tenant ${args.tenantId}, Install ${args.installId}`,
-    )
+    const attributes: Record<string, string> = {}
+    for (const dataValue of dataValues) {
+      for (const key in dataValue) {
+        if (dataValue[key]) {
+          attributes[key] = dataValue[key]
+        }
+      }
+    }
+
+    const deployment = await updateDeployment(tenantId, installId, args.deploymentId!, attributes)
+    const deploymentResponse = JSON.parse(deployment).data as Array<any>
+    if (this.jsonEnabled()) {
+      console.log(JSON.stringify(deploymentResponse))
+    } else {
+      this.log(`Updated Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`)
+      printFormattedJSON(deploymentResponse)
+    }
   }
 }
