@@ -16,9 +16,9 @@ hello friend from oclif! (./src/commands/hello/index.ts)
 `,
   ]
 
-//   static flags = {
-//     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
-//   }
+  //   static flags = {
+  //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
+  //   }
 
   async run(): Promise<void> {
     const {args, flags} = await this.parse(Deployments)
