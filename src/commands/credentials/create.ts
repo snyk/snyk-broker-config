@@ -1,5 +1,13 @@
 import {Args, Command, Flags} from '@oclif/core'
-import {commonUniversalBrokerArgs, commonUniversalBrokerDeploymentId, commonApiRelatedArgs} from '../../common/args.js'
+import {
+  commonUniversalBrokerArgs,
+  commonUniversalBrokerDeploymentId,
+  commonApiRelatedArgs,
+  getCommonIds,
+} from '../../common/args.js'
+import {credentialsData} from './flags.js'
+import {printFormattedJSON} from '../../utils/display.js'
+import {CredentialsAttributes, createCredentials} from '../../api/credentials.js'
 
 export default class Deployments extends Command {
   static args = {
@@ -8,12 +16,17 @@ export default class Deployments extends Command {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker Deployments - Create operation'
+  static flags = {
+    ...credentialsData,
+  }
+
+  static description = 'Universal Broker Credentials - Create operation'
 
   static examples = [
-    `<%= config.bin %> <%= command.id %> friend --from oclif
-hello friend from oclif! (./src/commands/hello/index.ts)
-`,
+    `[with exported TENANT_ID,INSTALL_ID]`,
+    `<%= config.bin %> <%= command.id %> DEPLOYMENT_ID --comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github`,
+    `[inline TENANT_ID,INSTALL_ID]`,
+    `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID --comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github`,
   ]
 
   //   static flags = {
@@ -22,7 +35,23 @@ hello friend from oclif! (./src/commands/hello/index.ts)
 
   async run(): Promise<void> {
     const {args, flags} = await this.parse(Deployments)
+    const {tenantId, installId} = getCommonIds(args)
 
-    this.log(`Creating Universal Broker Deployment for Tenant ${args.tenantId}, Install ${args.installId}`)
+    const attributes: CredentialsAttributes[] = []
+    const {comment, type, env_var_name} = flags
+    for (const envVarName of env_var_name.split(',')) {
+      attributes.push({comment: comment, environment_variable_name: envVarName, type: type})
+    }
+
+    const deployment = await createCredentials(tenantId, installId, args.deploymentId, attributes)
+    const deploymentResponse = JSON.parse(deployment).data as Array<any>
+    if (this.jsonEnabled()) {
+      console.log(JSON.stringify(deploymentResponse))
+    } else {
+      this.log(
+        `Creating Universal Broker Credentials for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
+      )
+      printFormattedJSON(deploymentResponse)
+    }
   }
 }

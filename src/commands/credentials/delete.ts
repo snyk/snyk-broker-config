@@ -1,20 +1,31 @@
 import {Args, Command, Flags} from '@oclif/core'
+import {
+  commonApiRelatedArgs,
+  commonUniversalBrokerArgs,
+  commonUniversalBrokerDeploymentId,
+  getCommonIds,
+} from '../../common/args.js'
+import {credentialsIds} from './flags.js'
+import {deleteCredentials} from '../../api/credentials.js'
 
 export default class Deployments extends Command {
   static args = {
-    tenantId: Args.string({description: 'Tenant ID', required: true}),
-    installId: Args.string({description: 'Install ID', required: true}),
-    deploymentId: Args.string({description: 'Deployment ID', required: true}),
-    apiUrl: Args.string({description: 'API Url', required: false, default: 'https://api.snyk.io'}),
-    apiVersion: Args.string({description: 'API Version', required: false, default: '2024-07-18~experimental'}),
+    ...commonUniversalBrokerArgs(),
+    ...commonUniversalBrokerDeploymentId(true),
+    ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker Deployments - Delete operation'
+  static flags = {
+    ...credentialsIds,
+  }
+
+  static description = 'Universal Broker Deployment Credentials - Delete operation'
 
   static examples = [
-    `<%= config.bin %> <%= command.id %> friend --from oclif
-hello friend from oclif! (./src/commands/hello/index.ts)
-`,
+    `[with exported TENANT_ID,INSTALL_ID]`,
+    `<%= config.bin %> <%= command.id %> DEPLOYMENT_ID -c CREDENTIALS_ID`,
+    `[inline TENANT_ID,INSTALL_ID]`,
+    `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID -c CREDENTIALS_ID`,
   ]
 
   //   static flags = {
@@ -23,9 +34,25 @@ hello friend from oclif! (./src/commands/hello/index.ts)
 
   async run(): Promise<void> {
     const {args, flags} = await this.parse(Deployments)
-
+    const {tenantId, installId} = getCommonIds({tenantId: args.tenantId, installId: args.installId})
+    const credentialsIdsArray = flags.credentialsIds.split(',')
     this.log(
-      `Deleting Universal Broker Deployment ${args.deploymentId} for Tenant ${args.tenantId}, Install ${args.installId}`,
+      `Deleting Universal Broker Credentials for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,
     )
+
+    for (const credentialsId of credentialsIdsArray) {
+      const deleteResponseCode = await deleteCredentials(tenantId, installId, args.deploymentId!, credentialsId)
+      if (deleteResponseCode === 204) {
+        if (this.jsonEnabled()) {
+          console.log(JSON.stringify({responseCode: deleteResponseCode}))
+        } else {
+          this.log(
+            `Deleted Universal Broker Credentials ${credentialsId} in Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
+          )
+        }
+      } else {
+        this.error(`Error deleting credentials for deployment. Status code: ${deleteResponseCode}.`)
+      }
+    }
   }
 }
