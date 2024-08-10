@@ -36,6 +36,7 @@ export default class Deployments extends Command {
       for (const deployment of deploymentsList) {
         printFormattedJSON(deployment)
       }
+      console.log(`Total = ${deploymentsList.length}`)
     }
   }
 }

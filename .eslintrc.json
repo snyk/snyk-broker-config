@@ -33,7 +33,9 @@
     "n/no-process-exit": "off",
     "padding-line-between-statements": "off",
     "arrow-body-style": "off",
-    "perfectionist/sort-classes": "off"
+    "perfectionist/sort-classes": "off",
+    "camelcase": "off",
+    "no-await-in-loop": "warn"
   },
   "overrides": [
     {

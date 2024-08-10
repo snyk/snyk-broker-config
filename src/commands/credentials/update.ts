@@ -1,31 +1,54 @@
 import {Args, Command, Flags} from '@oclif/core'
+import {
+  commonUniversalBrokerArgs,
+  commonUniversalBrokerDeploymentId,
+  commonApiRelatedArgs,
+  getCommonIds,
+} from '../../common/args.js'
+import {credentialId, credentialsData, credentialsIds} from './flags.js'
+import {printFormattedJSON} from '../../utils/display.js'
+import {CredentialsAttributes, createCredentials, updateCredentials} from '../../api/credentials.js'
 
 export default class Deployments extends Command {
   static args = {
-    tenantId: Args.string({description: 'Tenant ID', required: true}),
-    installId: Args.string({description: 'Install ID', required: true}),
-    deploymentId: Args.string({description: 'Deployment ID', required: true}),
-    apiUrl: Args.string({description: 'API Url', required: false, default: 'https://api.snyk.io'}),
-    apiVersion: Args.string({description: 'API Version', required: false, default: '2024-07-18~experimental'}),
+    ...commonUniversalBrokerArgs(),
+    ...commonUniversalBrokerDeploymentId(true),
+    ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker Deployments - Update operation'
+  static flags = {
+    ...credentialId,
+    ...credentialsData,
+  }
+
+  static description = 'Universal Broker Credentials - Update operation'
 
   static examples = [
-    `<%= config.bin %> <%= command.id %> friend --from oclif
-hello friend from oclif! (./src/commands/hello/index.ts)
-`,
+    `[with exported TENANT_ID,INSTALL_ID]`,
+    `<%= config.bin %> <%= command.id %> DEPLOYMENT_ID --credentialsId CREDENTIALID--comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github`,
+    `[inline TENANT_ID,INSTALL_ID]`,
+    `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID --credentialsId CREDENTIALID --comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github`,
   ]
-
-  //   static flags = {
-  //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
-  //   }
 
   async run(): Promise<void> {
     const {args, flags} = await this.parse(Deployments)
+    const {tenantId, installId} = getCommonIds(args)
 
-    this.log(
-      `Updating Universal Broker Deployment ${args.deploymentId} for Tenant ${args.tenantId}, Install ${args.installId}`,
-    )
+    const attributes: CredentialsAttributes = {
+      comment: flags.comment,
+      environment_variable_name: flags.env_var_name,
+      type: flags.type,
+    }
+
+    const deployment = await updateCredentials(tenantId, installId, args.deploymentId, flags.credentialsId, attributes)
+    const deploymentResponse = JSON.parse(deployment).data as Array<any>
+    if (this.jsonEnabled()) {
+      console.log(JSON.stringify(deploymentResponse))
+    } else {
+      this.log(
+        `Updating Universal Broker Credentials ${flags.credentialsId} for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
+      )
+      printFormattedJSON(deploymentResponse)
+    }
   }
 }

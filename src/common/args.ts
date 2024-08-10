@@ -30,7 +30,7 @@ export const commonUniversalBrokerArgs = (): CommonUniversalBrokerArgs => {
 
 export const commonUniversalBrokerDeploymentId = (required = false) => {
   return {
-    deploymentId: Args.string({description: 'Deployment ID', required}),
+    deploymentId: Args.string({description: 'Deployment ID', required, default: ''}),
   }
 }
 export const commonApiRelatedArgs = {
