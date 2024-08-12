@@ -35,7 +35,8 @@
     "arrow-body-style": "off",
     "perfectionist/sort-classes": "off",
     "camelcase": "off",
-    "no-await-in-loop": "warn"
+    "no-await-in-loop": "warn",
+    "dot-notation": "off"
   },
   "overrides": [
     {
