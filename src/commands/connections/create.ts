@@ -8,6 +8,7 @@ import {
 import {printFormattedJSON} from '../../utils/display.js'
 import {CredentialsAttributes, createCredentials} from '../../api/credentials.js'
 import {connectionsData} from './flags.js'
+import {createConnectionForDeployment} from '../../api/connections.js'
 
 export default class Deployments extends Command {
   static args = {
@@ -37,23 +38,31 @@ export default class Deployments extends Command {
   async run(): Promise<void> {
     const {args, flags} = await this.parse(Deployments)
 
-    console.log(flags)
     const {tenantId, installId} = getCommonIds(args)
     // const attributes: CredentialsAttributes[] = []
     // const {comment, type, env_var_name} = flags
     // for (const envVarName of env_var_name.split(',')) {
     //   attributes.push({comment: comment, environment_variable_name: envVarName, type: type})
     // }
-
-    // const deployment = await createCredentials(tenantId, installId, args.deploymentId, attributes)
-    // const deploymentResponse = JSON.parse(deployment).data as Array<any>
-    // if (this.jsonEnabled()) {
-    //   console.log(JSON.stringify(deploymentResponse))
-    // } else {
-    //   this.log(
-    //     `Creating Universal Broker Credentials for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
-    //   )
-    //   printFormattedJSON(deploymentResponse)
-    // }
+    const attributes = structuredClone(flags) as Omit<typeof flags, 'name' | 'type'>
+    delete attributes.name
+    delete attributes.type
+    const connection = await createConnectionForDeployment(
+      tenantId,
+      installId,
+      args.deploymentId,
+      flags.name,
+      flags.type,
+      attributes,
+    )
+    const connectionResponse = JSON.parse(connection).data
+    if (this.jsonEnabled()) {
+      console.log(JSON.stringify(connectionResponse))
+    } else {
+      this.log(
+        `Creating Universal Broker Credentials for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
+      )
+      printFormattedJSON(connectionResponse)
+    }
   }
 }

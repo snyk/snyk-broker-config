@@ -33,6 +33,11 @@ export const commonUniversalBrokerDeploymentId = (required = false) => {
     deploymentId: Args.string({description: 'Deployment ID', required, default: ''}),
   }
 }
+export const commonUniversalBrokerConnectionId = (required = false) => {
+  return {
+    connectionId: Args.string({description: 'Connection ID', required, default: ''}),
+  }
+}
 export const commonApiRelatedArgs = {
   apiUrl: Args.string({description: 'API Url', required: false, default: process.env.SNYK_API ?? config.API_HOSTNAME}),
   apiVersion: Args.string({

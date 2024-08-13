@@ -36,7 +36,6 @@ export const makeRequest = async (req: HttpRequest, retries = MAX_RETRY): Promis
 
         // The whole response has been received.
         response.on('end', () => {
-          console.log(response)
           if (response.statusCode && response.statusCode > 299) {
             throw new Error(`Request Error ${response.statusCode}: ${response.statusMessage}`)
           }
