@@ -43,10 +43,12 @@ export default class Deployments extends Command {
       if (this.jsonEnabled()) {
         console.log(JSON.stringify({responseCode: deleteConnectionResponseCode}))
       } else {
-        this.log(`Deleted Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`)
+        this.log(
+          `Deleted Universal Broker Connection ${args.connectionId} for Tenant ${tenantId}, Install ${installId}`,
+        )
       }
     } else {
-      this.error(`Error deleting deployment. Status code: ${deleteConnectionResponseCode}.`)
+      this.error(`Error deleting broker connection. Status code: ${deleteConnectionResponseCode}.`)
     }
   }
 }

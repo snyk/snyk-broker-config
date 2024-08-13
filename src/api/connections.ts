@@ -59,6 +59,45 @@ export const createConnectionForDeployment = async (
   return response.body
 }
 
+export const updateConnectionForDeployment = async (
+  tenantId: string,
+  installId: string,
+  deploymentId: string,
+  connectionId: string,
+  friendlyName: string,
+  connectionType: string,
+  requiredConfigurationAttributes: Record<string, string>,
+) => {
+  const headers = {...commonHeaders, ...getAuthHeader()}
+  const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/connections/${connectionId}`
+  const config = getConfig()
+
+  const body = {
+    data: {
+      type: 'broker_connection',
+      attributes: {
+        name: friendlyName,
+        deployment_id: deploymentId,
+        configuration: {
+          required: {
+            ...requiredConfigurationAttributes,
+          },
+          type: connectionType,
+        },
+      },
+    },
+  }
+  const req: HttpRequest = {
+    url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
+    headers: headers,
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  }
+  const response = await makeRequest(req)
+  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  return response.body
+}
+
 export const deleteConnectionForDeployment = async (
   tenantId: string,
   installId: string,
