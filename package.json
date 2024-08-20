@@ -42,7 +42,8 @@
   "files": [
     "/bin",
     "/dist",
-    "/oclif.manifest.json"
+    "/oclif.manifest.json",
+    "/theme.json"
   ],
   "homepage": "https://github.com/snyk/snyk-broker-config",
   "keywords": [
@@ -65,10 +66,8 @@
     ],
     "topicSeparator": " ",
     "topics": {
-      "hello": {
-        "description": "Say hello to the world and others"
-      }
-    }
+    },
+    "theme": "theme.json"
   },
   "repository": "snyk/snyk-broker-config",
   "scripts": {

@@ -1,4 +1,4 @@
-import {Args, Command, Flags} from '@oclif/core'
+import {Args, Command, Flags, ux} from '@oclif/core'
 import {printFormattedJSON} from '../../utils/display.js'
 import {getCredentialsForDeployment} from '../../api/credentials.js'
 import {
@@ -29,22 +29,22 @@ export default class Credentials extends Command {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async run(): Promise<void> {
+  async run(): Promise<string> {
+    this.log('\n'+ux.colorize('red',Credentials.description))
     const {args} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds(args)
     const credentials = await getCredentialsForDeployment(tenantId, installId, args.deploymentId!)
     const credentialsList = JSON.parse(credentials).data as Array<any>
-    if (this.jsonEnabled()) {
-      console.log(JSON.stringify(credentialsList))
-    } else {
-      this.log(
-        `Getting Universal Broker Credentials for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,
-      )
 
-      for (const credential of credentialsList) {
-        printFormattedJSON(credential)
-      }
-      console.log(`Total = ${credentialsList.length}`)
+    this.log(
+      ux.colorize('cyan',`Getting Universal Broker Credentials for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,)
+    )
+
+    for (const credential of credentialsList) {
+      printFormattedJSON(credential)
     }
+    this.log(`Total = ${credentialsList.length}`)
+
+    return JSON.stringify(credentialsList)
   }
 }

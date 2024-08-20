@@ -1,4 +1,4 @@
-import {Args, Command, Flags} from '@oclif/core'
+import {Args, Command, Flags, ux} from '@oclif/core'
 import {
   commonUniversalBrokerArgs,
   commonUniversalBrokerDeploymentId,
@@ -30,7 +30,8 @@ export default class Credentials extends Command {
     `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID --credentialsId CREDENTIALID --comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github`,
   ]
 
-  async run(): Promise<void> {
+  async run(): Promise<string> {
+    this.log('\n'+ux.colorize('red',Credentials.description))
     const {args, flags} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds(args)
 
@@ -42,13 +43,11 @@ export default class Credentials extends Command {
 
     const deployment = await updateCredentials(tenantId, installId, args.deploymentId, flags.credentialsId, attributes)
     const deploymentResponse = JSON.parse(deployment).data as Array<any>
-    if (this.jsonEnabled()) {
-      console.log(JSON.stringify(deploymentResponse))
-    } else {
-      this.log(
-        `Updating Universal Broker Credentials ${flags.credentialsId} for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
-      )
-      printFormattedJSON(deploymentResponse)
-    }
+
+    this.log(
+      ux.colorize('cyan',`Updating Universal Broker Credentials ${flags.credentialsId} for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,)
+    )
+    this.log(printFormattedJSON(deploymentResponse))
+    return JSON.stringify(deploymentResponse)
   }
 }

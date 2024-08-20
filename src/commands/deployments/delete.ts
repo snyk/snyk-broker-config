@@ -1,4 +1,4 @@
-import {Command} from '@oclif/core'
+import {Command, ux} from '@oclif/core'
 import {commonUniversalBrokerArgs, commonUniversalBrokerDeploymentId, getCommonIds} from '../../common/args.js'
 import {deleteDeployment} from '../../api/deployments.js'
 
@@ -21,20 +21,18 @@ export default class Deployments extends Command {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async run(): Promise<void> {
+  async run(): Promise<string> {
+    this.log('\n'+ux.colorize('red',Deployments.description))
     const {args} = await this.parse(Deployments)
     const {tenantId, installId} = getCommonIds({tenantId: args.tenantId, installId: args.installId})
-    this.log(`Deleting Universal Broker Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`)
+    this.log(ux.colorize('cyan',`Deleting Universal Broker Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`))
 
     const deploymentResponseCode = await deleteDeployment(tenantId, installId, args.deploymentId!)
     if (deploymentResponseCode === 204) {
-      if (this.jsonEnabled()) {
-        console.log(JSON.stringify({responseCode: deploymentResponseCode}))
-      } else {
-        this.log(`Deleted Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`)
-      }
+      this.log(ux.colorize('cyan',`Deleted Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
+      return JSON.stringify({responseCode: deploymentResponseCode})
     } else {
-      this.error(`Error deleting deployment. Status code: ${deploymentResponseCode}.`)
+      this.error(ux.colorize('red',`Error deleting deployment. Status code: ${deploymentResponseCode}.`))
     }
   }
 }

@@ -1,4 +1,4 @@
-import {Command} from '@oclif/core'
+import {Command, ux} from '@oclif/core'
 import {
   commonApiRelatedArgs,
   commonUniversalBrokerArgs,
@@ -29,7 +29,8 @@ export default class Deployments extends Command {
     `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID APP_INSTALLED_ORG_ID --data mykey=myvalue,mykey2=myvalue2`,
   ]
 
-  async run(): Promise<void> {
+  async run(): Promise<string> {
+    this.log('\n'+ux.colorize('red',Deployments.description))
     const {args, flags} = await this.parse(Deployments)
     const {tenantId, installId} = getCommonIds(args)
     const metadataValues = flags.data.split(',').map((x) => {
@@ -51,11 +52,9 @@ export default class Deployments extends Command {
 
     const deployment = await createDeployment(tenantId, installId, attributes)
     const deploymentResponse = JSON.parse(deployment).data as Array<any>
-    if (this.jsonEnabled()) {
-      console.log(JSON.stringify(deploymentResponse))
-    } else {
-      this.log(`Creating Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`)
-      printFormattedJSON(deploymentResponse)
-    }
+    
+    this.log(ux.colorize('cyan',`Creating Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
+    this.log(printFormattedJSON(deploymentResponse))
+    return JSON.stringify(deploymentResponse)
   }
 }

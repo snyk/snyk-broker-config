@@ -1,4 +1,4 @@
-import {Command} from '@oclif/core'
+import {Command, ux} from '@oclif/core'
 import {commonUniversalBrokerArgs, commonUniversalBrokerDeploymentId, getCommonIds} from '../../common/args.js'
 import {updateDeployment} from '../../api/deployments.js'
 import {deploymentMetadata} from '../../command-helpers/deployments/flags.js'
@@ -27,7 +27,8 @@ export default class Deployments extends Command {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async run(): Promise<void> {
+  async run(): Promise<string> {
+    this.log('\n'+ux.colorize('red',Deployments.description))
     const {args, flags} = await this.parse(Deployments)
     const {tenantId, installId} = getCommonIds({tenantId: args.tenantId, installId: args.installId})
     const dataValues = flags.data.split(',').map((x) => {
@@ -46,11 +47,9 @@ export default class Deployments extends Command {
 
     const deployment = await updateDeployment(tenantId, installId, args.deploymentId!, attributes)
     const deploymentResponse = JSON.parse(deployment).data as Array<any>
-    if (this.jsonEnabled()) {
-      console.log(JSON.stringify(deploymentResponse))
-    } else {
-      this.log(`Updated Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`)
-      printFormattedJSON(deploymentResponse)
-    }
+    
+    this.log(ux.colorize('cyan',`Updated Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
+    this.log(printFormattedJSON(deploymentResponse))
+    return JSON.stringify(deploymentResponse)
   }
 }
