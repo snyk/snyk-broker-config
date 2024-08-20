@@ -7,8 +7,9 @@ import {
   commonUniversalBrokerDeploymentId,
   getCommonIds,
 } from '../../common/args.js'
+import {getConnectionsForDeployment} from '../../api/connections.js'
 
-export default class Credentials extends Command {
+export default class Connections extends Command {
   public static enableJsonFlag = true
   static args = {
     ...commonUniversalBrokerArgs(),
@@ -16,7 +17,7 @@ export default class Credentials extends Command {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker Deployments - List operation'
+  static description = 'Universal Broker Connections - List operation'
 
   static examples = [
     `[with exported TENANT_ID,INSTALL_ID]`,
@@ -30,21 +31,21 @@ export default class Credentials extends Command {
   //   }
 
   async run(): Promise<void> {
-    const {args} = await this.parse(Credentials)
+    const {args} = await this.parse(Connections)
     const {tenantId, installId} = getCommonIds(args)
-    const credentials = await getCredentialsForDeployment(tenantId, installId, args.deploymentId!)
-    const credentialsList = JSON.parse(credentials).data as Array<any>
+    const connections = await getConnectionsForDeployment(tenantId, installId, args.deploymentId!)
+    const connectionsList = JSON.parse(connections).data as Array<any>
     if (this.jsonEnabled()) {
-      console.log(JSON.stringify(credentialsList))
+      console.log(JSON.stringify(connectionsList))
     } else {
       this.log(
-        `Getting Universal Broker Credentials for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,
+        `Getting Universal Broker Connections for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,
       )
 
-      for (const credential of credentialsList) {
-        printFormattedJSON(credential)
+      for (const connection of connectionsList) {
+        printFormattedJSON(connection)
       }
-      console.log(`Total = ${credentialsList.length}`)
+      console.log(`Total = ${connectionsList.length}`)
     }
   }
 }
