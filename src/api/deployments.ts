@@ -40,9 +40,7 @@ export const createDeployment = async (
     data: {
       type: 'broker_deployment',
       attributes: {
-        metadata: {
-          ...deploymentAttributes,
-        },
+        ...deploymentAttributes,
       },
     },
   }

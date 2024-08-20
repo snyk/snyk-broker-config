@@ -39,8 +39,8 @@ export default class Integrations extends Command {
     const integration = await createIntegrationForConnection(
       tenantId,
       args.connectionId,
-      args.orgId,
       args.type,
+      args.orgId,
       args.integrationId ?? null,
     )
     const integrationResponse = JSON.parse(integration).data

@@ -1,5 +1,10 @@
 import {Command} from '@oclif/core'
-import {commonApiRelatedArgs, commonUniversalBrokerArgs, getCommonIds} from '../../common/args.js'
+import {
+  commonApiRelatedArgs,
+  commonUniversalBrokerArgs,
+  commonUniversalBrokerNewDeploymentArgs,
+  getCommonIds,
+} from '../../common/args.js'
 import {printFormattedJSON} from '../../utils/display.js'
 import {createDeployment} from '../../api/deployments.js'
 import {deploymentMetadata} from './flags.js'
@@ -7,6 +12,7 @@ import {deploymentMetadata} from './flags.js'
 export default class Deployments extends Command {
   static args = {
     ...commonUniversalBrokerArgs(),
+    ...commonUniversalBrokerNewDeploymentArgs,
     ...commonApiRelatedArgs,
   }
 
@@ -18,24 +24,27 @@ export default class Deployments extends Command {
 
   static examples = [
     `[with exported TENANT_ID,INSTALL_ID]`,
-    `<%= config.bin %> <%= command.id %> --data mykey=myvalue,mykey2=myvalue2`,
+    `<%= config.bin %> <%= command.id %> APP_INSTALLED_ORG_ID --data mykey=myvalue,mykey2=myvalue2`,
     `[inline TENANT_ID,INSTALL_ID]`,
-    `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID --data mykey=myvalue,mykey2=myvalue2`,
+    `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID APP_INSTALLED_ORG_ID --data mykey=myvalue,mykey2=myvalue2`,
   ]
 
   async run(): Promise<void> {
     const {args, flags} = await this.parse(Deployments)
     const {tenantId, installId} = getCommonIds(args)
-    const dataValues = flags.data.split(',').map((x) => {
+    const metadataValues = flags.data.split(',').map((x) => {
       const dataSplit = x.split('=')
       return {[dataSplit[0]]: dataSplit[1]}
     })
 
-    const attributes: Record<string, string> = {}
-    for (const dataValue of dataValues) {
+    const attributes: Record<string, any> = {
+      broker_app_installed_in_org_id: args.appInstalledInOrgId,
+      metadata: {},
+    }
+    for (const dataValue of metadataValues) {
       for (const key in dataValue) {
         if (dataValue[key]) {
-          attributes[key] = dataValue[key]
+          attributes.metadata[key] = dataValue[key]
         }
       }
     }
