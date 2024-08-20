@@ -8,7 +8,7 @@ import {
   getCommonIds,
 } from '../../common/args.js'
 
-export default class Deployments extends Command {
+export default class Credentials extends Command {
   public static enableJsonFlag = true
   static args = {
     ...commonUniversalBrokerArgs(),
@@ -30,7 +30,7 @@ export default class Deployments extends Command {
   //   }
 
   async run(): Promise<void> {
-    const {args} = await this.parse(Deployments)
+    const {args} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds(args)
     const credentials = await getCredentialsForDeployment(tenantId, installId, args.deploymentId!)
     const credentialsList = JSON.parse(credentials).data as Array<any>

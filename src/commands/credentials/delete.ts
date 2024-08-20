@@ -8,7 +8,7 @@ import {
 import {credentialsIds} from './flags.js'
 import {deleteCredentials} from '../../api/credentials.js'
 
-export default class Deployments extends Command {
+export default class Credentials extends Command {
   static args = {
     ...commonUniversalBrokerArgs(),
     ...commonUniversalBrokerDeploymentId(true),
@@ -33,7 +33,7 @@ export default class Deployments extends Command {
   //   }
 
   async run(): Promise<void> {
-    const {args, flags} = await this.parse(Deployments)
+    const {args, flags} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds({tenantId: args.tenantId, installId: args.installId})
     const credentialsIdsArray = flags.credentialsIds.split(',')
     this.log(

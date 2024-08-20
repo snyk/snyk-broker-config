@@ -9,7 +9,7 @@ import {
 } from '../../common/args.js'
 import {getConnectionsForDeployment} from '../../api/connections.js'
 
-export default class Deployments extends Command {
+export default class Connections extends Command {
   public static enableJsonFlag = true
   static args = {
     ...commonUniversalBrokerArgs(),
@@ -31,7 +31,7 @@ export default class Deployments extends Command {
   //   }
 
   async run(): Promise<void> {
-    const {args} = await this.parse(Deployments)
+    const {args} = await this.parse(Connections)
     const {tenantId, installId} = getCommonIds(args)
     const connections = await getConnectionsForDeployment(tenantId, installId, args.deploymentId!)
     const connectionsList = JSON.parse(connections).data as Array<any>

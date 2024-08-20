@@ -9,7 +9,7 @@ import {credentialsData} from './flags.js'
 import {printFormattedJSON} from '../../utils/display.js'
 import {CredentialsAttributes, createCredentials} from '../../api/credentials.js'
 
-export default class Deployments extends Command {
+export default class Credentials extends Command {
   static args = {
     ...commonUniversalBrokerArgs(),
     ...commonUniversalBrokerDeploymentId(true),
@@ -34,7 +34,7 @@ export default class Deployments extends Command {
   //   }
 
   async run(): Promise<void> {
-    const {args, flags} = await this.parse(Deployments)
+    const {args, flags} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds(args)
 
     const attributes: CredentialsAttributes[] = []

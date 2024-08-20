@@ -38,6 +38,14 @@ export const commonUniversalBrokerConnectionId = (required = false) => {
     connectionId: Args.string({description: 'Connection ID', required, default: ''}),
   }
 }
+
+export const commonUniversalBrokerIntegrationsIds = (required = false) => {
+  return {
+    orgId: Args.string({description: 'Org ID', required, default: ''}),
+    integrationId: Args.string({description: 'Integration ID', required, default: ''}),
+  }
+}
+
 export const commonApiRelatedArgs = {
   apiUrl: Args.string({description: 'API Url', required: false, default: process.env.SNYK_API ?? config.API_HOSTNAME}),
   apiVersion: Args.string({

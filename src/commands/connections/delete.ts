@@ -8,7 +8,7 @@ import {
 } from '../../common/args.js'
 import {deleteConnectionForDeployment, getConnectionsForDeployment} from '../../api/connections.js'
 
-export default class Deployments extends Command {
+export default class Connections extends Command {
   public static enableJsonFlag = true
   static args = {
     ...commonUniversalBrokerArgs(),
@@ -31,7 +31,7 @@ export default class Deployments extends Command {
   //   }
 
   async run(): Promise<void> {
-    const {args} = await this.parse(Deployments)
+    const {args} = await this.parse(Connections)
     const {tenantId, installId} = getCommonIds(args)
     const deleteConnectionResponseCode = await deleteConnectionForDeployment(
       tenantId,
