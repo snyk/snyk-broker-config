@@ -45,6 +45,11 @@ export const commonUniversalBrokerIntegrationsIds = (required = false) => {
     integrationId: Args.string({description: 'Integration ID', required, default: ''}),
   }
 }
+export const commonUniversalBrokerIntegrationType = (required = false) => {
+  return {
+    type: Args.string({description: 'type', required, default: ''}),
+  }
+}
 
 export const commonApiRelatedArgs = {
   apiUrl: Args.string({description: 'API Url', required: false, default: process.env.SNYK_API ?? config.API_HOSTNAME}),

@@ -6,6 +6,12 @@ import {createLogger} from '../utils/logger.js'
 
 const logger = createLogger('snyk-broker-config')
 
+interface IntegrationBody {
+  data: {
+    type: string
+    integration_id?: string
+  }
+}
 export const getIntegrationsForConnection = async (tenantId: string, connectionId: string) => {
   const headers = {...commonHeaders, ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/connections/${connectionId}/integrations`
@@ -39,4 +45,34 @@ export const deleteIntegrationsForConnection = async (
   const response = await makeRequest(req)
   logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
   return response.statusCode
+}
+
+export const createIntegrationForConnection = async (
+  tenantId: string,
+  connectionId: string,
+  type: string,
+  orgId: string,
+  integrationId?: string,
+) => {
+  const headers = {...commonHeaders, ...getAuthHeader()}
+  const apiPath = `rest/tenants/${tenantId}/brokers/connections/${connectionId}/orgs/${orgId}/integration`
+  const config = getConfig()
+
+  const body: IntegrationBody = {
+    data: {
+      type: type,
+    },
+  }
+  if (integrationId) {
+    body.data.integration_id = integrationId
+  }
+  const req: HttpRequest = {
+    url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
+    headers: headers,
+    method: 'POST',
+    body: JSON.stringify(body),
+  }
+  const response = await makeRequest(req)
+  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  return response.body
 }
