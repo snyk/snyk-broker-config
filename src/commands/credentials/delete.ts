@@ -5,7 +5,7 @@ import {
   commonUniversalBrokerDeploymentId,
   getCommonIds,
 } from '../../common/args.js'
-import {credentialsIds} from './flags.js'
+import {credentialsIds} from '../../command-helpers/credentials/flags.js'
 import {deleteCredentials} from '../../api/credentials.js'
 
 export default class Credentials extends Command {

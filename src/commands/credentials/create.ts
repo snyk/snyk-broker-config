@@ -5,7 +5,7 @@ import {
   commonApiRelatedArgs,
   getCommonIds,
 } from '../../common/args.js'
-import {credentialsData} from './flags.js'
+import {credentialsData} from '../../command-helpers/credentials/flags.js'
 import {printFormattedJSON} from '../../utils/display.js'
 import {CredentialsAttributes, createCredentials} from '../../api/credentials.js'
 
