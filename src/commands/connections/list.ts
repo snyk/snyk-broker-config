@@ -1,4 +1,4 @@
-import {Args, Command, Flags} from '@oclif/core'
+import {Args, Command, Flags, ux} from '@oclif/core'
 import {printFormattedJSON} from '../../utils/display.js'
 import {getCredentialsForDeployment} from '../../api/credentials.js'
 import {
@@ -30,22 +30,22 @@ export default class Connections extends Command {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async run(): Promise<void> {
+  async run(): Promise<string> {
+    this.log('\n'+ux.colorize('red',Connections.description))
     const {args} = await this.parse(Connections)
     const {tenantId, installId} = getCommonIds(args)
     const connections = await getConnectionsForDeployment(tenantId, installId, args.deploymentId!)
     const connectionsList = JSON.parse(connections).data as Array<any>
-    if (this.jsonEnabled()) {
-      console.log(JSON.stringify(connectionsList))
-    } else {
-      this.log(
-        `Getting Universal Broker Connections for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,
-      )
 
-      for (const connection of connectionsList) {
-        printFormattedJSON(connection)
-      }
-      console.log(`Total = ${connectionsList.length}`)
+    this.log(
+      ux.colorize('cyan',`Getting Universal Broker Connections for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,)
+    )
+
+    for (const connection of connectionsList) {
+      this.log(printFormattedJSON(connection))
     }
+    this.log(`Total = ${connectionsList.length}`)
+
+    return JSON.stringify(connectionsList)
   }
 }

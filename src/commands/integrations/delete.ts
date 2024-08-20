@@ -1,4 +1,4 @@
-import {Command} from '@oclif/core'
+import {Command, ux} from '@oclif/core'
 import {printFormattedJSON} from '../../utils/display.js'
 import {
   commonApiRelatedArgs,
@@ -31,7 +31,8 @@ export default class Integrations extends Command {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async run(): Promise<void> {
+  async run(): Promise<string> {
+    this.log('\n'+ux.colorize('red',Integrations.description))
     const {args} = await this.parse(Integrations)
     const {tenantId} = getCommonIds(args)
     const integrationsResponseCode = await deleteIntegrationsForConnection(
@@ -41,15 +42,12 @@ export default class Integrations extends Command {
       args.integrationId,
     )
     if (integrationsResponseCode === 204) {
-      if (this.jsonEnabled()) {
-        console.log(JSON.stringify({responseCode: integrationsResponseCode}))
-      } else {
-        this.log(
-          `Deleted Universal Broker Deployment for Tenant ${tenantId}, Connection ${args.connectionId}, Org ${args.orgId}, Integration ${args.integrationId}`,
-        )
-      }
+      this.log(
+        ux.colorize('cyan',`Deleted Universal Broker Deployment for Tenant ${tenantId}, Connection ${args.connectionId}, Org ${args.orgId}, Integration ${args.integrationId}`,)
+      )
+      return JSON.stringify({responseCode: integrationsResponseCode})
     } else {
-      this.error(`Error deleting deployment. Status code: ${integrationsResponseCode}.`)
+      this.error(ux.colorize('red',`Error deleting deployment. Status code: ${integrationsResponseCode}.`))
     }
   }
 }

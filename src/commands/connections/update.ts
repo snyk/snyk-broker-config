@@ -1,4 +1,4 @@
-import {Command} from '@oclif/core'
+import {Command, ux} from '@oclif/core'
 import {
   commonUniversalBrokerArgs,
   commonUniversalBrokerDeploymentId,
@@ -31,7 +31,8 @@ export default class Connections extends Command {
     `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID CONNECTION_ID --type github`,
   ]
 
-  async run(): Promise<void> {
+  async run(): Promise<string> {
+    this.log('\n'+ux.colorize('red',Connections.description))
     const {args, flags} = await this.parse(Connections)
 
     const {tenantId, installId} = getCommonIds(args)
@@ -49,13 +50,11 @@ export default class Connections extends Command {
       attributes,
     )
     const connectionResponse = JSON.parse(connection).data
-    if (this.jsonEnabled()) {
-      console.log(JSON.stringify(connectionResponse))
-    } else {
-      this.log(
-        `Updating Universal Broker Connections ${args.connectionId} for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
-      )
-      printFormattedJSON(connectionResponse)
-    }
+
+    this.log(
+      ux.colorize('cyan',`Updating Universal Broker Connections ${args.connectionId} for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,)
+    )
+    this.log(printFormattedJSON(connectionResponse))
+    return JSON.stringify(connectionResponse)
   }
 }

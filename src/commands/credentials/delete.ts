@@ -1,4 +1,4 @@
-import {Args, Command, Flags} from '@oclif/core'
+import {Args, Command, Flags, ux} from '@oclif/core'
 import {
   commonApiRelatedArgs,
   commonUniversalBrokerArgs,
@@ -32,27 +32,27 @@ export default class Credentials extends Command {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async run(): Promise<void> {
+  async run(): Promise<string> {
+    this.log('\n'+ux.colorize('red',Credentials.description))
     const {args, flags} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds({tenantId: args.tenantId, installId: args.installId})
     const credentialsIdsArray = flags.credentialsIds.split(',')
     this.log(
       `Deleting Universal Broker Credentials for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,
     )
-
+    const jsonResponse = []
     for (const credentialsId of credentialsIdsArray) {
       const deleteResponseCode = await deleteCredentials(tenantId, installId, args.deploymentId!, credentialsId)
       if (deleteResponseCode === 204) {
-        if (this.jsonEnabled()) {
-          console.log(JSON.stringify({responseCode: deleteResponseCode}))
-        } else {
-          this.log(
-            `Deleted Universal Broker Credentials ${credentialsId} in Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
-          )
-        }
+        jsonResponse.push({responseCode: deleteResponseCode})
+
+        this.log(
+          ux.colorize('cyan',`Deleted Universal Broker Credentials ${credentialsId} in Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,)
+        )
       } else {
-        this.error(`Error deleting credentials for deployment. Status code: ${deleteResponseCode}.`)
+        this.error(ux.colorize('red',`Error deleting credentials for deployment. Status code: ${deleteResponseCode}.`))
       }
     }
+    return JSON.stringify(jsonResponse)
   }
 }

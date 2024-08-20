@@ -1,4 +1,4 @@
-import {Command} from '@oclif/core'
+import {Command, ux} from '@oclif/core'
 import {
   commonApiRelatedArgs,
   commonUniversalBrokerArgs,
@@ -30,7 +30,8 @@ export default class Connections extends Command {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async run(): Promise<void> {
+  async run(): Promise<string> {
+    this.log('\n'+ux.colorize('red',Connections.description))
     const {args} = await this.parse(Connections)
     const {tenantId, installId} = getCommonIds(args)
     const deleteConnectionResponseCode = await deleteConnectionForDeployment(
@@ -40,15 +41,11 @@ export default class Connections extends Command {
       args.connectionId,
     )
     if (deleteConnectionResponseCode === 204) {
-      if (this.jsonEnabled()) {
-        console.log(JSON.stringify({responseCode: deleteConnectionResponseCode}))
-      } else {
-        this.log(
-          `Deleted Universal Broker Connection ${args.connectionId} for Tenant ${tenantId}, Install ${installId}`,
-        )
-      }
+      this.log(ux.colorize('cyan',`Deleted Universal Broker Connection ${args.connectionId} for Tenant ${tenantId}, Install ${installId}`))
+
+      return JSON.stringify({responseCode: deleteConnectionResponseCode})
     } else {
-      this.error(`Error deleting broker connection. Status code: ${deleteConnectionResponseCode}.`)
+      this.error(ux.colorize('red',`Error deleting broker connection. Status code: ${deleteConnectionResponseCode}.`))
     }
   }
 }
