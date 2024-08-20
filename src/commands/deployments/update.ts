@@ -1,7 +1,7 @@
 import {Command} from '@oclif/core'
 import {commonUniversalBrokerArgs, commonUniversalBrokerDeploymentId, getCommonIds} from '../../common/args.js'
 import {updateDeployment} from '../../api/deployments.js'
-import {deploymentMetadata} from './flags.js'
+import {deploymentMetadata} from '../../command-helpers/deployments/flags.js'
 import {printFormattedJSON} from '../../utils/display.js'
 
 export default class Deployments extends Command {

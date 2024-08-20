@@ -7,7 +7,7 @@ import {
   commonUniversalBrokerConnectionId,
 } from '../../common/args.js'
 import {printFormattedJSON} from '../../utils/display.js'
-import {connectionsData} from './flags.js'
+import {connectionsData} from '../../command-helpers/connections/flags.js'
 import {updateConnectionForDeployment} from '../../api/connections.js'
 
 export default class Connections extends Command {

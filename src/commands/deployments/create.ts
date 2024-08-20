@@ -7,7 +7,7 @@ import {
 } from '../../common/args.js'
 import {printFormattedJSON} from '../../utils/display.js'
 import {createDeployment} from '../../api/deployments.js'
-import {deploymentMetadata} from './flags.js'
+import {deploymentMetadata} from '../../command-helpers/deployments/flags.js'
 
 export default class Deployments extends Command {
   static args = {
