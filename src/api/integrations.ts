@@ -8,8 +8,8 @@ const logger = createLogger('snyk-broker-config')
 
 interface IntegrationBody {
   data: {
-    type: string
     integration_id?: string
+    type: string
   }
 }
 export const getIntegrationsForConnection = async (tenantId: string, connectionId: string) => {
