@@ -1,7 +1,7 @@
-import {Command, ux} from '@oclif/core'
+import {ux} from '@oclif/core'
 import {commonApiRelatedArgs, commonUniversalBrokerArgs, getCommonIds} from '../../common/args.js'
 import {getDeployments} from '../../api/deployments.js'
-import {printFormattedJSON, printIndexedFormattedJSON} from '../../utils/display.js'
+import {printIndexedFormattedJSON} from '../../utils/display.js'
 import {BaseCommand} from '../../base-command.js'
 
 export default class Deployments extends BaseCommand<typeof Deployments> {

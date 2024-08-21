@@ -1,15 +1,9 @@
-import {Command, ux} from '@oclif/core'
-import {commonApiRelatedArgs, commonUniversalBrokerArgs, getCommonIds} from '../../common/args.js'
+import {ux} from '@oclif/core'
+import {commonApiRelatedArgs, commonUniversalBrokerArgs} from '../../common/args.js'
 import {input, confirm, number} from '@inquirer/prompts'
 import {getAppInstalledOnOrgId, installAppsWorfklow} from '../../workflows/apps.js'
-import {
-  createDeployment,
-  DeploymentAttributes,
-  DeploymentResponse,
-  DeploymentResponseData,
-  getDeployments,
-} from '../../api/deployments.js'
-import {printFormattedJSON, printIndexedFormattedJSON} from '../../utils/display.js'
+import {createDeployment, DeploymentAttributes, DeploymentResponse, getDeployments} from '../../api/deployments.js'
+import {printIndexedFormattedJSON} from '../../utils/display.js'
 import {isValidUUID} from '../../utils/validation.js'
 import {BaseCommand} from '../../base-command.js'
 
