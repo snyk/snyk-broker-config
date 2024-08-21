@@ -1,4 +1,4 @@
-import {Args, Command, Flags, ux} from '@oclif/core'
+import {ux} from '@oclif/core'
 import {printFormattedJSON} from '../../utils/display.js'
 import {getCredentialsForDeployment} from '../../api/credentials.js'
 import {
@@ -7,8 +7,9 @@ import {
   commonUniversalBrokerDeploymentId,
   getCommonIds,
 } from '../../common/args.js'
+import {BaseCommand} from '../../base-command.js'
 
-export default class Credentials extends Command {
+export default class Credentials extends BaseCommand<typeof Credentials> {
   public static enableJsonFlag = true
   static args = {
     ...commonUniversalBrokerArgs(),

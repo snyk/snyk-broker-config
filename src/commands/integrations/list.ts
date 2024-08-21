@@ -1,4 +1,4 @@
-import {Command, ux} from '@oclif/core'
+import {ux} from '@oclif/core'
 import {printFormattedJSON} from '../../utils/display.js'
 import {
   commonApiRelatedArgs,
@@ -6,10 +6,10 @@ import {
   commonUniversalBrokerConnectionId,
   getCommonIds,
 } from '../../common/args.js'
-import {getConnectionsForDeployment} from '../../api/connections.js'
 import {getIntegrationsForConnection} from '../../api/integrations.js'
+import {BaseCommand} from '../../base-command.js'
 
-export default class Integrations extends Command {
+export default class Integrations extends BaseCommand<typeof Integrations> {
   public static enableJsonFlag = true
   static args = {
     ...commonUniversalBrokerArgs(),

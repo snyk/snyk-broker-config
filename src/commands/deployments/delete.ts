@@ -1,8 +1,9 @@
-import {Command, ux} from '@oclif/core'
+import {ux} from '@oclif/core'
 import {commonUniversalBrokerArgs, commonUniversalBrokerDeploymentId, getCommonIds} from '../../common/args.js'
 import {deleteDeployment} from '../../api/deployments.js'
+import {BaseCommand} from '../../base-command.js'
 
-export default class Deployments extends Command {
+export default class Deployments extends BaseCommand<typeof Deployments> {
   static args = {
     ...commonUniversalBrokerArgs(),
     ...commonUniversalBrokerDeploymentId(true),

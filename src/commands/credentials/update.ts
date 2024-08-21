@@ -1,15 +1,16 @@
-import {Args, Command, Flags, ux} from '@oclif/core'
+import {ux} from '@oclif/core'
 import {
   commonUniversalBrokerArgs,
   commonUniversalBrokerDeploymentId,
   commonApiRelatedArgs,
   getCommonIds,
 } from '../../common/args.js'
-import {credentialId, credentialsData, credentialsIds} from '../../command-helpers/credentials/flags.js'
+import {credentialId, credentialsData} from '../../command-helpers/credentials/flags.js'
 import {printFormattedJSON} from '../../utils/display.js'
-import {CredentialsAttributes, createCredentials, updateCredentials} from '../../api/credentials.js'
+import {CredentialsAttributes, updateCredentials} from '../../api/credentials.js'
+import {BaseCommand} from '../../base-command.js'
 
-export default class Credentials extends Command {
+export default class Credentials extends BaseCommand<typeof Credentials> {
   static args = {
     ...commonUniversalBrokerArgs(),
     ...commonUniversalBrokerDeploymentId(true),

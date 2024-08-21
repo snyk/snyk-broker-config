@@ -1,4 +1,4 @@
-import {Args, Command, Flags, ux} from '@oclif/core'
+import {ux} from '@oclif/core'
 import {
   commonApiRelatedArgs,
   commonUniversalBrokerArgs,
@@ -7,8 +7,9 @@ import {
 } from '../../common/args.js'
 import {credentialsIds} from '../../command-helpers/credentials/flags.js'
 import {deleteCredentials} from '../../api/credentials.js'
+import {BaseCommand} from '../../base-command.js'
 
-export default class Credentials extends Command {
+export default class Credentials extends BaseCommand<typeof Credentials> {
   static args = {
     ...commonUniversalBrokerArgs(),
     ...commonUniversalBrokerDeploymentId(true),

@@ -1,4 +1,4 @@
-import {Command, ux} from '@oclif/core'
+import {ux} from '@oclif/core'
 import {
   commonApiRelatedArgs,
   commonUniversalBrokerArgs,
@@ -7,8 +7,9 @@ import {
   getCommonIds,
 } from '../../common/args.js'
 import {deleteConnectionForDeployment, getConnectionsForDeployment} from '../../api/connections.js'
+import {BaseCommand} from '../../base-command.js'
 
-export default class Connections extends Command {
+export default class Connections extends BaseCommand<typeof Connections> {
   public static enableJsonFlag = true
   static args = {
     ...commonUniversalBrokerArgs(),

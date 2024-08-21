@@ -1,4 +1,4 @@
-import {Command, ux} from '@oclif/core'
+import {ux} from '@oclif/core'
 import {
   commonUniversalBrokerArgs,
   commonUniversalBrokerDeploymentId,
@@ -9,11 +9,10 @@ import {
   commonUniversalBrokerIntegrationType,
 } from '../../common/args.js'
 import {printFormattedJSON} from '../../utils/display.js'
-import {createConnectionForDeployment} from '../../api/connections.js'
-import Connections from '../connections/create.js'
 import {createIntegrationForConnection} from '../../api/integrations.js'
+import {BaseCommand} from '../../base-command.js'
 
-export default class Integrations extends Command {
+export default class Integrations extends BaseCommand<typeof Integrations> {
   static args = {
     ...commonUniversalBrokerArgs(),
     ...commonUniversalBrokerConnectionId(true),

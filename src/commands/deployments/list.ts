@@ -2,8 +2,9 @@ import {Command, ux} from '@oclif/core'
 import {commonApiRelatedArgs, commonUniversalBrokerArgs, getCommonIds} from '../../common/args.js'
 import {getDeployments} from '../../api/deployments.js'
 import {printFormattedJSON} from '../../utils/display.js'
+import {BaseCommand} from '../../base-command.js'
 
-export default class Deployments extends Command {
+export default class Deployments extends BaseCommand<typeof Deployments> {
   public static enableJsonFlag = true
   static args = {
     ...commonUniversalBrokerArgs(),
@@ -28,7 +29,7 @@ export default class Deployments extends Command {
     const {args} = await this.parse(Deployments)
     const {tenantId, installId} = getCommonIds(args)
     const deployments = await getDeployments(tenantId, installId)
-    const deploymentsList = JSON.parse(deployments).data as Array<any>
+    const deploymentsList = JSON.parse(deployments).data ? (JSON.parse(deployments).data as Array<any>) : []
 
     this.log(
       '=>',

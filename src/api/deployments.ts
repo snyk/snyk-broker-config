@@ -10,6 +10,7 @@ export interface DeploymentAttributesMetadata {
   [key: string]: any
 }
 export interface DeploymentAttributes {
+  broker_app_installed_in_org_id: string
   metadata: DeploymentAttributesMetadata
 }
 
