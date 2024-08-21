@@ -1,4 +1,4 @@
-import {Args, Command, Flags, ux} from '@oclif/core'
+import {ux} from '@oclif/core'
 import {printFormattedJSON} from '../../utils/display.js'
 import {getCredentialsForDeployment} from '../../api/credentials.js'
 import {
@@ -7,8 +7,9 @@ import {
   commonUniversalBrokerDeploymentId,
   getCommonIds,
 } from '../../common/args.js'
+import {BaseCommand} from '../../base-command.js'
 
-export default class Credentials extends Command {
+export default class Credentials extends BaseCommand<typeof Credentials> {
   public static enableJsonFlag = true
   static args = {
     ...commonUniversalBrokerArgs(),
@@ -30,14 +31,17 @@ export default class Credentials extends Command {
   //   }
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Credentials.description))
+    this.log('\n' + ux.colorize('red', Credentials.description))
     const {args} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds(args)
     const credentials = await getCredentialsForDeployment(tenantId, installId, args.deploymentId!)
     const credentialsList = JSON.parse(credentials).data as Array<any>
 
     this.log(
-      ux.colorize('cyan',`Getting Universal Broker Credentials for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,)
+      ux.colorize(
+        'cyan',
+        `Getting Universal Broker Credentials for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,
+      ),
     )
 
     for (const credential of credentialsList) {

@@ -10,7 +10,29 @@ export interface DeploymentAttributesMetadata {
   [key: string]: any
 }
 export interface DeploymentAttributes {
+  broker_app_installed_in_org_id: string
   metadata: DeploymentAttributesMetadata
+}
+
+export interface DeploymentResponseData {
+  id: string
+  type: string
+  attributes: {
+    broker_app_installed_in_org_id: string
+    metadata: Record<string, string>
+  }
+}
+export interface DeploymentResponse {
+  data: DeploymentResponseData
+  jsonapi: {version: string}
+  links: any
+}
+
+export interface DeploymentsResponse {
+  data?: DeploymentResponseData[]
+  jsonapi: {version: string}
+  links: any
+  errors?: any
 }
 
 export const getDeployments = async (tenantId: string, installId: string) => {
@@ -25,7 +47,7 @@ export const getDeployments = async (tenantId: string, installId: string) => {
   }
   const response = await makeRequest(req)
   logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
-  return response.body
+  return JSON.parse(response.body) as DeploymentsResponse
 }
 
 export const createDeployment = async (
@@ -52,7 +74,7 @@ export const createDeployment = async (
   }
   const response = await makeRequest(req)
   logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
-  return response.body
+  return JSON.parse(response.body) as DeploymentResponse
 }
 
 export const deleteDeployment = async (tenantId: string, installId: string, deploymentId: string) => {
@@ -97,5 +119,5 @@ export const updateDeployment = async (
   }
   const response = await makeRequest(req)
   logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
-  return response.body
+  return JSON.parse(response.body) as DeploymentResponse
 }

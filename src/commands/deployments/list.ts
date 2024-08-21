@@ -1,9 +1,10 @@
 import {Command, ux} from '@oclif/core'
 import {commonApiRelatedArgs, commonUniversalBrokerArgs, getCommonIds} from '../../common/args.js'
 import {getDeployments} from '../../api/deployments.js'
-import {printFormattedJSON} from '../../utils/display.js'
+import {printFormattedJSON, printIndexedFormattedJSON} from '../../utils/display.js'
+import {BaseCommand} from '../../base-command.js'
 
-export default class Deployments extends Command {
+export default class Deployments extends BaseCommand<typeof Deployments> {
   public static enableJsonFlag = true
   static args = {
     ...commonUniversalBrokerArgs(),
@@ -24,18 +25,22 @@ export default class Deployments extends Command {
   //   }
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Deployments.description))
+    this.log('\n' + ux.colorize('red', Deployments.description))
     const {args} = await this.parse(Deployments)
     const {tenantId, installId} = getCommonIds(args)
     const deployments = await getDeployments(tenantId, installId)
-    const deploymentsList = JSON.parse(deployments).data as Array<any>
-    
-    this.log('=>',ux.colorize('cyan',`Getting Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
+    const deploymentsList = deployments.data ?? []
 
-    for (const deployment of deploymentsList) {
-      this.log(printFormattedJSON(deployment))
-    }
-    this.log(ux.colorize('cyan',`Total = ${deploymentsList.length}`))
+    this.log(
+      '=>',
+      ux.colorize('cyan', `Getting Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`),
+    )
+
+    this.log(printIndexedFormattedJSON(deploymentsList))
+    // for (const deployment of deploymentsList) {
+    //   this.log(printFormattedJSON(deployment))
+    // }
+    this.log(ux.colorize('cyan', `Total = ${deploymentsList.length}`))
 
     return JSON.stringify(deploymentsList)
   }

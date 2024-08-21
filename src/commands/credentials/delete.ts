@@ -1,4 +1,4 @@
-import {Args, Command, Flags, ux} from '@oclif/core'
+import {ux} from '@oclif/core'
 import {
   commonApiRelatedArgs,
   commonUniversalBrokerArgs,
@@ -7,8 +7,9 @@ import {
 } from '../../common/args.js'
 import {credentialsIds} from '../../command-helpers/credentials/flags.js'
 import {deleteCredentials} from '../../api/credentials.js'
+import {BaseCommand} from '../../base-command.js'
 
-export default class Credentials extends Command {
+export default class Credentials extends BaseCommand<typeof Credentials> {
   static args = {
     ...commonUniversalBrokerArgs(),
     ...commonUniversalBrokerDeploymentId(true),
@@ -33,7 +34,7 @@ export default class Credentials extends Command {
   //   }
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Credentials.description))
+    this.log('\n' + ux.colorize('red', Credentials.description))
     const {args, flags} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds({tenantId: args.tenantId, installId: args.installId})
     const credentialsIdsArray = flags.credentialsIds.split(',')
@@ -47,10 +48,13 @@ export default class Credentials extends Command {
         jsonResponse.push({responseCode: deleteResponseCode})
 
         this.log(
-          ux.colorize('cyan',`Deleted Universal Broker Credentials ${credentialsId} in Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,)
+          ux.colorize(
+            'cyan',
+            `Deleted Universal Broker Credentials ${credentialsId} in Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
+          ),
         )
       } else {
-        this.error(ux.colorize('red',`Error deleting credentials for deployment. Status code: ${deleteResponseCode}.`))
+        this.error(ux.colorize('red', `Error deleting credentials for deployment. Status code: ${deleteResponseCode}.`))
       }
     }
     return JSON.stringify(jsonResponse)

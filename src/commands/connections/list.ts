@@ -1,6 +1,5 @@
-import {Args, Command, Flags, ux} from '@oclif/core'
+import {ux} from '@oclif/core'
 import {printFormattedJSON} from '../../utils/display.js'
-import {getCredentialsForDeployment} from '../../api/credentials.js'
 import {
   commonApiRelatedArgs,
   commonUniversalBrokerArgs,
@@ -8,8 +7,9 @@ import {
   getCommonIds,
 } from '../../common/args.js'
 import {getConnectionsForDeployment} from '../../api/connections.js'
+import {BaseCommand} from '../../base-command.js'
 
-export default class Connections extends Command {
+export default class Connections extends BaseCommand<typeof Connections> {
   public static enableJsonFlag = true
   static args = {
     ...commonUniversalBrokerArgs(),
@@ -31,14 +31,17 @@ export default class Connections extends Command {
   //   }
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Connections.description))
+    this.log('\n' + ux.colorize('red', Connections.description))
     const {args} = await this.parse(Connections)
     const {tenantId, installId} = getCommonIds(args)
     const connections = await getConnectionsForDeployment(tenantId, installId, args.deploymentId!)
     const connectionsList = JSON.parse(connections).data as Array<any>
 
     this.log(
-      ux.colorize('cyan',`Getting Universal Broker Connections for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,)
+      ux.colorize(
+        'cyan',
+        `Getting Universal Broker Connections for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,
+      ),
     )
 
     for (const connection of connectionsList) {

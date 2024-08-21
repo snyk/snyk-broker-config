@@ -1,4 +1,4 @@
-import {Command, ux} from '@oclif/core'
+import {ux} from '@oclif/core'
 import {
   commonApiRelatedArgs,
   commonUniversalBrokerArgs,
@@ -6,10 +6,11 @@ import {
   getCommonIds,
 } from '../../common/args.js'
 import {printFormattedJSON} from '../../utils/display.js'
-import {createDeployment} from '../../api/deployments.js'
+import {createDeployment, DeploymentAttributes} from '../../api/deployments.js'
 import {deploymentMetadata} from '../../command-helpers/deployments/flags.js'
+import {BaseCommand} from '../../base-command.js'
 
-export default class Deployments extends Command {
+export default class Deployments extends BaseCommand<typeof Deployments> {
   static args = {
     ...commonUniversalBrokerArgs(),
     ...commonUniversalBrokerNewDeploymentArgs,
@@ -30,7 +31,7 @@ export default class Deployments extends Command {
   ]
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Deployments.description))
+    this.log('\n' + ux.colorize('red', Deployments.description))
     const {args, flags} = await this.parse(Deployments)
     const {tenantId, installId} = getCommonIds(args)
     const metadataValues = flags.data.split(',').map((x) => {
@@ -38,7 +39,7 @@ export default class Deployments extends Command {
       return {[dataSplit[0]]: dataSplit[1]}
     })
 
-    const attributes: Record<string, any> = {
+    const attributes: DeploymentAttributes = {
       broker_app_installed_in_org_id: args.appInstalledInOrgId,
       metadata: {},
     }
@@ -51,10 +52,9 @@ export default class Deployments extends Command {
     }
 
     const deployment = await createDeployment(tenantId, installId, attributes)
-    const deploymentResponse = JSON.parse(deployment).data as Array<any>
-    
-    this.log(ux.colorize('cyan',`Creating Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
-    this.log(printFormattedJSON(deploymentResponse))
-    return JSON.stringify(deploymentResponse)
+
+    this.log(ux.colorize('cyan', `Creating Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
+    this.log(printFormattedJSON(deployment.data))
+    return JSON.stringify(deployment)
   }
 }

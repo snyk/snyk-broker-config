@@ -1,15 +1,16 @@
-import {Args, Command, Flags, ux} from '@oclif/core'
+import {ux} from '@oclif/core'
 import {
   commonUniversalBrokerArgs,
   commonUniversalBrokerDeploymentId,
   commonApiRelatedArgs,
   getCommonIds,
 } from '../../common/args.js'
-import {credentialId, credentialsData, credentialsIds} from '../../command-helpers/credentials/flags.js'
+import {credentialId, credentialsData} from '../../command-helpers/credentials/flags.js'
 import {printFormattedJSON} from '../../utils/display.js'
-import {CredentialsAttributes, createCredentials, updateCredentials} from '../../api/credentials.js'
+import {CredentialsAttributes, updateCredentials} from '../../api/credentials.js'
+import {BaseCommand} from '../../base-command.js'
 
-export default class Credentials extends Command {
+export default class Credentials extends BaseCommand<typeof Credentials> {
   static args = {
     ...commonUniversalBrokerArgs(),
     ...commonUniversalBrokerDeploymentId(true),
@@ -31,7 +32,7 @@ export default class Credentials extends Command {
   ]
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Credentials.description))
+    this.log('\n' + ux.colorize('red', Credentials.description))
     const {args, flags} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds(args)
 
@@ -45,7 +46,10 @@ export default class Credentials extends Command {
     const deploymentResponse = JSON.parse(deployment).data as Array<any>
 
     this.log(
-      ux.colorize('cyan',`Updating Universal Broker Credentials ${flags.credentialsId} for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,)
+      ux.colorize(
+        'cyan',
+        `Updating Universal Broker Credentials ${flags.credentialsId} for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
+      ),
     )
     this.log(printFormattedJSON(deploymentResponse))
     return JSON.stringify(deploymentResponse)
