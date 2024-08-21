@@ -36,7 +36,9 @@
     "perfectionist/sort-classes": "off",
     "camelcase": "off",
     "no-await-in-loop": "warn",
-    "dot-notation": "off"
+    "dot-notation": "off",
+    "perfectionist/sort-intersection-types": "off",
+    "unicorn/no-for-loop": "off"
   },
   "overrides": [
     {

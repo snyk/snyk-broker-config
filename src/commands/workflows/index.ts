@@ -1,6 +1,6 @@
 import {Command, ux} from '@oclif/core'
 import {commonApiRelatedArgs, commonUniversalBrokerArgs, getCommonIds} from '../../common/args.js'
-import {input, confirm} from '@inquirer/prompts'
+import {input, confirm, number} from '@inquirer/prompts'
 import {getAppInstalledOnOrgId, installAppsWorfklow} from '../../workflows/apps.js'
 import {
   createDeployment,
@@ -9,7 +9,7 @@ import {
   DeploymentResponseData,
   getDeployments,
 } from '../../api/deployments.js'
-import {printFormattedJSON} from '../../utils/display.js'
+import {printFormattedJSON, printIndexedFormattedJSON} from '../../utils/display.js'
 import {isValidUUID} from '../../utils/validation.js'
 import {BaseCommand} from '../../base-command.js'
 
@@ -92,21 +92,34 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     this.log(`Now using Tenant Id ${tenantId} and Install Id ${installId}`)
 
     const deployments = await getDeployments(tenantId, installId)
+    let deploymentId
     if (deployments.errors) {
       this.log(`${deployments.errors[0].detail}`)
       if (await confirm({message: 'Do you want to create a new deployment?'})) {
         const newDeployment = await this.createNewDeployment(tenantId, installId, appInstalledOnOrgId)
-        this.log(JSON.stringify(newDeployment))
+        deploymentId = newDeployment.data.id
       } else {
         this.error(
           'A deployment is needed to get started. Please create one using the deployment create command or running this workflow again. Exiting.',
         )
       }
+    } else if (deployments.data) {
+      if (deployments.data && deployments.data.length === 1) {
+        deploymentId = deployments.data[0].id
+      } else {
+        this.log(printIndexedFormattedJSON(deployments.data))
+        const deploymentIndex = await number({
+          message: 'Which deployment do you want to use? [1]',
+          default: 1,
+          min: 1,
+          max: deployments.data!.length + 1,
+        })
+        deploymentId = deployments.data![deploymentIndex! - 1].id
+      }
     } else {
-      const deploymentsList = deployments.data as Array<any>
-      this.log(JSON.stringify(deploymentsList))
+      this.error('Unexpected error in deployment selection.')
     }
-
+    this.log(`Using Deployment ${deploymentId}`)
     return JSON.stringify('')
   }
 }

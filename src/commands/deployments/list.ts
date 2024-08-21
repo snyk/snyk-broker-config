@@ -1,7 +1,7 @@
 import {Command, ux} from '@oclif/core'
 import {commonApiRelatedArgs, commonUniversalBrokerArgs, getCommonIds} from '../../common/args.js'
 import {getDeployments} from '../../api/deployments.js'
-import {printFormattedJSON} from '../../utils/display.js'
+import {printFormattedJSON, printIndexedFormattedJSON} from '../../utils/display.js'
 import {BaseCommand} from '../../base-command.js'
 
 export default class Deployments extends BaseCommand<typeof Deployments> {
@@ -36,9 +36,10 @@ export default class Deployments extends BaseCommand<typeof Deployments> {
       ux.colorize('cyan', `Getting Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`),
     )
 
-    for (const deployment of deploymentsList) {
-      this.log(printFormattedJSON(deployment))
-    }
+    this.log(printIndexedFormattedJSON(deploymentsList))
+    // for (const deployment of deploymentsList) {
+    //   this.log(printFormattedJSON(deployment))
+    // }
     this.log(ux.colorize('cyan', `Total = ${deploymentsList.length}`))
 
     return JSON.stringify(deploymentsList)
