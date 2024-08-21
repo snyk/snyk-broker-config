@@ -32,7 +32,7 @@ export default class Integrations extends Command {
   //   }
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Integrations.description))
+    this.log('\n' + ux.colorize('red', Integrations.description))
     const {args} = await this.parse(Integrations)
     const {tenantId} = getCommonIds(args)
     const integrationsResponseCode = await deleteIntegrationsForConnection(
@@ -43,11 +43,13 @@ export default class Integrations extends Command {
     )
     if (integrationsResponseCode === 204) {
       this.log(
-        ux.colorize('cyan',`Deleted Universal Broker Deployment for Tenant ${tenantId}, Connection ${args.connectionId}, Org ${args.orgId}, Integration ${args.integrationId}`,)
+        ux.colorize(
+          'cyan',
+          `Deleted Universal Broker Deployment for Tenant ${tenantId}, Connection ${args.connectionId}, Org ${args.orgId}, Integration ${args.integrationId}`,
+        ),
       )
       return JSON.stringify({responseCode: integrationsResponseCode})
-    } else {
-      this.error(ux.colorize('red',`Error deleting deployment. Status code: ${integrationsResponseCode}.`))
     }
+    this.error(ux.colorize('red', `Error deleting deployment. Status code: ${integrationsResponseCode}.`))
   }
 }

@@ -30,14 +30,17 @@ export default class Credentials extends Command {
   //   }
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Credentials.description))
+    this.log('\n' + ux.colorize('red', Credentials.description))
     const {args} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds(args)
     const credentials = await getCredentialsForDeployment(tenantId, installId, args.deploymentId!)
     const credentialsList = JSON.parse(credentials).data as Array<any>
 
     this.log(
-      ux.colorize('cyan',`Getting Universal Broker Credentials for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,)
+      ux.colorize(
+        'cyan',
+        `Getting Universal Broker Credentials for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,
+      ),
     )
 
     for (const credential of credentialsList) {

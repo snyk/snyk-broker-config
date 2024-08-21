@@ -31,7 +31,7 @@ export default class Connections extends Command {
   //   }
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Connections.description))
+    this.log('\n' + ux.colorize('red', Connections.description))
     const {args} = await this.parse(Connections)
     const {tenantId, installId} = getCommonIds(args)
     const deleteConnectionResponseCode = await deleteConnectionForDeployment(
@@ -41,11 +41,15 @@ export default class Connections extends Command {
       args.connectionId,
     )
     if (deleteConnectionResponseCode === 204) {
-      this.log(ux.colorize('cyan',`Deleted Universal Broker Connection ${args.connectionId} for Tenant ${tenantId}, Install ${installId}`))
+      this.log(
+        ux.colorize(
+          'cyan',
+          `Deleted Universal Broker Connection ${args.connectionId} for Tenant ${tenantId}, Install ${installId}`,
+        ),
+      )
 
       return JSON.stringify({responseCode: deleteConnectionResponseCode})
-    } else {
-      this.error(ux.colorize('red',`Error deleting broker connection. Status code: ${deleteConnectionResponseCode}.`))
     }
+    this.error(ux.colorize('red', `Error deleting broker connection. Status code: ${deleteConnectionResponseCode}.`))
   }
 }

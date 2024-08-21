@@ -31,20 +31,23 @@ export default class Integrations extends Command {
   //   }
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Integrations.description))
+    this.log('\n' + ux.colorize('red', Integrations.description))
     const {args} = await this.parse(Integrations)
     const {tenantId} = getCommonIds(args)
     const integrations = await getIntegrationsForConnection(tenantId, args.connectionId)
     const integrationsList = JSON.parse(integrations).data as Array<any>
 
     this.log(
-      ux.colorize('cyan',`Getting Universal Broker Connections Integrations for Connection ${args.connectionId}, Tenant ${tenantId}`,)
+      ux.colorize(
+        'cyan',
+        `Getting Universal Broker Connections Integrations for Connection ${args.connectionId}, Tenant ${tenantId}`,
+      ),
     )
 
     for (const connection of integrationsList) {
       this.log(printFormattedJSON(connection))
     }
-    this.log(ux.colorize('cyan',`Total = ${integrationsList.length}`))
+    this.log(ux.colorize('cyan', `Total = ${integrationsList.length}`))
     return JSON.stringify(integrationsList)
   }
 }

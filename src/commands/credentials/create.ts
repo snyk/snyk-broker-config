@@ -34,7 +34,7 @@ export default class Credentials extends Command {
   //   }
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Credentials.description))
+    this.log('\n' + ux.colorize('red', Credentials.description))
     const {args, flags} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds(args)
 
@@ -47,7 +47,10 @@ export default class Credentials extends Command {
     const deployment = await createCredentials(tenantId, installId, args.deploymentId, attributes)
     const deploymentResponse = JSON.parse(deployment).data as Array<any>
     this.log(
-      ux.colorize('cyan',`Creating Universal Broker Credentials for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,)
+      ux.colorize(
+        'cyan',
+        `Creating Universal Broker Credentials for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
+      ),
     )
     this.log(printFormattedJSON(deploymentResponse))
     return JSON.stringify(deploymentResponse)

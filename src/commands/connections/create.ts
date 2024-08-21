@@ -30,7 +30,7 @@ export default class Connections extends Command {
   ]
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Connections.description))
+    this.log('\n' + ux.colorize('red', Connections.description))
     const {args, flags} = await this.parse(Connections)
 
     const {tenantId, installId} = getCommonIds(args)
@@ -48,9 +48,12 @@ export default class Connections extends Command {
     )
     const connectionResponse = JSON.parse(connection).data
 
-    this.log(ux.colorize('cyan',
-      `Creating Universal Broker Connection for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
-    ))
+    this.log(
+      ux.colorize(
+        'cyan',
+        `Creating Universal Broker Connection for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
+      ),
+    )
     this.log(printFormattedJSON(connectionResponse))
     return JSON.stringify(connectionResponse)
   }

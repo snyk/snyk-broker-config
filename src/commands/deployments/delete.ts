@@ -22,17 +22,21 @@ export default class Deployments extends Command {
   //   }
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Deployments.description))
+    this.log('\n' + ux.colorize('red', Deployments.description))
     const {args} = await this.parse(Deployments)
     const {tenantId, installId} = getCommonIds({tenantId: args.tenantId, installId: args.installId})
-    this.log(ux.colorize('cyan',`Deleting Universal Broker Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`))
+    this.log(
+      ux.colorize(
+        'cyan',
+        `Deleting Universal Broker Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
+      ),
+    )
 
     const deploymentResponseCode = await deleteDeployment(tenantId, installId, args.deploymentId!)
     if (deploymentResponseCode === 204) {
-      this.log(ux.colorize('cyan',`Deleted Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
+      this.log(ux.colorize('cyan', `Deleted Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
       return JSON.stringify({responseCode: deploymentResponseCode})
-    } else {
-      this.error(ux.colorize('red',`Error deleting deployment. Status code: ${deploymentResponseCode}.`))
     }
+    this.error(ux.colorize('red', `Error deleting deployment. Status code: ${deploymentResponseCode}.`))
   }
 }

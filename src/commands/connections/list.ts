@@ -31,14 +31,17 @@ export default class Connections extends Command {
   //   }
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Connections.description))
+    this.log('\n' + ux.colorize('red', Connections.description))
     const {args} = await this.parse(Connections)
     const {tenantId, installId} = getCommonIds(args)
     const connections = await getConnectionsForDeployment(tenantId, installId, args.deploymentId!)
     const connectionsList = JSON.parse(connections).data as Array<any>
 
     this.log(
-      ux.colorize('cyan',`Getting Universal Broker Connections for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,)
+      ux.colorize(
+        'cyan',
+        `Getting Universal Broker Connections for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,
+      ),
     )
 
     for (const connection of connectionsList) {

@@ -30,7 +30,7 @@ export default class Deployments extends Command {
   ]
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Deployments.description))
+    this.log('\n' + ux.colorize('red', Deployments.description))
     const {args, flags} = await this.parse(Deployments)
     const {tenantId, installId} = getCommonIds(args)
     const metadataValues = flags.data.split(',').map((x) => {
@@ -52,8 +52,8 @@ export default class Deployments extends Command {
 
     const deployment = await createDeployment(tenantId, installId, attributes)
     const deploymentResponse = JSON.parse(deployment).data as Array<any>
-    
-    this.log(ux.colorize('cyan',`Creating Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
+
+    this.log(ux.colorize('cyan', `Creating Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
     this.log(printFormattedJSON(deploymentResponse))
     return JSON.stringify(deploymentResponse)
   }

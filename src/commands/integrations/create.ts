@@ -32,7 +32,7 @@ export default class Integrations extends Command {
   ]
 
   async run(): Promise<string> {
-    this.log('\n'+ux.colorize('red',Integrations.description))
+    this.log('\n' + ux.colorize('red', Integrations.description))
     const {args} = await this.parse(Integrations)
 
     const {tenantId} = getCommonIds(args)
@@ -46,7 +46,10 @@ export default class Integrations extends Command {
     )
     const integrationResponse = JSON.parse(integration).data
     this.log(
-      ux.colorize('cyan',`Creating Universal Broker Integration for Connection ${args.connectionId} for Org ${args.orgId}, Integration ${args.integrationId}`,)
+      ux.colorize(
+        'cyan',
+        `Creating Universal Broker Integration for Connection ${args.connectionId} for Org ${args.orgId}, Integration ${args.integrationId}`,
+      ),
     )
     this.log(printFormattedJSON(integrationResponse))
 
