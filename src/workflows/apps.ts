@@ -16,14 +16,13 @@ export const installAppsWorfklow = async (orgId: string): Promise<AppInstallOutp
 export const getAppInstalledOnOrgId = async (tenantId: string, installId: string): Promise<string> => {
   let orgId
   const deployments = await getDeployments(tenantId, installId)
-  const parsedDeployments = JSON.parse(deployments)
-  if (parsedDeployments.errors || parsedDeployments.data.length === 0) {
+  if (deployments.errors || (deployments.data && deployments.data.length === 0)) {
     orgId = await input({message: 'Enter the Org ID where you installed your Broker App'})
     if (!isValidUUID(installId)) {
       throw new Error('Invalid Org ID entered.')
     }
   } else {
-    const deploymentsList = parsedDeployments.data as Array<any>
+    const deploymentsList = deployments.data as Array<any>
     orgId = deploymentsList[0].attributes.broker_app_installed_in_org_id
   }
   return orgId

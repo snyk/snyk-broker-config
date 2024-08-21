@@ -2,7 +2,13 @@ import {Command, ux} from '@oclif/core'
 import {commonApiRelatedArgs, commonUniversalBrokerArgs, getCommonIds} from '../../common/args.js'
 import {input, confirm} from '@inquirer/prompts'
 import {getAppInstalledOnOrgId, installAppsWorfklow} from '../../workflows/apps.js'
-import {createDeployment, DeploymentAttributes, getDeployments} from '../../api/deployments.js'
+import {
+  createDeployment,
+  DeploymentAttributes,
+  DeploymentResponse,
+  DeploymentResponseData,
+  getDeployments,
+} from '../../api/deployments.js'
 import {printFormattedJSON} from '../../utils/display.js'
 import {isValidUUID} from '../../utils/validation.js'
 import {BaseCommand} from '../../base-command.js'
@@ -59,14 +65,17 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       this.log(ux.colorize('purple', `- clientSecret: ${client_secret}`))
       this.log(ux.colorize('purple', `You will need them to run your broker client.`))
     }
-    const deployments = await getDeployments(tenantId, installId)
-    const parsedDeployments = JSON.parse(deployments)
+    await getDeployments(tenantId, installId)
 
     const appInstalledOnOrgId = orgId ?? (await getAppInstalledOnOrgId(tenantId, installId))
     return {installId, tenantId, appInstalledOnOrgId}
   }
 
-  async createNewDeployment(tenantId: string, installId: string, appInstalledOnOrgId: string): Promise<string> {
+  async createNewDeployment(
+    tenantId: string,
+    installId: string,
+    appInstalledOnOrgId: string,
+  ): Promise<DeploymentResponse> {
     const attributes: DeploymentAttributes = {
       broker_app_installed_in_org_id: appInstalledOnOrgId,
       metadata: {createdAt: new Date().toUTCString(), comment: `Created interactively by snyk-broker-config`},
@@ -83,9 +92,8 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     this.log(`Now using Tenant Id ${tenantId} and Install Id ${installId}`)
 
     const deployments = await getDeployments(tenantId, installId)
-    const parsedDeployments = JSON.parse(deployments)
-    if (parsedDeployments.errors) {
-      this.log(`${parsedDeployments.errors[0].detail}`)
+    if (deployments.errors) {
+      this.log(`${deployments.errors[0].detail}`)
       if (await confirm({message: 'Do you want to create a new deployment?'})) {
         const newDeployment = await this.createNewDeployment(tenantId, installId, appInstalledOnOrgId)
         this.log(JSON.stringify(newDeployment))
@@ -95,7 +103,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         )
       }
     } else {
-      const deploymentsList = parsedDeployments.data as Array<any>
+      const deploymentsList = deployments.data as Array<any>
       this.log(JSON.stringify(deploymentsList))
     }
 

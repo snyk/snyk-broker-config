@@ -47,10 +47,9 @@ export default class Deployments extends BaseCommand<typeof Deployments> {
     }
 
     const deployment = await updateDeployment(tenantId, installId, args.deploymentId!, attributes)
-    const deploymentResponse = JSON.parse(deployment).data as Array<any>
 
     this.log(ux.colorize('cyan', `Updated Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
-    this.log(printFormattedJSON(deploymentResponse))
-    return JSON.stringify(deploymentResponse)
+    this.log(printFormattedJSON(deployment))
+    return JSON.stringify(deployment)
   }
 }

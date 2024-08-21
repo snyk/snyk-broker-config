@@ -52,10 +52,9 @@ export default class Deployments extends BaseCommand<typeof Deployments> {
     }
 
     const deployment = await createDeployment(tenantId, installId, attributes)
-    const deploymentResponse = JSON.parse(deployment).data as Array<any>
 
     this.log(ux.colorize('cyan', `Creating Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
-    this.log(printFormattedJSON(deploymentResponse))
-    return JSON.stringify(deploymentResponse)
+    this.log(printFormattedJSON(deployment.data))
+    return JSON.stringify(deployment)
   }
 }
