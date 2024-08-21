@@ -1,6 +1,6 @@
 import {ux} from '@oclif/core'
 import {commonApiRelatedArgs, commonUniversalBrokerArgs} from '../../common/args.js'
-import {input, confirm, number} from '@inquirer/prompts'
+import {input, confirm, number, select} from '@inquirer/prompts'
 import {getAppInstalledOnOrgId, installAppsWorfklow} from '../../workflows/apps.js'
 import {createDeployment, DeploymentAttributes, DeploymentResponse, getDeployments} from '../../api/deployments.js'
 import {printIndexedFormattedJSON} from '../../utils/display.js'
@@ -12,6 +12,7 @@ interface SetupParameters {
   tenantId: string
   appInstalledOnOrgId: string
 }
+type DeploymentId = string
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -78,13 +79,11 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     return deployment
   }
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', Workflows.description))
-
-    const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
-
-    this.log(`Now using Tenant Id ${tenantId} and Install Id ${installId}`)
-
+  async setupOrSelectDeployment(
+    tenantId: string,
+    installId: string,
+    appInstalledOnOrgId: string,
+  ): Promise<DeploymentId> {
     const deployments = await getDeployments(tenantId, installId)
     let deploymentId
     if (deployments.errors) {
@@ -98,22 +97,30 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         )
       }
     } else if (deployments.data) {
-      if (deployments.data && deployments.data.length === 1) {
-        deploymentId = deployments.data[0].id
-      } else {
-        this.log(printIndexedFormattedJSON(deployments.data))
-        const deploymentIndex = await number({
-          message: 'Which deployment do you want to use? [1]',
-          default: 1,
-          min: 1,
-          max: deployments.data!.length + 1,
-        })
-        deploymentId = deployments.data![deploymentIndex! - 1].id
-      }
+      deploymentId =
+        deployments.data.length === 1
+          ? deployments.data[0].id
+          : await select({
+              message: 'Which deployment do you want to use?',
+              choices: deployments.data.map((x) => {
+                return {id: x.id, value: x.id, description: `metadata: ${JSON.stringify(x.attributes.metadata)}`}
+              }),
+            })
     } else {
       this.error('Unexpected error in deployment selection.')
     }
-    this.log(`Using Deployment ${deploymentId}`)
+    return deploymentId
+  }
+
+  async run(): Promise<string> {
+    this.log('\n' + ux.colorize('red', Workflows.description))
+
+    const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
+
+    this.log(ux.colorize('cyan', `Now using Tenant Id ${tenantId} and Install Id ${installId}.\n`))
+
+    const deploymentId = await this.setupOrSelectDeployment(tenantId, installId, appInstalledOnOrgId)
+    this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
     return JSON.stringify('')
   }
 }
