@@ -21,14 +21,12 @@ const scmTypes = new Set([
   'github-server-app',
   'gitlab',
 ])
+export const nonSourceIntegrations = new Set(['apprisk', 'artifactory', 'jira', 'nexus'])
 
 export const connectionTypes = [
   ...craConfigType1Types.values(),
   ...scmTypes.values(),
-  'apprisk',
-  'artifactory',
-  'jira',
-  'nexus',
+  ...nonSourceIntegrations.values(),
   'digitalocean-cr',
   'ecr',
 ]

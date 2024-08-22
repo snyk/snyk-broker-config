@@ -97,3 +97,21 @@ export interface ConnectionsResponse {
     next?: string
   }
 }
+
+export interface IntegrationsResponseData {
+  org_id: string
+  id: string
+  type: string
+  integration_type: string
+}
+export interface IntegrationsResponse {
+  data: IntegrationsResponseData[]
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
+}

@@ -35,7 +35,7 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
     const {args} = await this.parse(Integrations)
     const {tenantId} = getCommonIds(args)
     const integrations = await getIntegrationsForConnection(tenantId, args.connectionId)
-    const integrationsList = JSON.parse(integrations).data as Array<any>
+    const integrationsList = integrations.data ?? []
 
     this.log(
       ux.colorize(

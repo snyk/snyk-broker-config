@@ -3,6 +3,7 @@ import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
 import {createLogger} from '../utils/logger.js'
+import {IntegrationsResponse} from './types.js'
 
 const logger = createLogger('snyk-broker-config')
 
@@ -24,7 +25,7 @@ export const getIntegrationsForConnection = async (tenantId: string, connectionI
   }
   const response = await makeRequest(req)
   logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
-  return response.body
+  return JSON.parse(response.body) as IntegrationsResponse
 }
 
 export const deleteIntegrationsForConnection = async (
@@ -74,5 +75,5 @@ export const createIntegrationForConnection = async (
   }
   const response = await makeRequest(req)
   logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
-  return response.body
+  return JSON.parse(response.body) as IntegrationsResponse
 }
