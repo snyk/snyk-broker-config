@@ -104,7 +104,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       existingConnections.data.length === 1
         ? existingConnections.data[0].id
         : await select({
-            message: 'Which deployment do you want to use?',
+            message: 'Which connection do you want to use?',
             choices: existingConnections.data.map((x) => {
               return {
                 id: x.id,
@@ -149,6 +149,13 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       orgId,
       integrationId,
     )
+    this.log(
+      ux.colorize(
+        'cyan',
+        `Connection ${connectionIntegration.data[0].id} (type: ${selectedConnection.type}) integrated with integration ${integrationId} on org ${orgId}.`,
+      ),
+    )
+    this.log(ux.colorize('red', 'Connection Integrate Workflow completed.'))
     return JSON.stringify('')
   }
 }
