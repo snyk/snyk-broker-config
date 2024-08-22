@@ -5,9 +5,8 @@ import {getAppInstalledOnOrgId} from '../../../workflows/apps.js'
 import {getDeployments} from '../../../api/deployments.js'
 import {isValidUUID} from '../../../utils/validation.js'
 import {BaseCommand} from '../../../base-command.js'
-import {nonSourceIntegrations} from '../../../command-helpers/connections/type-params-mapping.js'
-import {getConnectionsForDeployment} from '../../../api/connections.js'
-import {createIntegrationForConnection} from '../../../api/integrations.js'
+import * as multiSelect from 'inquirer-select-pro'
+import {deleteCredentials, getCredentialForDeployment, getCredentialsForDeployment} from '../../../api/credentials.js'
 
 interface SetupParameters {
   installId: string
@@ -15,11 +14,14 @@ interface SetupParameters {
   appInstalledOnOrgId: string
 }
 
-type TenantId = string
-type InstallId = string
 type DeploymentId = string
-type ConnectionId = string
-type ConnectionSelection = {id: ConnectionId; type: string}
+class ExitPromptError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'ExitPromptError'
+  }
+}
+
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
   static args = {
@@ -27,7 +29,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker - Connection Create Integration(s) workflow'
+  static description = 'Universal Broker -  Credentials Deletion workflow'
 
   static examples = [
     `[with exported TENANT_ID,INSTALL_ID]`,
@@ -66,7 +68,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     return {installId, tenantId, appInstalledOnOrgId}
   }
 
-  async selectDeployment(tenantId: string, installId: string, appInstalledOnOrgId: string): Promise<DeploymentId> {
+  async selectDeployment(tenantId: string, installId: string, _appInstalledOnOrgId: string): Promise<DeploymentId> {
     const deployments = await getDeployments(tenantId, installId)
     let deploymentId
     if (deployments.errors) {
@@ -88,32 +90,6 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     return deploymentId
   }
 
-  async selectConnection(
-    tenantID: TenantId,
-    installId: InstallId,
-    deploymentId: DeploymentId,
-  ): Promise<ConnectionSelection> {
-    const existingConnections = await getConnectionsForDeployment(tenantID, installId, deploymentId)
-    if (existingConnections.data.length === 0) {
-      this.error('No connection found.')
-    }
-    const selectedConnection =
-      existingConnections.data.length === 1
-        ? existingConnections.data[0].id
-        : await select({
-            message: 'Which connection do you want to use?',
-            choices: existingConnections.data.map((x) => {
-              return {
-                id: x.id,
-                value: x.id,
-                description: `name: ${x.attributes.name}, type: ${x.attributes.configuration.type}, configuration: ${JSON.stringify(x.attributes.configuration)}`,
-              }
-            }),
-          })
-    const selectConnectionData = existingConnections.data.find((x) => x.id === selectedConnection)
-    return {id: selectConnectionData!.id, type: selectConnectionData?.attributes.configuration.type}
-  }
-
   async run(): Promise<string> {
     try {
       this.log('\n' + ux.colorize('red', Workflows.description))
@@ -126,37 +102,48 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
 
       // this.log(ux.colorize('cyan', `Let's create a ${connectionType} connection now.\n`))
-      const selectedConnection = await this.selectConnection(tenantId, installId, deploymentId)
-      this.log(
-        ux.colorize(
-          'cyan',
-          `Selected connection id ${selectedConnection.id}. Ready to configure integrations to use this connection.\n`,
-        ),
-      )
-      const orgId = await input({message: 'Enter the OrgID you want to integrate.'})
-      let integrationId
-      if (!nonSourceIntegrations.has(selectedConnection.type)) {
-        integrationId = await input({
-          message: `Enter the integrationID you want to integrate. Must be of type ${selectedConnection.type}`,
+
+      const credentials = await getCredentialsForDeployment(tenantId, installId, deploymentId)
+      if (credentials.data.length === 0) {
+        this.error(`Not credentials found.`)
+      }
+
+      const choices = credentials.data.map((x) => {
+        return {
+          name: `[Type: ${x.attributes.type}] ${x.attributes.environment_variable_name} (${x.attributes.comment})`,
+          value: x.id,
+        }
+      })
+      const credentialsIdsToDelete = await multiSelect.select({
+        message: 'select',
+        options: choices,
+      })
+
+      if (
+        await confirm({
+          message: `Are you sure you want to delete credentials ${credentialsIdsToDelete.join(',')} ?`,
         })
+      ) {
+        for (const credentialsId of credentialsIdsToDelete) {
+          this.log(ux.colorize('blue', `Deleting credentials ${credentialsId}`))
+          const credential = await getCredentialForDeployment(tenantId, installId, deploymentId, credentialsId)
+          if (credential.data.relationships && credential.data.relationships.broker_connections.length > 0) {
+            this.log(
+              ux.colorize(
+                'red',
+                `Cannot delete ${credentialsId}. In use by ${credential.data.relationships.broker_connections.length} connection${credential.data.relationships.broker_connections.length > 1 ? 's' : ''} (${credential.data.relationships.broker_connections.map((x) => x.data.id).join(',')}). Skipping.`,
+              ),
+            )
+            continue
+          } else {
+            await deleteCredentials(tenantId, installId, deploymentId, credentialsId)
+          }
+        }
+      } else {
+        this.log(ux.colorize('cyan', 'Canceling.'))
       }
-      const connectionIntegration = await createIntegrationForConnection(
-        tenantId,
-        selectedConnection.id,
-        selectedConnection.type,
-        orgId,
-        integrationId,
-      )
-      if (connectionIntegration.errors) {
-        this.error(ux.colorize('red', JSON.stringify(connectionIntegration.errors)))
-      }
-      this.log(
-        ux.colorize(
-          'cyan',
-          `Connection ${connectionIntegration.data.id} (type: ${selectedConnection.type}) integrated with integration ${integrationId} on org ${orgId}.`,
-        ),
-      )
-      this.log(ux.colorize('red', 'Connection Integrate Workflow completed.'))
+
+      this.log(ux.colorize('red', 'Credentials Deletion Workflow completed.'))
     } catch (error: any) {
       if (error.name === 'ExitPromptError') {
         this.log(ux.colorize('red', 'Goodbye.'))
