@@ -8,7 +8,7 @@ import {isValidUUID} from '../../utils/validation.js'
 import {BaseCommand} from '../../base-command.js'
 import {connectionTypes, flagConnectionMapping} from '../../command-helpers/connections/type-params-mapping.js'
 import {captureConnectionParams} from '../../command-helpers/connections/parameters-capture.js'
-import {createConnectionForDeployment} from '../../api/connections.js'
+import {createConnectionForDeployment, getConnectionsForDeployment} from '../../api/connections.js'
 
 interface SetupParameters {
   installId: string
@@ -125,11 +125,17 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     deploymentId: DeploymentId,
     connectionType: string,
   ): Promise<ConnectionId> {
+    const existingConnections = await getConnectionsForDeployment(tenantID, installId, deploymentId)
     const regex = /^[\w-]+$/ // Any word character. Avoiding problems that way.
     let connectionFriendlyName = await input({message: 'Enter a human friendly name for your connection.'})
-    if (!regex.test(connectionFriendlyName)) {
+    while (!regex.test(connectionFriendlyName)) {
       connectionFriendlyName = await input({
         message: 'Please use only [a-Z0-9_-]. Enter a human friendly name for your connection.',
+      })
+    }
+    while (existingConnections.data.map((x) => x.attributes.name).includes(connectionFriendlyName)) {
+      connectionFriendlyName = await input({
+        message: 'Name is already in use. Please enter a unique human friendly name for your connection.',
       })
     }
     const params = await captureConnectionParams(tenantID, installId, deploymentId, connectionType)
