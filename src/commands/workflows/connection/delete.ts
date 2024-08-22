@@ -5,7 +5,7 @@ import {getAppInstalledOnOrgId} from '../../../workflows/apps.js'
 import {getDeployments} from '../../../api/deployments.js'
 import {isValidUUID} from '../../../utils/validation.js'
 import {BaseCommand} from '../../../base-command.js'
-import {getConnectionsForDeployment} from '../../../api/connections.js'
+import {deleteConnectionForDeployment, getConnectionsForDeployment} from '../../../api/connections.js'
 import {deleteIntegrationsForConnection, getIntegrationsForConnection} from '../../../api/integrations.js'
 import * as multiSelect from 'inquirer-select-pro'
 
@@ -27,7 +27,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker -  Connection Disconnect Integration(s) workflow'
+  static description = 'Universal Broker -  Connection Deletion workflow'
 
   static examples = [
     `[with exported TENANT_ID,INSTALL_ID]`,
@@ -126,39 +126,25 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
     // this.log(ux.colorize('cyan', `Let's create a ${connectionType} connection now.\n`))
     const selectedConnection = await this.selectConnection(tenantId, installId, deploymentId)
-    this.log(
-      ux.colorize(
-        'cyan',
-        `Selected connection id ${selectedConnection.id}. Ready to configure integrations to use this connection.\n`,
-      ),
-    )
-    const integrationsForConnectionId = await getIntegrationsForConnection(tenantId, selectedConnection.id)
-    const choices = integrationsForConnectionId.data.map((x) => {
-      return {name: `[Type: ${x.integration_type}] in ${x.org_id} (integr ${x.id})`, value: x.id}
-    })
-    const integrationsIdsToDisconnect = await multiSelect.select({
-      message: 'select',
-      options: choices,
-    })
+    const connectionIntegration = await getIntegrationsForConnection(tenantId, selectedConnection.id)
+    if (connectionIntegration.data.length > 0) {
+      this.error(
+        `Please disconnect connection integration(s) first (connection disconnect workflow). Connection is used by org${connectionIntegration.data.length > 1 ? 's' : ''} ${connectionIntegration.data.map((x) => x.org_id).join(',')}.`,
+      )
+    }
+    this.log(ux.colorize('cyan', `Selected connection id ${selectedConnection.id}. Ready to delete connection.\n`))
     if (
       await confirm({
-        message: `Are you sure you want to disconnect integration${integrationsIdsToDisconnect.length > 1 ? 's' : ''} ${integrationsIdsToDisconnect.join(',')} ?\n Doing so will interrupt service for these integrations.`,
+        message: `Are you sure you want to delete connection ${selectedConnection.id} ?`,
       })
     ) {
-      for (const integrationId of integrationsIdsToDisconnect) {
-        this.log(ux.colorize('blue', `Disconnecting integration ${integrationId}`))
-        await deleteIntegrationsForConnection(
-          tenantId,
-          selectedConnection.id,
-          integrationsForConnectionId.data.find((x) => x.id === integrationId)!.org_id,
-          integrationId,
-        )
-      }
+      this.log(ux.colorize('blue', `Deleting connection ${selectedConnection.id}`))
+      await deleteConnectionForDeployment(tenantId, installId, deploymentId, selectedConnection.id)
     } else {
       this.log(ux.colorize('cyan', 'Canceling.'))
     }
 
-    this.log(ux.colorize('red', 'Connection Integrate Workflow completed.'))
+    this.log(ux.colorize('red', 'Connection Deletion Workflow completed.'))
     return JSON.stringify('')
   }
 }
