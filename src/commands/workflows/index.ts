@@ -1,23 +1,25 @@
-import {Command, ux} from '@oclif/core'
-import {commonApiRelatedArgs, commonUniversalBrokerArgs, getCommonIds} from '../../common/args.js'
-import {input, confirm, number} from '@inquirer/prompts'
+import {ux} from '@oclif/core'
+import {commonApiRelatedArgs, commonUniversalBrokerArgs} from '../../common/args.js'
+import {input, confirm, number, select} from '@inquirer/prompts'
 import {getAppInstalledOnOrgId, installAppsWorfklow} from '../../workflows/apps.js'
-import {
-  createDeployment,
-  DeploymentAttributes,
-  DeploymentResponse,
-  DeploymentResponseData,
-  getDeployments,
-} from '../../api/deployments.js'
-import {printFormattedJSON, printIndexedFormattedJSON} from '../../utils/display.js'
+import {createDeployment, DeploymentAttributes, DeploymentResponse, getDeployments} from '../../api/deployments.js'
+import {printIndexedFormattedJSON} from '../../utils/display.js'
 import {isValidUUID} from '../../utils/validation.js'
 import {BaseCommand} from '../../base-command.js'
+import {connectionTypes, flagConnectionMapping} from '../../command-helpers/connections/type-params-mapping.js'
+import {captureConnectionParams} from '../../command-helpers/connections/parameters-capture.js'
+import {createConnectionForDeployment} from '../../api/connections.js'
 
 interface SetupParameters {
   installId: string
   tenantId: string
   appInstalledOnOrgId: string
 }
+
+type TenantId = string
+type InstallId = string
+type DeploymentId = string
+type ConnectionId = string
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -84,13 +86,11 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     return deployment
   }
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', Workflows.description))
-
-    const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
-
-    this.log(`Now using Tenant Id ${tenantId} and Install Id ${installId}`)
-
+  async setupOrSelectDeployment(
+    tenantId: string,
+    installId: string,
+    appInstalledOnOrgId: string,
+  ): Promise<DeploymentId> {
     const deployments = await getDeployments(tenantId, installId)
     let deploymentId
     if (deployments.errors) {
@@ -104,22 +104,71 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         )
       }
     } else if (deployments.data) {
-      if (deployments.data && deployments.data.length === 1) {
-        deploymentId = deployments.data[0].id
-      } else {
-        this.log(printIndexedFormattedJSON(deployments.data))
-        const deploymentIndex = await number({
-          message: 'Which deployment do you want to use? [1]',
-          default: 1,
-          min: 1,
-          max: deployments.data!.length + 1,
-        })
-        deploymentId = deployments.data![deploymentIndex! - 1].id
-      }
+      deploymentId =
+        deployments.data.length === 1
+          ? deployments.data[0].id
+          : await select({
+              message: 'Which deployment do you want to use?',
+              choices: deployments.data.map((x) => {
+                return {id: x.id, value: x.id, description: `metadata: ${JSON.stringify(x.attributes.metadata)}`}
+              }),
+            })
     } else {
       this.error('Unexpected error in deployment selection.')
     }
-    this.log(`Using Deployment ${deploymentId}`)
+    return deploymentId
+  }
+
+  async createNewConnection(
+    tenantID: TenantId,
+    installId: InstallId,
+    deploymentId: DeploymentId,
+    connectionType: string,
+  ): Promise<ConnectionId> {
+    const regex = /^[\w-]+$/ // Any word character. Avoiding problems that way.
+    let connectionFriendlyName = await input({message: 'Enter a human friendly name for your connection.'})
+    if (!regex.test(connectionFriendlyName)) {
+      connectionFriendlyName = await input({
+        message: 'Please use only [a-Z0-9_-]. Enter a human friendly name for your connection.',
+      })
+    }
+    const params = await captureConnectionParams(tenantID, installId, deploymentId, connectionType)
+    const newConnection = await createConnectionForDeployment(
+      tenantID,
+      installId,
+      deploymentId,
+      connectionFriendlyName,
+      connectionType,
+      params,
+    )
+    return newConnection.data.id
+  }
+
+  async run(): Promise<string> {
+    this.log('\n' + ux.colorize('red', Workflows.description))
+
+    const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
+
+    this.log(ux.colorize('cyan', `Now using Tenant Id ${tenantId} and Install Id ${installId}.\n`))
+
+    const deploymentId = await this.setupOrSelectDeployment(tenantId, installId, appInstalledOnOrgId)
+    this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
+
+    const connectionType = await select({
+      message: 'Which connection type do you want to create?',
+      choices: connectionTypes.map((x) => {
+        return {id: x, value: x}
+      }),
+      pageSize: connectionTypes.length,
+    })
+    this.log(ux.colorize('cyan', `Let's create a ${connectionType} connection now.\n`))
+    const connectionId = await this.createNewConnection(tenantId, installId, deploymentId, connectionType)
+    this.log(
+      ux.colorize(
+        'cyan',
+        `Connection created with id ${connectionId}. Ready to configure integrations to use this connection.\n`,
+      ),
+    )
     return JSON.stringify('')
   }
 }

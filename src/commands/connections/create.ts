@@ -46,7 +46,7 @@ export default class Connections extends Command {
       flags.type,
       attributes,
     )
-    const connectionResponse = JSON.parse(connection).data
+    const connectionResponse = connection.data
 
     this.log(
       ux.colorize(
