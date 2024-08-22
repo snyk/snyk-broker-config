@@ -3,7 +3,7 @@ import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
 import {createLogger} from '../utils/logger.js'
-import {IntegrationsResponse} from './types.js'
+import {IntegrationResponse, IntegrationsResponse} from './types.js'
 
 const logger = createLogger('snyk-broker-config')
 
@@ -54,7 +54,7 @@ export const createIntegrationForConnection = async (
   type: string,
   orgId: string,
   integrationId?: string,
-) => {
+): Promise<IntegrationResponse> => {
   const headers = {...commonHeaders, ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/connections/${connectionId}/orgs/${orgId}/integration`
   const config = getConfig()
@@ -75,5 +75,5 @@ export const createIntegrationForConnection = async (
   }
   const response = await makeRequest(req)
   logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
-  return JSON.parse(response.body) as IntegrationsResponse
+  return JSON.parse(response.body) as IntegrationResponse
 }

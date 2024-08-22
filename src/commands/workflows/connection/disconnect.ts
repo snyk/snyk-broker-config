@@ -5,9 +5,9 @@ import {getAppInstalledOnOrgId} from '../../../workflows/apps.js'
 import {getDeployments} from '../../../api/deployments.js'
 import {isValidUUID} from '../../../utils/validation.js'
 import {BaseCommand} from '../../../base-command.js'
-import {nonSourceIntegrations} from '../../../command-helpers/connections/type-params-mapping.js'
 import {getConnectionsForDeployment} from '../../../api/connections.js'
-import {createIntegrationForConnection} from '../../../api/integrations.js'
+import {deleteIntegrationsForConnection, getIntegrationsForConnection} from '../../../api/integrations.js'
+import * as multiSelect from 'inquirer-select-pro'
 
 interface SetupParameters {
   installId: string
@@ -27,7 +27,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker - Connection Create Integration(s) workflow'
+  static description = 'Universal Broker -  Connection Disconnect Integration(s) workflow'
 
   static examples = [
     `[with exported TENANT_ID,INSTALL_ID]`,
@@ -66,7 +66,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     return {installId, tenantId, appInstalledOnOrgId}
   }
 
-  async selectDeployment(tenantId: string, installId: string, appInstalledOnOrgId: string): Promise<DeploymentId> {
+  async selectDeployment(tenantId: string, installId: string, _appInstalledOnOrgId: string): Promise<DeploymentId> {
     const deployments = await getDeployments(tenantId, installId)
     let deploymentId
     if (deployments.errors) {
@@ -129,29 +129,24 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         `Selected connection id ${selectedConnection.id}. Ready to configure integrations to use this connection.\n`,
       ),
     )
-    const orgId = await input({message: 'Enter the OrgID you want to integrate.'})
-    let integrationId
-    if (!nonSourceIntegrations.has(selectedConnection.type)) {
-      integrationId = await input({
-        message: `Enter the integrationID you want to integrate. Must be of type ${selectedConnection.type}`,
-      })
+    const integrationsForConnectionId = await getIntegrationsForConnection(tenantId, selectedConnection.id)
+    const choices = integrationsForConnectionId.data.map((x) => {
+      return {name: `[Type: ${x.integration_type}] in ${x.org_id} (integr ${x.id})`, value: x.id}
+    })
+    const integrationsIdsToDisconnect = await multiSelect.select({
+      message: 'select',
+      options: choices,
+    })
+    for (const integrationId of integrationsIdsToDisconnect) {
+      this.log(ux.colorize('blue', `Disconnecting integration ${integrationId}`))
+      await deleteIntegrationsForConnection(
+        tenantId,
+        selectedConnection.id,
+        integrationsForConnectionId.data.find((x) => x.id === integrationId)!.org_id,
+        integrationId,
+      )
     }
-    const connectionIntegration = await createIntegrationForConnection(
-      tenantId,
-      selectedConnection.id,
-      selectedConnection.type,
-      orgId,
-      integrationId,
-    )
-    if (connectionIntegration.errors) {
-      this.error(ux.colorize('red', JSON.stringify(connectionIntegration.errors)))
-    }
-    this.log(
-      ux.colorize(
-        'cyan',
-        `Connection ${connectionIntegration.data.id} (type: ${selectedConnection.type}) integrated with integration ${integrationId} on org ${orgId}.`,
-      ),
-    )
+
     this.log(ux.colorize('red', 'Connection Integrate Workflow completed.'))
     return JSON.stringify('')
   }

@@ -1,12 +1,11 @@
 import {ux} from '@oclif/core'
 import {commonApiRelatedArgs, commonUniversalBrokerArgs} from '../../../common/args.js'
-import {input, confirm, number, select} from '@inquirer/prompts'
+import {input, confirm, select} from '@inquirer/prompts'
 import {getAppInstalledOnOrgId, installAppsWorfklow} from '../../../workflows/apps.js'
 import {createDeployment, DeploymentAttributes, DeploymentResponse, getDeployments} from '../../../api/deployments.js'
-import {printIndexedFormattedJSON} from '../../../utils/display.js'
 import {isValidUUID} from '../../../utils/validation.js'
 import {BaseCommand} from '../../../base-command.js'
-import {connectionTypes, flagConnectionMapping} from '../../../command-helpers/connections/type-params-mapping.js'
+import {connectionTypes} from '../../../command-helpers/connections/type-params-mapping.js'
 import {captureConnectionParams} from '../../../command-helpers/connections/parameters-capture.js'
 import {createConnectionForDeployment, getConnectionsForDeployment} from '../../../api/connections.js'
 
@@ -28,7 +27,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker - workflows'
+  static description = 'Universal Broker - Create Connection Workflow'
 
   static examples = [
     `[with exported TENANT_ID,INSTALL_ID]`,
