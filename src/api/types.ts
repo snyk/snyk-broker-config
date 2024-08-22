@@ -85,3 +85,15 @@ export interface ConnectionResponse {
     next?: string
   }
 }
+
+export interface ConnectionsResponse {
+  data: ConnectionResponseData[]
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
+}
