@@ -94,6 +94,9 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     deploymentId: DeploymentId,
   ): Promise<ConnectionSelection> {
     const existingConnections = await getConnectionsForDeployment(tenantID, installId, deploymentId)
+    if (existingConnections.data.length === 0) {
+      this.error('No connection found.')
+    }
     const selectedConnection =
       existingConnections.data.length === 1
         ? existingConnections.data[0].id
