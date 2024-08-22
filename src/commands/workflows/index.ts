@@ -6,13 +6,20 @@ import {createDeployment, DeploymentAttributes, DeploymentResponse, getDeploymen
 import {printIndexedFormattedJSON} from '../../utils/display.js'
 import {isValidUUID} from '../../utils/validation.js'
 import {BaseCommand} from '../../base-command.js'
+import {connectionTypes, flagConnectionMapping} from '../../command-helpers/connections/type-params-mapping.js'
+import {captureConnectionParams} from '../../command-helpers/connections/parameters-capture.js'
+import {createConnectionForDeployment} from '../../api/connections.js'
 
 interface SetupParameters {
   installId: string
   tenantId: string
   appInstalledOnOrgId: string
 }
+
+type TenantId = string
+type InstallId = string
 type DeploymentId = string
+type ConnectionId = string
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -112,6 +119,31 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     return deploymentId
   }
 
+  async createNewConnection(
+    tenantID: TenantId,
+    installId: InstallId,
+    deploymentId: DeploymentId,
+    connectionType: string,
+  ): Promise<ConnectionId> {
+    const regex = /^[\w-]+$/ // Any word character. Avoiding problems that way.
+    let connectionFriendlyName = await input({message: 'Enter a human friendly name for your connection.'})
+    if (!regex.test(connectionFriendlyName)) {
+      connectionFriendlyName = await input({
+        message: 'Please use only [a-Z0-9_-]. Enter a human friendly name for your connection.',
+      })
+    }
+    const params = await captureConnectionParams(tenantID, installId, deploymentId, connectionType)
+    const newConnection = await createConnectionForDeployment(
+      tenantID,
+      installId,
+      deploymentId,
+      connectionFriendlyName,
+      connectionType,
+      params,
+    )
+    return newConnection.data.id
+  }
+
   async run(): Promise<string> {
     this.log('\n' + ux.colorize('red', Workflows.description))
 
@@ -121,6 +153,22 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
     const deploymentId = await this.setupOrSelectDeployment(tenantId, installId, appInstalledOnOrgId)
     this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
+
+    const connectionType = await select({
+      message: 'Which connection type do you want to create?',
+      choices: connectionTypes.map((x) => {
+        return {id: x, value: x}
+      }),
+      pageSize: connectionTypes.length,
+    })
+    this.log(ux.colorize('cyan', `Let's create a ${connectionType} connection now.\n`))
+    const connectionId = await this.createNewConnection(tenantId, installId, deploymentId, connectionType)
+    this.log(
+      ux.colorize(
+        'cyan',
+        `Connection created with id ${connectionId}. Ready to configure integrations to use this connection.\n`,
+      ),
+    )
     return JSON.stringify('')
   }
 }

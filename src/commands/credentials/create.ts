@@ -7,8 +7,9 @@ import {
 } from '../../common/args.js'
 import {credentialsData} from '../../command-helpers/credentials/flags.js'
 import {printFormattedJSON} from '../../utils/display.js'
-import {CredentialsAttributes, createCredentials} from '../../api/credentials.js'
+import {createCredentials} from '../../api/credentials.js'
 import {BaseCommand} from '../../base-command.js'
+import {CredentialsAttributes} from '../../api/types.js'
 
 export default class Credentials extends BaseCommand<typeof Credentials> {
   static args = {
@@ -46,7 +47,7 @@ export default class Credentials extends BaseCommand<typeof Credentials> {
     }
 
     const deployment = await createCredentials(tenantId, installId, args.deploymentId, attributes)
-    const deploymentResponse = JSON.parse(deployment).data as Array<any>
+    const deploymentResponse = deployment.data
     this.log(
       ux.colorize(
         'cyan',

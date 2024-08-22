@@ -32,3 +32,56 @@ export interface AppInstallOutput {
   client_id: string
   client_secret: string
 }
+
+export interface CredentialsAttributes {
+  comment: string
+  environment_variable_name: string
+  type: string
+}
+export interface CredentialsListResponseData {
+  id: string
+  type: string
+  attributes: CredentialsAttributes
+}
+export interface CredentialsListResponse {
+  data: CredentialsListResponseData[]
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
+}
+
+export interface NewCredentialsResponse {
+  data: CredentialsListResponseData[]
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
+}
+
+export interface ConnectionsAttributes {}
+export interface ConnectionResponseData {
+  id: string
+  type: string
+  attributes: any
+}
+
+export interface ConnectionResponse {
+  data: ConnectionResponseData
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
+}

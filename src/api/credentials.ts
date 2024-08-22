@@ -3,14 +3,9 @@ import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
 import {createLogger} from '../utils/logger.js'
+import {CredentialsAttributes, CredentialsListResponse, NewCredentialsResponse} from './types.js'
 
 const logger = createLogger('snyk-broker-config')
-
-export interface CredentialsAttributes {
-  comment: string
-  environment_variable_name: string
-  type: string
-}
 
 export const getCredentialsForDeployment = async (tenantId: string, installId: string, deploymentId: string) => {
   const headers = {...commonHeaders, ...getAuthHeader()}
@@ -24,7 +19,7 @@ export const getCredentialsForDeployment = async (tenantId: string, installId: s
   }
   const response = await makeRequest(req)
   logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
-  return response.body
+  return JSON.parse(response.body) as CredentialsListResponse
 }
 
 export const createCredentials = async (
@@ -50,7 +45,7 @@ export const createCredentials = async (
   }
   const response = await makeRequest(req)
   logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
-  return response.body
+  return JSON.parse(response.body) as NewCredentialsResponse
 }
 
 export const deleteCredentials = async (

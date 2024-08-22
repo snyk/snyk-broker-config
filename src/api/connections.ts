@@ -3,6 +3,7 @@ import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
 import {createLogger} from '../utils/logger.js'
+import {ConnectionResponse} from './types.js'
 
 const logger = createLogger('snyk-broker-config')
 
@@ -56,7 +57,7 @@ export const createConnectionForDeployment = async (
   }
   const response = await makeRequest(req)
   logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
-  return response.body
+  return JSON.parse(response.body) as ConnectionResponse
 }
 
 export const updateConnectionForDeployment = async (

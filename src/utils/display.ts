@@ -3,7 +3,6 @@ import {ux} from '@oclif/core/ux'
 export function printFormattedJSON(obj: any, indent: number = 2): string {
   let stringOutput = ''
   const indentation = ' '.repeat(indent)
-
   for (const key in obj) {
     if (typeof obj[key] === 'object' && !Array.isArray(obj[key]) && obj[key] !== null) {
       stringOutput += `${indentation}${key === 'id' ? `-` : ' '} ${ux.colorize('yellow', key)}:\n`

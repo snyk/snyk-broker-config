@@ -35,7 +35,7 @@ export default class Credentials extends BaseCommand<typeof Credentials> {
     const {args} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds(args)
     const credentials = await getCredentialsForDeployment(tenantId, installId, args.deploymentId!)
-    const credentialsList = JSON.parse(credentials).data as Array<any>
+    const credentialsList = credentials.data
 
     this.log(
       ux.colorize(
@@ -43,9 +43,8 @@ export default class Credentials extends BaseCommand<typeof Credentials> {
         `Getting Universal Broker Credentials for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,
       ),
     )
-
     for (const credential of credentialsList) {
-      printFormattedJSON(credential)
+      this.log(printFormattedJSON(credential))
     }
     this.log(`Total = ${credentialsList.length}`)
 

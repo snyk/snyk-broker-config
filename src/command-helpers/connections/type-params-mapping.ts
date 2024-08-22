@@ -1,39 +1,48 @@
 import {Flags} from '@oclif/core'
 import {FlagProps, FlagRelationship, Relationship} from './types.js'
 
-// const craConfigType1Types = new Set([
-//   'acr',
-//   'artifactory-cr',
-//   'docker-hub',
-//   'gcr',
-//   'github-cr',
-//   'gitlab-cr',
-//   'google-artifact-cr',
-//   'harbor-cr',
-//   'nexus-cr',
-//   'quay-cr',
-// ])
-// const scmTypes = new Set([
-//   'azure-repos',
-//   'bitbucket-server',
-//   'github',
-//   'github-enterprise',
-//   'github-server-app',
-//   'gitlab',
-// ])
+const craConfigType1Types = new Set([
+  'acr',
+  'artifactory-cr',
+  'docker-hub',
+  'gcr',
+  'github-cr',
+  'gitlab-cr',
+  'google-artifact-cr',
+  'harbor-cr',
+  'nexus-cr',
+  'quay-cr',
+])
+const scmTypes = new Set([
+  'azure-repos',
+  'bitbucket-server',
+  'github',
+  'github-enterprise',
+  'github-server-app',
+  'gitlab',
+])
 
-// const connectionTypes = [
-//   ...craConfigType1Types.values(),
-//   ...scmTypes.values(),
-//   'apprisk',
-//   'artifactory',
-//   'jira',
-//   'nexus',
-//   'digitalocean-cr',
-//   'ecr',
-// ]
+export const connectionTypes = [
+  ...craConfigType1Types.values(),
+  ...scmTypes.values(),
+  'apprisk',
+  'artifactory',
+  'jira',
+  'nexus',
+  'digitalocean-cr',
+  'ecr',
+]
+export interface TypeMapping {
+  [key: string]: {
+    [key: string]: {
+      description: string
+      sensitive?: boolean
+      input?: string
+    }
+  }
+}
 
-const flagConnectionMapping = {
+export const flagConnectionMapping: TypeMapping = {
   apprisk: {
     broker_client_url: {description: 'Broker Client Url'},
     checkmarx: {description: 'Checkmarx hostname'},
