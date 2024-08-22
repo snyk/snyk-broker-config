@@ -115,3 +115,15 @@ export interface IntegrationsResponse {
     next?: string
   }
 }
+export interface IntegrationResponse {
+  data: IntegrationsResponseData
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
+  errors?: any
+}
