@@ -1,8 +1,16 @@
 import {ux} from '@oclif/core/ux'
 
-export function printFormattedJSON(obj: any, indent: number = 2): string {
+export function printFormattedJSON(objectReceived: any, indent: number = 2): string {
   let stringOutput = ''
   const indentation = ' '.repeat(indent)
+  let obj = structuredClone(objectReceived)
+  if (obj.id) {
+    const objId = obj.id
+    delete obj.id
+    const objWithIdFirst = {id: objId, ...obj}
+    obj = objWithIdFirst
+  }
+
   for (const key in obj) {
     if (typeof obj[key] === 'object' && !Array.isArray(obj[key]) && obj[key] !== null) {
       stringOutput += `${indentation}${key === 'id' ? `-` : ' '} ${ux.colorize('yellow', key)}:\n`

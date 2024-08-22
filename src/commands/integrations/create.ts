@@ -43,7 +43,7 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
       args.orgId,
       args.integrationId ?? null,
     )
-    const integrationResponse = JSON.parse(integration).data
+    const integrationResponse = integration
     this.log(
       ux.colorize(
         'cyan',

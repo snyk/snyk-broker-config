@@ -1,14 +1,14 @@
 import {ux} from '@oclif/core'
-import {commonApiRelatedArgs, commonUniversalBrokerArgs} from '../../common/args.js'
+import {commonApiRelatedArgs, commonUniversalBrokerArgs} from '../../../common/args.js'
 import {input, confirm, number, select} from '@inquirer/prompts'
-import {getAppInstalledOnOrgId, installAppsWorfklow} from '../../workflows/apps.js'
-import {createDeployment, DeploymentAttributes, DeploymentResponse, getDeployments} from '../../api/deployments.js'
-import {printIndexedFormattedJSON} from '../../utils/display.js'
-import {isValidUUID} from '../../utils/validation.js'
-import {BaseCommand} from '../../base-command.js'
-import {connectionTypes, flagConnectionMapping} from '../../command-helpers/connections/type-params-mapping.js'
-import {captureConnectionParams} from '../../command-helpers/connections/parameters-capture.js'
-import {createConnectionForDeployment, getConnectionsForDeployment} from '../../api/connections.js'
+import {getAppInstalledOnOrgId, installAppsWorfklow} from '../../../workflows/apps.js'
+import {createDeployment, DeploymentAttributes, DeploymentResponse, getDeployments} from '../../../api/deployments.js'
+import {printIndexedFormattedJSON} from '../../../utils/display.js'
+import {isValidUUID} from '../../../utils/validation.js'
+import {BaseCommand} from '../../../base-command.js'
+import {connectionTypes, flagConnectionMapping} from '../../../command-helpers/connections/type-params-mapping.js'
+import {captureConnectionParams} from '../../../command-helpers/connections/parameters-capture.js'
+import {createConnectionForDeployment, getConnectionsForDeployment} from '../../../api/connections.js'
 
 interface SetupParameters {
   installId: string
