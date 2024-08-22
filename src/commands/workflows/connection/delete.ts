@@ -6,8 +6,7 @@ import {getDeployments} from '../../../api/deployments.js'
 import {isValidUUID} from '../../../utils/validation.js'
 import {BaseCommand} from '../../../base-command.js'
 import {deleteConnectionForDeployment, getConnectionsForDeployment} from '../../../api/connections.js'
-import {deleteIntegrationsForConnection, getIntegrationsForConnection} from '../../../api/integrations.js'
-import * as multiSelect from 'inquirer-select-pro'
+import {getIntegrationsForConnection} from '../../../api/integrations.js'
 
 interface SetupParameters {
   installId: string
@@ -115,36 +114,45 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
   }
 
   async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', Workflows.description))
+    try {
+      this.log('\n' + ux.colorize('red', Workflows.description))
 
-    const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
+      const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
 
-    this.log(ux.colorize('cyan', `Now using Tenant Id ${tenantId} and Install Id ${installId}.\n`))
+      this.log(ux.colorize('cyan', `Now using Tenant Id ${tenantId} and Install Id ${installId}.\n`))
 
-    const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
-    this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
+      const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
+      this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
 
-    // this.log(ux.colorize('cyan', `Let's create a ${connectionType} connection now.\n`))
-    const selectedConnection = await this.selectConnection(tenantId, installId, deploymentId)
-    const connectionIntegration = await getIntegrationsForConnection(tenantId, selectedConnection.id)
-    if (connectionIntegration.data.length > 0) {
-      this.error(
-        `Please disconnect connection integration(s) first (connection disconnect workflow). Connection is used by org${connectionIntegration.data.length > 1 ? 's' : ''} ${connectionIntegration.data.map((x) => x.org_id).join(',')}.`,
-      )
+      // this.log(ux.colorize('cyan', `Let's create a ${connectionType} connection now.\n`))
+      const selectedConnection = await this.selectConnection(tenantId, installId, deploymentId)
+      const connectionIntegration = await getIntegrationsForConnection(tenantId, selectedConnection.id)
+      if (connectionIntegration.data.length > 0) {
+        this.error(
+          `Please disconnect connection integration(s) first (connection disconnect workflow). Connection is used by org${connectionIntegration.data.length > 1 ? 's' : ''} ${connectionIntegration.data.map((x) => x.org_id).join(',')}.`,
+        )
+      }
+      this.log(ux.colorize('cyan', `Selected connection id ${selectedConnection.id}. Ready to delete connection.\n`))
+      if (
+        await confirm({
+          message: `Are you sure you want to delete connection ${selectedConnection.id} ?`,
+        })
+      ) {
+        this.log(ux.colorize('blue', `Deleting connection ${selectedConnection.id}`))
+        await deleteConnectionForDeployment(tenantId, installId, deploymentId, selectedConnection.id)
+      } else {
+        this.log(ux.colorize('cyan', 'Canceling.'))
+      }
+
+      this.log(ux.colorize('red', 'Connection Deletion Workflow completed.'))
+    } catch (error: any) {
+      if (error.name === 'ExitPromptError') {
+        this.log(ux.colorize('red', 'Goodbye.'))
+      } else {
+        // Handle other errors or rethrow
+        throw error
+      }
     }
-    this.log(ux.colorize('cyan', `Selected connection id ${selectedConnection.id}. Ready to delete connection.\n`))
-    if (
-      await confirm({
-        message: `Are you sure you want to delete connection ${selectedConnection.id} ?`,
-      })
-    ) {
-      this.log(ux.colorize('blue', `Deleting connection ${selectedConnection.id}`))
-      await deleteConnectionForDeployment(tenantId, installId, deploymentId, selectedConnection.id)
-    } else {
-      this.log(ux.colorize('cyan', 'Canceling.'))
-    }
-
-    this.log(ux.colorize('red', 'Connection Deletion Workflow completed.'))
     return JSON.stringify('')
   }
 }

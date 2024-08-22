@@ -3,7 +3,7 @@ import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
 import {createLogger} from '../utils/logger.js'
-import {CredentialsAttributes, CredentialsListResponse, NewCredentialsResponse} from './types.js'
+import {CredentialsAttributes, CredentialsListResponse, CredentialsResponse, NewCredentialsResponse} from './types.js'
 
 const logger = createLogger('snyk-broker-config')
 
@@ -20,6 +20,26 @@ export const getCredentialsForDeployment = async (tenantId: string, installId: s
   const response = await makeRequest(req)
   logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
   return JSON.parse(response.body) as CredentialsListResponse
+}
+
+export const getCredentialForDeployment = async (
+  tenantId: string,
+  installId: string,
+  deploymentId: string,
+  credentialId: string,
+) => {
+  const headers = {...commonHeaders, ...getAuthHeader()}
+  const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/credentials/${credentialId}`
+  const config = getConfig()
+
+  const req: HttpRequest = {
+    url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
+    headers: headers,
+    method: 'GET',
+  }
+  const response = await makeRequest(req)
+  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  return JSON.parse(response.body) as CredentialsResponse
 }
 
 export const createCredentials = async (
@@ -65,7 +85,6 @@ export const deleteCredentials = async (
   }
   const response = await makeRequest(req)
   logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
-
   return response.statusCode
 }
 

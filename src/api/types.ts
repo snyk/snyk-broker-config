@@ -42,6 +42,27 @@ export interface CredentialsListResponseData {
   id: string
   type: string
   attributes: CredentialsAttributes
+  relationships?: {
+    broker_connections: BrokerConnectionRelationshipData[]
+  }
+}
+export interface BrokerConnectionRelationshipData {
+  data: {
+    id: string
+    type: string
+  }
+}
+
+export interface CredentialsResponse {
+  data: CredentialsListResponseData
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
 }
 export interface CredentialsListResponse {
   data: CredentialsListResponseData[]
