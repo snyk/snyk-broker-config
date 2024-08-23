@@ -101,8 +101,8 @@ List all snyk-broker-config commands.
 
 ```
 USAGE
-  $ snyk-broker-config commands [--json] [-c id|plugin|summary|type... |
-    --tree] [--deprecated] [-x | ] [--hidden] [--no-truncate | ] [--sort id|plugin|summary|type | ]
+  $ snyk-broker-config commands [--json] [-c id|plugin|summary|type... | --tree] [--deprecated] [-x | ]
+    [--hidden] [--no-truncate | ] [--sort id|plugin|summary|type | ]
 
 FLAGS
   -c, --columns=<option>...  Only show provided columns (comma-separated).
@@ -130,16 +130,15 @@ Universal Broker Connections - Create operation
 
 ```
 USAGE
-  $ snyk-broker-config connections create DEPLOYMENTID [APIURL] [APIVERSION] -t
-    <value> -n <value> [--broker_client_url <value>] [--checkmarx <value>] [--checkmarx_password <value>]
-    [--checkmarx_username <value>] [--artifactory_url <value>] [--jira <value>] [--jira_username <value>]
-    [--jira_password <value>] [--jira_pat <value>] [--base_nexus_url <value>] [--azure_repos_token <value>]
-    [--azure_repos_org <value>] [--bitbucket <value>] [--bitbucket_username <value>] [--bitbucket_password <value>]
-    [--bitbucket_pat <value>] [--github_token <value>] [--github <value>] [--github_api <value>] [--github_app_client_id
-    <value>] [--github_app_id <value>] [--github_app_installation_id <value>] [--github_app_private_pem_path <value>]
-    [--gitlab <value>] [--gitlab_token <value>] [--cr_agent_url <value>] [--cr_base <value>] [--cr_username <value>]
-    [--cr_password <value>] [--cr_token <value>] [--cr_role_arn <value>] [--cr_region <value>] [--cr_external_id
-    <value>]
+  $ snyk-broker-config connections create DEPLOYMENTID [APIURL] [APIVERSION] -t <value> -n <value> [--broker_client_url
+    <value>] [--checkmarx <value>] [--checkmarx_password <value>] [--checkmarx_username <value>] [--artifactory_url
+    <value>] [--jira <value>] [--jira_username <value>] [--jira_password <value>] [--jira_pat <value>] [--base_nexus_url
+    <value>] [--azure_repos_token <value>] [--azure_repos_org <value>] [--bitbucket <value>] [--bitbucket_username
+    <value>] [--bitbucket_password <value>] [--bitbucket_pat <value>] [--github_token <value>] [--github <value>]
+    [--github_api <value>] [--github_app_client_id <value>] [--github_app_id <value>] [--github_app_installation_id
+    <value>] [--github_app_private_pem_path <value>] [--gitlab <value>] [--gitlab_token <value>] [--cr_agent_url
+    <value>] [--cr_base <value>] [--cr_username <value>] [--cr_password <value>] [--cr_token <value>] [--cr_role_arn
+    <value>] [--cr_region <value>] [--cr_external_id <value>]
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
@@ -204,8 +203,8 @@ Universal Broker Connections - Delete operation
 
 ```
 USAGE
-  $ snyk-broker-config connections delete DEPLOYMENTID CONNECTIONID [APIURL]
-    [APIVERSION] [--json] [--log-level debug|warn|error|info|trace]
+  $ snyk-broker-config connections delete DEPLOYMENTID CONNECTIONID [APIURL] [APIVERSION] [--json] [--log-level
+    debug|warn|error|info|trace]
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
@@ -239,8 +238,8 @@ Universal Broker Connections - List operation
 
 ```
 USAGE
-  $ snyk-broker-config connections list DEPLOYMENTID [APIURL] [APIVERSION] [--json]
-    [--log-level debug|warn|error|info|trace]
+  $ snyk-broker-config connections list DEPLOYMENTID [APIURL] [APIVERSION] [--json] [--log-level
+    debug|warn|error|info|trace]
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
@@ -273,16 +272,15 @@ Universal Broker Connections - Update operation
 
 ```
 USAGE
-  $ snyk-broker-config connections update DEPLOYMENTID CONNECTIONID [APIURL]
-    [APIVERSION] -t <value> -n <value> [--broker_client_url <value>] [--checkmarx <value>] [--checkmarx_password
-    <value>] [--checkmarx_username <value>] [--artifactory_url <value>] [--jira <value>] [--jira_username <value>]
-    [--jira_password <value>] [--jira_pat <value>] [--base_nexus_url <value>] [--azure_repos_token <value>]
-    [--azure_repos_org <value>] [--bitbucket <value>] [--bitbucket_username <value>] [--bitbucket_password <value>]
-    [--bitbucket_pat <value>] [--github_token <value>] [--github <value>] [--github_api <value>] [--github_app_client_id
-    <value>] [--github_app_id <value>] [--github_app_installation_id <value>] [--github_app_private_pem_path <value>]
-    [--gitlab <value>] [--gitlab_token <value>] [--cr_agent_url <value>] [--cr_base <value>] [--cr_username <value>]
-    [--cr_password <value>] [--cr_token <value>] [--cr_role_arn <value>] [--cr_region <value>] [--cr_external_id
-    <value>]
+  $ snyk-broker-config connections update DEPLOYMENTID CONNECTIONID [APIURL] [APIVERSION] -t <value> -n <value>
+    [--broker_client_url <value>] [--checkmarx <value>] [--checkmarx_password <value>] [--checkmarx_username <value>]
+    [--artifactory_url <value>] [--jira <value>] [--jira_username <value>] [--jira_password <value>] [--jira_pat
+    <value>] [--base_nexus_url <value>] [--azure_repos_token <value>] [--azure_repos_org <value>] [--bitbucket <value>]
+    [--bitbucket_username <value>] [--bitbucket_password <value>] [--bitbucket_pat <value>] [--github_token <value>]
+    [--github <value>] [--github_api <value>] [--github_app_client_id <value>] [--github_app_id <value>]
+    [--github_app_installation_id <value>] [--github_app_private_pem_path <value>] [--gitlab <value>] [--gitlab_token
+    <value>] [--cr_agent_url <value>] [--cr_base <value>] [--cr_username <value>] [--cr_password <value>] [--cr_token
+    <value>] [--cr_role_arn <value>] [--cr_region <value>] [--cr_external_id <value>]
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
@@ -348,8 +346,8 @@ Universal Broker Credentials - Create operation
 
 ```
 USAGE
-  $ snyk-broker-config credentials create DEPLOYMENTID [APIURL] [APIVERSION] -c
-    <value> -n <value> -t <value> [--json] [--log-level debug|warn|error|info|trace]
+  $ snyk-broker-config credentials create DEPLOYMENTID [APIURL] [APIVERSION] -c <value> -n <value> -t <value> [--json]
+    [--log-level debug|warn|error|info|trace]
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
@@ -388,8 +386,8 @@ Universal Broker Deployment Credentials - Delete operation
 
 ```
 USAGE
-  $ snyk-broker-config credentials delete DEPLOYMENTID [APIURL] [APIVERSION] -c
-    <value> [--json] [--log-level debug|warn|error|info|trace]
+  $ snyk-broker-config credentials delete DEPLOYMENTID [APIURL] [APIVERSION] -c <value> [--json] [--log-level
+    debug|warn|error|info|trace]
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
@@ -425,8 +423,8 @@ Universal Broker Deployments - List operation
 
 ```
 USAGE
-  $ snyk-broker-config credentials list DEPLOYMENTID [APIURL] [APIVERSION] [--json]
-    [--log-level debug|warn|error|info|trace]
+  $ snyk-broker-config credentials list DEPLOYMENTID [APIURL] [APIVERSION] [--json] [--log-level
+    debug|warn|error|info|trace]
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
@@ -459,8 +457,8 @@ Universal Broker Credentials - Update operation
 
 ```
 USAGE
-  $ snyk-broker-config credentials update DEPLOYMENTID [APIURL] [APIVERSION] -i
-    <value> -c <value> -n <value> -t <value> [--json] [--log-level debug|warn|error|info|trace]
+  $ snyk-broker-config credentials update DEPLOYMENTID [APIURL] [APIVERSION] -i <value> -c <value> -n <value> -t <value>
+    [--json] [--log-level debug|warn|error|info|trace]
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
@@ -500,8 +498,8 @@ Universal Broker Deployments - Create operation
 
 ```
 USAGE
-  $ snyk-broker-config deployments create APPINSTALLEDINORGID [APIURL] [APIVERSION]
-    -d <value> [--json] [--log-level debug|warn|error|info|trace]
+  $ snyk-broker-config deployments create APPINSTALLEDINORGID [APIURL] [APIVERSION] -d <value> [--json] [--log-level
+    debug|warn|error|info|trace]
 
 ARGUMENTS
   APPINSTALLEDINORGID  Broker App Installed in Org ID
@@ -538,8 +536,7 @@ Universal Broker Deployments - Delete operation
 
 ```
 USAGE
-  $ snyk-broker-config deployments delete DEPLOYMENTID [--json] [--log-level
-    debug|warn|error|info|trace]
+  $ snyk-broker-config deployments delete DEPLOYMENTID [--json] [--log-level debug|warn|error|info|trace]
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
@@ -570,8 +567,7 @@ Universal Broker Deployments - List operation
 
 ```
 USAGE
-  $ snyk-broker-config deployments list [APIURL] [APIVERSION] [--json] [--log-level
-    debug|warn|error|info|trace]
+  $ snyk-broker-config deployments list [APIURL] [APIVERSION] [--json] [--log-level debug|warn|error|info|trace]
 
 ARGUMENTS
   APIURL      [default: https://api.pre-prod.snyk.io] API Url
@@ -603,8 +599,7 @@ Universal Broker Deployments - Update operation
 
 ```
 USAGE
-  $ snyk-broker-config deployments update DEPLOYMENTID -d <value> [--json]
-    [--log-level debug|warn|error|info|trace]
+  $ snyk-broker-config deployments update DEPLOYMENTID -d <value> [--json] [--log-level debug|warn|error|info|trace]
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
@@ -659,8 +654,8 @@ Universal Broker Connections - Create operation
 
 ```
 USAGE
-  $ snyk-broker-config integrations create CONNECTIONID ORGID INTEGRATIONID TYPE
-    [APIURL] [APIVERSION] [--json] [--log-level debug|warn|error|info|trace]
+  $ snyk-broker-config integrations create CONNECTIONID ORGID INTEGRATIONID TYPE [APIURL] [APIVERSION] [--json]
+    [--log-level debug|warn|error|info|trace]
 
 ARGUMENTS
   CONNECTIONID   Connection ID
@@ -696,8 +691,8 @@ Universal Broker Connections Integrations - List operation
 
 ```
 USAGE
-  $ snyk-broker-config integrations delete CONNECTIONID ORGID INTEGRATIONID [APIURL]
-    [APIVERSION] [--json] [--log-level debug|warn|error|info|trace]
+  $ snyk-broker-config integrations delete CONNECTIONID ORGID INTEGRATIONID [APIURL] [APIVERSION] [--json] [--log-level
+    debug|warn|error|info|trace]
 
 ARGUMENTS
   CONNECTIONID   Connection ID
@@ -732,8 +727,8 @@ Universal Broker Connections Integrations - List operation
 
 ```
 USAGE
-  $ snyk-broker-config integrations list CONNECTIONID [APIURL] [APIVERSION] [--json]
-    [--log-level debug|warn|error|info|trace]
+  $ snyk-broker-config integrations list CONNECTIONID [APIURL] [APIVERSION] [--json] [--log-level
+    debug|warn|error|info|trace]
 
 ARGUMENTS
   CONNECTIONID  Connection ID
@@ -1076,7 +1071,7 @@ Universal Broker - Create Connection Workflow
 ```
 USAGE
   $ snyk-broker-config workflows connection create [APIURL] [APIVERSION] [--json] [--log-level
-    debug|warn|error|info|trace]
+  debug|warn|error|info|trace]
 
 ARGUMENTS
   APIURL      [default: https://api.pre-prod.snyk.io] API Url
@@ -1109,7 +1104,7 @@ Universal Broker -  Connection Deletion workflow
 ```
 USAGE
   $ snyk-broker-config workflows connection delete [APIURL] [APIVERSION] [--json] [--log-level
-    debug|warn|error|info|trace]
+  debug|warn|error|info|trace]
 
 ARGUMENTS
   APIURL      [default: https://api.pre-prod.snyk.io] API Url
@@ -1142,7 +1137,7 @@ Universal Broker -  Connection Disconnect Integration(s) workflow
 ```
 USAGE
   $ snyk-broker-config workflows connection disconnect [APIURL] [APIVERSION] [--json] [--log-level
-    debug|warn|error|info|trace]
+  debug|warn|error|info|trace]
 
 ARGUMENTS
   APIURL      [default: https://api.pre-prod.snyk.io] API Url
@@ -1175,7 +1170,7 @@ Universal Broker - Connection Create Integration(s) workflow
 ```
 USAGE
   $ snyk-broker-config workflows connection integrate [APIURL] [APIVERSION] [--json] [--log-level
-    debug|warn|error|info|trace]
+  debug|warn|error|info|trace]
 
 ARGUMENTS
   APIURL      [default: https://api.pre-prod.snyk.io] API Url
@@ -1208,7 +1203,7 @@ Universal Broker -  Credentials Deletion workflow
 ```
 USAGE
   $ snyk-broker-config workflows credentials delete [APIURL] [APIVERSION] [--json] [--log-level
-    debug|warn|error|info|trace]
+  debug|warn|error|info|trace]
 
 ARGUMENTS
   APIURL      [default: https://api.pre-prod.snyk.io] API Url
