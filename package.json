@@ -1,7 +1,7 @@
 {
   "name": "snyk-broker-config",
   "description": "Small utility to help with Universal Broker configuration and management",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "author": "Snyk Ltd.",
   "bin": {
     "snyk-broker-config": "./bin/run.js"
@@ -45,7 +45,8 @@
     "/bin",
     "/dist",
     "/oclif.manifest.json",
-    "/theme.json"
+    "/theme.json",
+    "/config.default.json"
   ],
   "homepage": "https://github.com/snyk/snyk-broker-config",
   "keywords": [
