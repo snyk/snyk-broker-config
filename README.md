@@ -20,7 +20,7 @@ $ npm install -g snyk-broker-config
 $ snyk-broker-config COMMAND
 running command...
 $ snyk-broker-config (--version)
-snyk-broker-config/0.0.0 linux-x64 node-v20.14.0
+snyk-broker-config/1.0.0 linux-x64 node-v20.14.0
 $ snyk-broker-config --help [COMMAND]
 USAGE
   $ snyk-broker-config COMMAND
@@ -29,9 +29,24 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`snyk-broker-config hello PERSON`](#snyk-broker-config-hello-person)
-* [`snyk-broker-config hello world`](#snyk-broker-config-hello-world)
+* [`snyk-broker-config autocomplete [SHELL]`](#snyk-broker-config-autocomplete-shell)
+* [`snyk-broker-config commands`](#snyk-broker-config-commands)
+* [`snyk-broker-config connections create DEPLOYMENTID [APIURL] [APIVERSION]`](#snyk-broker-config-connections-create-deploymentid-apiurl-apiversion)
+* [`snyk-broker-config connections delete DEPLOYMENTID CONNECTIONID [APIURL] [APIVERSION]`](#snyk-broker-config-connections-delete-deploymentid-connectionid-apiurl-apiversion)
+* [`snyk-broker-config connections list DEPLOYMENTID [APIURL] [APIVERSION]`](#snyk-broker-config-connections-list-deploymentid-apiurl-apiversion)
+* [`snyk-broker-config connections update DEPLOYMENTID CONNECTIONID [APIURL] [APIVERSION]`](#snyk-broker-config-connections-update-deploymentid-connectionid-apiurl-apiversion)
+* [`snyk-broker-config credentials create DEPLOYMENTID [APIURL] [APIVERSION]`](#snyk-broker-config-credentials-create-deploymentid-apiurl-apiversion)
+* [`snyk-broker-config credentials delete DEPLOYMENTID [APIURL] [APIVERSION]`](#snyk-broker-config-credentials-delete-deploymentid-apiurl-apiversion)
+* [`snyk-broker-config credentials list DEPLOYMENTID [APIURL] [APIVERSION]`](#snyk-broker-config-credentials-list-deploymentid-apiurl-apiversion)
+* [`snyk-broker-config credentials update DEPLOYMENTID [APIURL] [APIVERSION]`](#snyk-broker-config-credentials-update-deploymentid-apiurl-apiversion)
+* [`snyk-broker-config deployments create APPINSTALLEDINORGID [APIURL] [APIVERSION]`](#snyk-broker-config-deployments-create-appinstalledinorgid-apiurl-apiversion)
+* [`snyk-broker-config deployments delete DEPLOYMENTID`](#snyk-broker-config-deployments-delete-deploymentid)
+* [`snyk-broker-config deployments list [APIURL] [APIVERSION]`](#snyk-broker-config-deployments-list-apiurl-apiversion)
+* [`snyk-broker-config deployments update DEPLOYMENTID`](#snyk-broker-config-deployments-update-deploymentid)
 * [`snyk-broker-config help [COMMAND]`](#snyk-broker-config-help-command)
+* [`snyk-broker-config integrations create CONNECTIONID ORGID INTEGRATIONID TYPE [APIURL] [APIVERSION]`](#snyk-broker-config-integrations-create-connectionid-orgid-integrationid-type-apiurl-apiversion)
+* [`snyk-broker-config integrations delete CONNECTIONID ORGID INTEGRATIONID [APIURL] [APIVERSION]`](#snyk-broker-config-integrations-delete-connectionid-orgid-integrationid-apiurl-apiversion)
+* [`snyk-broker-config integrations list CONNECTIONID [APIURL] [APIVERSION]`](#snyk-broker-config-integrations-list-connectionid-apiurl-apiversion)
 * [`snyk-broker-config plugins`](#snyk-broker-config-plugins)
 * [`snyk-broker-config plugins add PLUGIN`](#snyk-broker-config-plugins-add-plugin)
 * [`snyk-broker-config plugins:inspect PLUGIN...`](#snyk-broker-config-pluginsinspect-plugin)
@@ -42,48 +57,581 @@ USAGE
 * [`snyk-broker-config plugins uninstall [PLUGIN]`](#snyk-broker-config-plugins-uninstall-plugin)
 * [`snyk-broker-config plugins unlink [PLUGIN]`](#snyk-broker-config-plugins-unlink-plugin)
 * [`snyk-broker-config plugins update`](#snyk-broker-config-plugins-update)
+* [`snyk-broker-config version`](#snyk-broker-config-version)
+* [`snyk-broker-config workflows connection create [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-connection-create-apiurl-apiversion)
+* [`snyk-broker-config workflows connection delete [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-connection-delete-apiurl-apiversion)
+* [`snyk-broker-config workflows connection disconnect [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-connection-disconnect-apiurl-apiversion)
+* [`snyk-broker-config workflows connection integrate [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-connection-integrate-apiurl-apiversion)
+* [`snyk-broker-config workflows credentials delete [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-credentials-delete-apiurl-apiversion)
 
-## `snyk-broker-config hello PERSON`
+## `snyk-broker-config autocomplete [SHELL]`
 
-Say hello
+Display autocomplete installation instructions.
 
 ```
 USAGE
-  $ snyk-broker-config hello PERSON -f <value>
+  $ snyk-broker-config autocomplete [SHELL] [-r]
 
 ARGUMENTS
-  PERSON  Person to say hello to
+  SHELL  (zsh|bash|powershell) Shell type
 
 FLAGS
-  -f, --from=<value>  (required) Who is saying hello
+  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
 
 DESCRIPTION
-  Say hello
+  Display autocomplete installation instructions.
 
 EXAMPLES
-  $ snyk-broker-config hello friend --from oclif
-  hello friend from oclif! (./src/commands/hello/index.ts)
+  $ snyk-broker-config autocomplete
+
+  $ snyk-broker-config autocomplete bash
+
+  $ snyk-broker-config autocomplete zsh
+
+  $ snyk-broker-config autocomplete powershell
+
+  $ snyk-broker-config autocomplete --refresh-cache
 ```
 
-_See code: [src/commands/hello/index.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0/src/commands/hello/index.ts)_
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v3.2.0/src/commands/autocomplete/index.ts)_
 
-## `snyk-broker-config hello world`
+## `snyk-broker-config commands`
 
-Say hello world
+List all snyk-broker-config commands.
 
 ```
 USAGE
-  $ snyk-broker-config hello world
+  $ snyk-broker-config commands [--json] [-c id|plugin|summary|type... |
+    --tree] [--deprecated] [-x | ] [--hidden] [--no-truncate | ] [--sort id|plugin|summary|type | ]
+
+FLAGS
+  -c, --columns=<option>...  Only show provided columns (comma-separated).
+                             <options: id|plugin|summary|type>
+  -x, --extended             Show extra columns.
+      --deprecated           Show deprecated commands.
+      --hidden               Show hidden commands.
+      --no-truncate          Do not truncate output.
+      --sort=<option>        [default: id] Property to sort by.
+                             <options: id|plugin|summary|type>
+      --tree                 Show tree of commands.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
-  Say hello world
-
-EXAMPLES
-  $ snyk-broker-config hello world
-  hello world! (./src/commands/hello/world.ts)
+  List all snyk-broker-config commands.
 ```
 
-_See code: [src/commands/hello/world.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0/src/commands/hello/world.ts)_
+_See code: [@oclif/plugin-commands](https://github.com/oclif/plugin-commands/blob/v4.0.10/src/commands/commands.ts)_
+
+## `snyk-broker-config connections create DEPLOYMENTID [APIURL] [APIVERSION]`
+
+Universal Broker Connections - Create operation
+
+```
+USAGE
+  $ snyk-broker-config connections create DEPLOYMENTID [APIURL] [APIVERSION] -t
+    <value> -n <value> [--broker_client_url <value>] [--checkmarx <value>] [--checkmarx_password <value>]
+    [--checkmarx_username <value>] [--artifactory_url <value>] [--jira <value>] [--jira_username <value>]
+    [--jira_password <value>] [--jira_pat <value>] [--base_nexus_url <value>] [--azure_repos_token <value>]
+    [--azure_repos_org <value>] [--bitbucket <value>] [--bitbucket_username <value>] [--bitbucket_password <value>]
+    [--bitbucket_pat <value>] [--github_token <value>] [--github <value>] [--github_api <value>] [--github_app_client_id
+    <value>] [--github_app_id <value>] [--github_app_installation_id <value>] [--github_app_private_pem_path <value>]
+    [--gitlab <value>] [--gitlab_token <value>] [--cr_agent_url <value>] [--cr_base <value>] [--cr_username <value>]
+    [--cr_password <value>] [--cr_token <value>] [--cr_role_arn <value>] [--cr_region <value>] [--cr_external_id
+    <value>]
+
+ARGUMENTS
+  DEPLOYMENTID  Deployment ID
+  APIURL        [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION    [default: 2024-02-08~experimental] API Version
+
+FLAGS
+  -n, --name=<value>                         (required) Connection name
+  -t, --type=<value>                         (required) Connection type
+      --artifactory_url=<value>              Artifactory URL (Credentials Reference as it may contain sensitive values)
+      --azure_repos_org=<value>              Azure Repos Org Name
+      --azure_repos_token=<value>            Azure Repos Token Credentials Reference
+      --base_nexus_url=<value>               Nexus URL (Credentials Reference as it may contain sensitive values)
+      --bitbucket=<value>                    Bitbucket Hostname
+      --bitbucket_password=<value>           Bitbucket Password Credentials Reference
+      --bitbucket_pat=<value>                Bitbucket Pat Credentials Reference
+      --bitbucket_username=<value>           Bitbucket Username
+      --broker_client_url=<value>            Broker Client Url
+      --checkmarx=<value>                    Checkmarx hostname
+      --checkmarx_password=<value>           Checkmarx Password Credentials Reference
+      --checkmarx_username=<value>           Checkmarx Username
+      --cr_agent_url=<value>                 CR Agent Url
+      --cr_base=<value>                      CR Base Url
+      --cr_external_id=<value>               CR External Id
+      --cr_password=<value>                  CR Password Credentials Reference
+      --cr_region=<value>                    CR Region
+      --cr_role_arn=<value>                  CR Role Arn
+      --cr_token=<value>                     CR Token Credentials Reference
+      --cr_username=<value>                  CR Username
+      --github=<value>                       Github Url
+      --github_api=<value>                   Github Api Url
+      --github_app_client_id=<value>         Github App Client Id Credentials Refs
+      --github_app_id=<value>                Github App Id
+      --github_app_installation_id=<value>   Github App Installation Id
+      --github_app_private_pem_path=<value>  Github Private Pem cert path
+      --github_token=<value>                 Github Token Credentials Reference
+      --gitlab=<value>                       Gitlab Hostname
+      --gitlab_token=<value>                 Gitlab Token Credentials Reference
+      --jira=<value>                         Jira Hostname
+      --jira_password=<value>                Jira Password Credentials Reference
+      --jira_pat=<value>                     JIRA Pat Reference
+      --jira_username=<value>                Jira Username
+
+DESCRIPTION
+  Universal Broker Connections - Create operation
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config connections create DEPLOYMENT_ID --type github
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config connections create TENANT_ID INSTALL_ID DEPLOYMENT_ID --type github
+```
+
+_See code: [src/commands/connections/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/connections/create.ts)_
+
+## `snyk-broker-config connections delete DEPLOYMENTID CONNECTIONID [APIURL] [APIVERSION]`
+
+Universal Broker Connections - Delete operation
+
+```
+USAGE
+  $ snyk-broker-config connections delete DEPLOYMENTID CONNECTIONID [APIURL]
+    [APIVERSION] [--json] [--log-level debug|warn|error|info|trace]
+
+ARGUMENTS
+  DEPLOYMENTID  Deployment ID
+  CONNECTIONID  Connection ID
+  APIURL        [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION    [default: 2024-02-08~experimental] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker Connections - Delete operation
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config connections delete DEPLOYMENT_ID CONNECTION_ID
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config connections delete TENANT_ID INSTALL_ID DEPLOYMENT_ID CONNECTION_ID
+```
+
+_See code: [src/commands/connections/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/connections/delete.ts)_
+
+## `snyk-broker-config connections list DEPLOYMENTID [APIURL] [APIVERSION]`
+
+Universal Broker Connections - List operation
+
+```
+USAGE
+  $ snyk-broker-config connections list DEPLOYMENTID [APIURL] [APIVERSION] [--json]
+    [--log-level debug|warn|error|info|trace]
+
+ARGUMENTS
+  DEPLOYMENTID  Deployment ID
+  APIURL        [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION    [default: 2024-02-08~experimental] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker Connections - List operation
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config connections list DEPLOYMENT_ID
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config connections list TENANT_ID INSTALL_ID DEPLOYMENT_ID
+```
+
+_See code: [src/commands/connections/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/connections/list.ts)_
+
+## `snyk-broker-config connections update DEPLOYMENTID CONNECTIONID [APIURL] [APIVERSION]`
+
+Universal Broker Connections - Update operation
+
+```
+USAGE
+  $ snyk-broker-config connections update DEPLOYMENTID CONNECTIONID [APIURL]
+    [APIVERSION] -t <value> -n <value> [--broker_client_url <value>] [--checkmarx <value>] [--checkmarx_password
+    <value>] [--checkmarx_username <value>] [--artifactory_url <value>] [--jira <value>] [--jira_username <value>]
+    [--jira_password <value>] [--jira_pat <value>] [--base_nexus_url <value>] [--azure_repos_token <value>]
+    [--azure_repos_org <value>] [--bitbucket <value>] [--bitbucket_username <value>] [--bitbucket_password <value>]
+    [--bitbucket_pat <value>] [--github_token <value>] [--github <value>] [--github_api <value>] [--github_app_client_id
+    <value>] [--github_app_id <value>] [--github_app_installation_id <value>] [--github_app_private_pem_path <value>]
+    [--gitlab <value>] [--gitlab_token <value>] [--cr_agent_url <value>] [--cr_base <value>] [--cr_username <value>]
+    [--cr_password <value>] [--cr_token <value>] [--cr_role_arn <value>] [--cr_region <value>] [--cr_external_id
+    <value>]
+
+ARGUMENTS
+  DEPLOYMENTID  Deployment ID
+  CONNECTIONID  Connection ID
+  APIURL        [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION    [default: 2024-02-08~experimental] API Version
+
+FLAGS
+  -n, --name=<value>                         (required) Connection name
+  -t, --type=<value>                         (required) Connection type
+      --artifactory_url=<value>              Artifactory URL (Credentials Reference as it may contain sensitive values)
+      --azure_repos_org=<value>              Azure Repos Org Name
+      --azure_repos_token=<value>            Azure Repos Token Credentials Reference
+      --base_nexus_url=<value>               Nexus URL (Credentials Reference as it may contain sensitive values)
+      --bitbucket=<value>                    Bitbucket Hostname
+      --bitbucket_password=<value>           Bitbucket Password Credentials Reference
+      --bitbucket_pat=<value>                Bitbucket Pat Credentials Reference
+      --bitbucket_username=<value>           Bitbucket Username
+      --broker_client_url=<value>            Broker Client Url
+      --checkmarx=<value>                    Checkmarx hostname
+      --checkmarx_password=<value>           Checkmarx Password Credentials Reference
+      --checkmarx_username=<value>           Checkmarx Username
+      --cr_agent_url=<value>                 CR Agent Url
+      --cr_base=<value>                      CR Base Url
+      --cr_external_id=<value>               CR External Id
+      --cr_password=<value>                  CR Password Credentials Reference
+      --cr_region=<value>                    CR Region
+      --cr_role_arn=<value>                  CR Role Arn
+      --cr_token=<value>                     CR Token Credentials Reference
+      --cr_username=<value>                  CR Username
+      --github=<value>                       Github Url
+      --github_api=<value>                   Github Api Url
+      --github_app_client_id=<value>         Github App Client Id Credentials Refs
+      --github_app_id=<value>                Github App Id
+      --github_app_installation_id=<value>   Github App Installation Id
+      --github_app_private_pem_path=<value>  Github Private Pem cert path
+      --github_token=<value>                 Github Token Credentials Reference
+      --gitlab=<value>                       Gitlab Hostname
+      --gitlab_token=<value>                 Gitlab Token Credentials Reference
+      --jira=<value>                         Jira Hostname
+      --jira_password=<value>                Jira Password Credentials Reference
+      --jira_pat=<value>                     JIRA Pat Reference
+      --jira_username=<value>                Jira Username
+
+DESCRIPTION
+  Universal Broker Connections - Update operation
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config connections update DEPLOYMENT_ID CONNECTION_ID --type github
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config connections update TENANT_ID INSTALL_ID DEPLOYMENT_ID CONNECTION_ID --type github
+```
+
+_See code: [src/commands/connections/update.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/connections/update.ts)_
+
+## `snyk-broker-config credentials create DEPLOYMENTID [APIURL] [APIVERSION]`
+
+Universal Broker Credentials - Create operation
+
+```
+USAGE
+  $ snyk-broker-config credentials create DEPLOYMENTID [APIURL] [APIVERSION] -c
+    <value> -n <value> -t <value> [--json] [--log-level debug|warn|error|info|trace]
+
+ARGUMENTS
+  DEPLOYMENTID  Deployment ID
+  APIURL        [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION    [default: 2024-02-08~experimental] API Version
+
+FLAGS
+  -c, --comment=<value>       (required) Comment about credentials reference(s).
+  -n, --env_var_name=<value>  (required) Env var name(s) of the credentials reference(s). Comma separated to specify
+                              more than one at a time.
+  -t, --type=<value>          (required) Connection type
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker Credentials - Create operation
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config credentials create DEPLOYMENT_ID --comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config credentials create TENANT_ID INSTALL_ID DEPLOYMENT_ID --comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github
+```
+
+_See code: [src/commands/credentials/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/credentials/create.ts)_
+
+## `snyk-broker-config credentials delete DEPLOYMENTID [APIURL] [APIVERSION]`
+
+Universal Broker Deployment Credentials - Delete operation
+
+```
+USAGE
+  $ snyk-broker-config credentials delete DEPLOYMENTID [APIURL] [APIVERSION] -c
+    <value> [--json] [--log-level debug|warn|error|info|trace]
+
+ARGUMENTS
+  DEPLOYMENTID  Deployment ID
+  APIURL        [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION    [default: 2024-02-08~experimental] API Version
+
+FLAGS
+  -c, --credentialsIds=<value>  (required) Credentials reference(s) Id(s).
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker Deployment Credentials - Delete operation
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config credentials delete DEPLOYMENT_ID -c CREDENTIALS_ID
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config credentials delete TENANT_ID INSTALL_ID DEPLOYMENT_ID -c CREDENTIALS_ID
+```
+
+_See code: [src/commands/credentials/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/credentials/delete.ts)_
+
+## `snyk-broker-config credentials list DEPLOYMENTID [APIURL] [APIVERSION]`
+
+Universal Broker Deployments - List operation
+
+```
+USAGE
+  $ snyk-broker-config credentials list DEPLOYMENTID [APIURL] [APIVERSION] [--json]
+    [--log-level debug|warn|error|info|trace]
+
+ARGUMENTS
+  DEPLOYMENTID  Deployment ID
+  APIURL        [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION    [default: 2024-02-08~experimental] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker Deployments - List operation
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config credentials list DEPLOYMENT_ID
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config credentials list TENANT_ID INSTALL_ID DEPLOYMENT_ID
+```
+
+_See code: [src/commands/credentials/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/credentials/list.ts)_
+
+## `snyk-broker-config credentials update DEPLOYMENTID [APIURL] [APIVERSION]`
+
+Universal Broker Credentials - Update operation
+
+```
+USAGE
+  $ snyk-broker-config credentials update DEPLOYMENTID [APIURL] [APIVERSION] -i
+    <value> -c <value> -n <value> -t <value> [--json] [--log-level debug|warn|error|info|trace]
+
+ARGUMENTS
+  DEPLOYMENTID  Deployment ID
+  APIURL        [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION    [default: 2024-02-08~experimental] API Version
+
+FLAGS
+  -c, --comment=<value>        (required) Comment about credentials reference(s).
+  -i, --credentialsId=<value>  (required) Credentials reference Id.
+  -n, --env_var_name=<value>   (required) Env var name(s) of the credentials reference(s). Comma separated to specify
+                               more than one at a time.
+  -t, --type=<value>           (required) Connection type
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker Credentials - Update operation
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config credentials update DEPLOYMENT_ID --credentialsId CREDENTIALID--comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config credentials update TENANT_ID INSTALL_ID DEPLOYMENT_ID --credentialsId CREDENTIALID --comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github
+```
+
+_See code: [src/commands/credentials/update.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/credentials/update.ts)_
+
+## `snyk-broker-config deployments create APPINSTALLEDINORGID [APIURL] [APIVERSION]`
+
+Universal Broker Deployments - Create operation
+
+```
+USAGE
+  $ snyk-broker-config deployments create APPINSTALLEDINORGID [APIURL] [APIVERSION]
+    -d <value> [--json] [--log-level debug|warn|error|info|trace]
+
+ARGUMENTS
+  APPINSTALLEDINORGID  Broker App Installed in Org ID
+  APIURL               [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION           [default: 2024-02-08~experimental] API Version
+
+FLAGS
+  -d, --data=<value>  (required) A series of key/value pairs comma separated. Ex:
+                      cluster=my_cluster,deployment_name=test
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker Deployments - Create operation
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config deployments create APP_INSTALLED_ORG_ID --data mykey=myvalue,mykey2=myvalue2
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config deployments create TENANT_ID INSTALL_ID APP_INSTALLED_ORG_ID --data mykey=myvalue,mykey2=myvalue2
+```
+
+_See code: [src/commands/deployments/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/deployments/create.ts)_
+
+## `snyk-broker-config deployments delete DEPLOYMENTID`
+
+Universal Broker Deployments - Delete operation
+
+```
+USAGE
+  $ snyk-broker-config deployments delete DEPLOYMENTID [--json] [--log-level
+    debug|warn|error|info|trace]
+
+ARGUMENTS
+  DEPLOYMENTID  Deployment ID
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker Deployments - Delete operation
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config deployments delete DEPLOYMENT_ID
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config deployments delete TENANT_ID INSTALL_ID DEPLOYMENT_ID
+```
+
+_See code: [src/commands/deployments/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/deployments/delete.ts)_
+
+## `snyk-broker-config deployments list [APIURL] [APIVERSION]`
+
+Universal Broker Deployments - List operation
+
+```
+USAGE
+  $ snyk-broker-config deployments list [APIURL] [APIVERSION] [--json] [--log-level
+    debug|warn|error|info|trace]
+
+ARGUMENTS
+  APIURL      [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION  [default: 2024-02-08~experimental] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker Deployments - List operation
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config deployments list
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config deployments list TENANT_ID INSTALL_ID
+```
+
+_See code: [src/commands/deployments/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/deployments/list.ts)_
+
+## `snyk-broker-config deployments update DEPLOYMENTID`
+
+Universal Broker Deployments - Update operation
+
+```
+USAGE
+  $ snyk-broker-config deployments update DEPLOYMENTID -d <value> [--json]
+    [--log-level debug|warn|error|info|trace]
+
+ARGUMENTS
+  DEPLOYMENTID  Deployment ID
+
+FLAGS
+  -d, --data=<value>  (required) A series of key/value pairs comma separated. Ex:
+                      cluster=my_cluster,deployment_name=test
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker Deployments - Update operation
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config deployments update DEPLOYMENT_ID --data mykey=myvalue,mykey2=myvalue2
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config deployments update TENANT_ID INSTALL_ID DEPLOYMENT_ID --data mykey=myvalue,mykey2=myvalue2
+```
+
+_See code: [src/commands/deployments/update.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/deployments/update.ts)_
 
 ## `snyk-broker-config help [COMMAND]`
 
@@ -104,6 +652,113 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.8/src/commands/help.ts)_
+
+## `snyk-broker-config integrations create CONNECTIONID ORGID INTEGRATIONID TYPE [APIURL] [APIVERSION]`
+
+Universal Broker Connections - Create operation
+
+```
+USAGE
+  $ snyk-broker-config integrations create CONNECTIONID ORGID INTEGRATIONID TYPE
+    [APIURL] [APIVERSION] [--json] [--log-level debug|warn|error|info|trace]
+
+ARGUMENTS
+  CONNECTIONID   Connection ID
+  ORGID          Org ID
+  INTEGRATIONID  Integration ID
+  TYPE           type
+  APIURL         [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION     [default: 2024-02-08~experimental] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker Connections - Create operation
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config integrations create CONNECTION_ID ORG_ID INTEGRATION_ID
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config integrations create TENANT_ID INSTALL_ID CONNECTION_ID ORG_ID INTEGRATION_ID
+```
+
+_See code: [src/commands/integrations/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/integrations/create.ts)_
+
+## `snyk-broker-config integrations delete CONNECTIONID ORGID INTEGRATIONID [APIURL] [APIVERSION]`
+
+Universal Broker Connections Integrations - List operation
+
+```
+USAGE
+  $ snyk-broker-config integrations delete CONNECTIONID ORGID INTEGRATIONID [APIURL]
+    [APIVERSION] [--json] [--log-level debug|warn|error|info|trace]
+
+ARGUMENTS
+  CONNECTIONID   Connection ID
+  ORGID          Org ID
+  INTEGRATIONID  Integration ID
+  APIURL         [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION     [default: 2024-02-08~experimental] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker Connections Integrations - List operation
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config integrations delete CONNECTION_ID ORG_ID INTEGRATION_ID
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config integrations delete TENANT_ID INSTALL_ID CONNECTION_ID ORG_ID INTEGRATION_ID
+```
+
+_See code: [src/commands/integrations/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/integrations/delete.ts)_
+
+## `snyk-broker-config integrations list CONNECTIONID [APIURL] [APIVERSION]`
+
+Universal Broker Connections Integrations - List operation
+
+```
+USAGE
+  $ snyk-broker-config integrations list CONNECTIONID [APIURL] [APIVERSION] [--json]
+    [--log-level debug|warn|error|info|trace]
+
+ARGUMENTS
+  CONNECTIONID  Connection ID
+  APIURL        [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION    [default: 2024-02-08~experimental] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker Connections Integrations - List operation
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config integrations list CONNECTION_ID
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config integrations list TENANT_ID INSTALL_ID CONNECTION_ID
+```
+
+_See code: [src/commands/integrations/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/integrations/list.ts)_
 
 ## `snyk-broker-config plugins`
 
@@ -393,4 +1048,189 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.2/src/commands/plugins/update.ts)_
+
+## `snyk-broker-config version`
+
+```
+USAGE
+  $ snyk-broker-config version [--json] [--verbose]
+
+FLAGS
+  --verbose  Show additional information about the CLI.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+FLAG DESCRIPTIONS
+  --verbose  Show additional information about the CLI.
+
+    Additionally shows the architecture, node version, operating system, and versions of plugins that the CLI is using.
+```
+
+_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v2.2.10/src/commands/version.ts)_
+
+## `snyk-broker-config workflows connection create [APIURL] [APIVERSION]`
+
+Universal Broker - Create Connection Workflow
+
+```
+USAGE
+  $ snyk-broker-config workflows connection create [APIURL] [APIVERSION] [--json] [--log-level
+    debug|warn|error|info|trace]
+
+ARGUMENTS
+  APIURL      [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION  [default: 2024-02-08~experimental] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker - Create Connection Workflow
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config workflows connection create
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config workflows connection create TENANT_ID INSTALL_ID
+```
+
+_See code: [src/commands/workflows/connection/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/workflows/connection/create.ts)_
+
+## `snyk-broker-config workflows connection delete [APIURL] [APIVERSION]`
+
+Universal Broker -  Connection Deletion workflow
+
+```
+USAGE
+  $ snyk-broker-config workflows connection delete [APIURL] [APIVERSION] [--json] [--log-level
+    debug|warn|error|info|trace]
+
+ARGUMENTS
+  APIURL      [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION  [default: 2024-02-08~experimental] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker -  Connection Deletion workflow
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config workflows connection delete
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config workflows connection delete TENANT_ID INSTALL_ID
+```
+
+_See code: [src/commands/workflows/connection/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/workflows/connection/delete.ts)_
+
+## `snyk-broker-config workflows connection disconnect [APIURL] [APIVERSION]`
+
+Universal Broker -  Connection Disconnect Integration(s) workflow
+
+```
+USAGE
+  $ snyk-broker-config workflows connection disconnect [APIURL] [APIVERSION] [--json] [--log-level
+    debug|warn|error|info|trace]
+
+ARGUMENTS
+  APIURL      [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION  [default: 2024-02-08~experimental] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker -  Connection Disconnect Integration(s) workflow
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config workflows connection disconnect
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config workflows connection disconnect TENANT_ID INSTALL_ID
+```
+
+_See code: [src/commands/workflows/connection/disconnect.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/workflows/connection/disconnect.ts)_
+
+## `snyk-broker-config workflows connection integrate [APIURL] [APIVERSION]`
+
+Universal Broker - Connection Create Integration(s) workflow
+
+```
+USAGE
+  $ snyk-broker-config workflows connection integrate [APIURL] [APIVERSION] [--json] [--log-level
+    debug|warn|error|info|trace]
+
+ARGUMENTS
+  APIURL      [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION  [default: 2024-02-08~experimental] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker - Connection Create Integration(s) workflow
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config workflows connection integrate
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config workflows connection integrate TENANT_ID INSTALL_ID
+```
+
+_See code: [src/commands/workflows/connection/integrate.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/workflows/connection/integrate.ts)_
+
+## `snyk-broker-config workflows credentials delete [APIURL] [APIVERSION]`
+
+Universal Broker -  Credentials Deletion workflow
+
+```
+USAGE
+  $ snyk-broker-config workflows credentials delete [APIURL] [APIVERSION] [--json] [--log-level
+    debug|warn|error|info|trace]
+
+ARGUMENTS
+  APIURL      [default: https://api.pre-prod.snyk.io] API Url
+  APIVERSION  [default: 2024-02-08~experimental] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker -  Credentials Deletion workflow
+
+EXAMPLES
+  [with exported TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config workflows credentials delete
+
+  [inline TENANT_ID,INSTALL_ID]
+
+  $ snyk-broker-config workflows credentials delete TENANT_ID INSTALL_ID
+```
+
+_See code: [src/commands/workflows/credentials/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.0.0/src/commands/workflows/credentials/delete.ts)_
 <!-- commandsstop -->
