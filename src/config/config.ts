@@ -1,6 +1,5 @@
-import {cwd} from 'node:process'
-import {resolve} from 'node:path'
 import {loadConfig} from 'snyk-config'
+import {findPackageJsonDir} from '../utils/utils.js'
 
 export interface Config {
   API_HOSTNAME: string
@@ -10,6 +9,6 @@ export interface Config {
   LOG_LEVEL: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal'
 }
 
-const loadedConfig = loadConfig(resolve(cwd()))
+const loadedConfig = loadConfig(findPackageJsonDir())
 
 export const getConfig = () => loadedConfig as unknown as Config
