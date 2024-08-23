@@ -47,6 +47,9 @@ export const getDeployments = async (tenantId: string, installId: string) => {
   }
   const response = await makeRequest(req)
   logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  if (response.statusCode && response.statusCode > 299) {
+    throw new Error(`${response.statusCode} - ${response.statusText ?? ''}`)
+  }
   return JSON.parse(response.body) as DeploymentsResponse
 }
 

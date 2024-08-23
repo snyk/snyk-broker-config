@@ -22,7 +22,6 @@ type ConnectionSelection = {id: ConnectionId; type: string}
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
   static args = {
-    ...commonUniversalBrokerArgs(),
     ...commonApiRelatedArgs,
   }
 
