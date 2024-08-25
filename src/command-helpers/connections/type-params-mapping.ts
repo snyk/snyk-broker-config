@@ -19,6 +19,7 @@ const scmTypes = new Set([
   'github',
   'github-enterprise',
   'github-server-app',
+  'github-cloud-app',
   'gitlab',
 ])
 export const nonSourceIntegrations = new Set(['apprisk', 'artifactory', 'jira', 'nexus'])
@@ -87,6 +88,15 @@ export const flagConnectionMapping: TypeMapping = {
     github_token: {description: 'Github Token Credentials Reference', sensitive: true},
   },
   'github-server-app': {
+    broker_client_url: {description: 'Broker Client Url'},
+    github: {description: 'Github Url'},
+    github_api: {description: 'Github Api Url'},
+    github_app_client_id: {description: 'Github App Client Id Credentials Refs', sensitive: true},
+    github_app_id: {description: 'Github App Id'},
+    github_app_installation_id: {description: 'Github App Installation Id'},
+    github_app_private_pem_path: {description: 'Github Private Pem cert path'},
+  },
+  'github-cloud-app': {
     broker_client_url: {description: 'Broker Client Url'},
     github: {description: 'Github Url'},
     github_api: {description: 'Github Api Url'},
