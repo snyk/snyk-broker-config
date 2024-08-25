@@ -26,7 +26,7 @@ export const captureConnectionParams = async (
       choices.push({id: 'new', value: 'CreateNew', description: 'Create a new Credentials Reference'})
 
       const choice = await select({
-        message: 'Which credential reference do you want to use? Or create New?',
+        message: `${key} (Sensitive): ${choices.length > 1 ? 'Which credential reference do you want to use? Or create New?' : 'No existing credential reference for this connection type.'}`,
         choices: choices,
         pageSize: existingCredentialsByTypeAndDeployment.data.length + 1,
       })
