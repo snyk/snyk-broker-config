@@ -44,7 +44,7 @@ export interface TypeMapping {
 export const flagConnectionMapping: TypeMapping = {
   apprisk: {
     broker_client_url: {description: 'Broker Client Url'},
-    checkmarx: {description: 'Checkmarx hostname'},
+    checkmarx: {description: 'Checkmarx Hostname'},
     checkmarx_password: {description: 'Checkmarx Password Credentials Reference', sensitive: true},
     checkmarx_username: {description: 'Checkmarx Username'},
   },

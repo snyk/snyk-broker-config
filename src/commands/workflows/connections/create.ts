@@ -37,7 +37,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       this.log(
         ux.colorize(
           'cyan',
-          `Connection created with id ${connectionId}. Ready to configure integrations to use this connection.\n`,
+          `Connection created with Id ${connectionId}. Ready to configure integrations to use this connection.\n`,
         ),
       )
       this.log(ux.colorize('red', 'Connection Create Workflow completed.'))

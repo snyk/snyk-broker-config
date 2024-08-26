@@ -29,7 +29,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker -  Credentials Deletion workflow'
+  static description = 'Universal Broker -  Credentials Deletion Workflow'
 
   static examples = [
     `[with exported TENANT_ID,INSTALL_ID]`,
@@ -73,7 +73,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     let deploymentId
     if (deployments.errors) {
       this.log(`${deployments.errors[0].detail}`)
-      this.error(`Please first create a deployment by using the create worklow.`)
+      this.error(`Please first create a deployment by using the create workflow.`)
     } else if (deployments.data) {
       deploymentId =
         deployments.data.length === 1
@@ -105,7 +105,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
       const credentials = await getCredentialsForDeployment(tenantId, installId, deploymentId)
       if (credentials.data.length === 0) {
-        this.error(`Not credentials found.`)
+        this.error(`No credentials found.`)
       }
 
       const choices = credentials.data.map((x) => {

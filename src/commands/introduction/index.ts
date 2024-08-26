@@ -74,7 +74,7 @@ export default class Intro extends BaseCommand<typeof Intro> {
     )
 
     const introText = `
-    The Universal Broker is redefining how Snyk integrates with various systems, greatly improving the Broker clients deployment scalability, management and monitoring.
+    The Universal Broker is redefining how Snyk integrates with various systems, greatly improving the Broker client's deployment scalability, management and monitoring.
     It introduces the following concepts:
     - Deployment
     - Credentials Reference
@@ -92,13 +92,13 @@ export default class Intro extends BaseCommand<typeof Intro> {
     `
     const helpConcepts = {
       deployments: `
-    A Deployment represents the running broker client(s), whether it is a container running alone or a kubernetes deployment will multiple replicas in High Availability Mode. It represents the running code, configured with all the local enviroment configuration required for proxy usage, private certificate authority, custom pod specs, etc.
+    A Deployment represents the running broker client(s), either as a standalone container or a Kubernetes Deployment with multiple replicas in High Availability Mode. It represents the running code, configured with all the local environment variables required for proxy usage, private certificate authority, custom pod specs, etc.
 
-    It is purposely not including any of the connection specifics which are instead defined remotely in the Snyk platform, greatly simplifying the local configuration complexity while offering greater flexibility in their definition.
+    It is purposely not including any of the connection specifics which are instead defined remotely in the Snyk platform, this greatly simplifies the local configuration complexity while offering greater flexibility overall.
     
-    A deployment is meant to be a set and forget component, running code which will handle changes in connections creation, deletion, and update of its parameters.
+    A Deployment is meant to be a set and forget component, running code which will handle Creating, Reading, Updating and Deleting Connections.
 
-    The deployment creation process requires the following parameters:
+    The Deployment creation process requires the following parameters:
     - tenant ID
     - org ID against which the Broker App was installed
     - the install ID associated
@@ -107,24 +107,24 @@ export default class Intro extends BaseCommand<typeof Intro> {
     The "snyk-broker-config workflows connection create" command will walk you through those steps.
     `,
       credentials: `
-    In Universal Broker, Credentials references are local environment variables expected to be found in a deployment. Snyk Broker allows you to keep any sensitive value/token local to your network, never sharing them with Snyk. These references are then used in the requests brokering to inject the relevant credentials on the way to the downstream system integrated with Snyk (i.e SCM, Jira, Artifactory, etc).
+    In Universal Broker, Credential references are local environment variables expected to be found in a Deployment. Snyk Broker allows you to keep any sensitive value/token local to your network, never sharing them with Snyk. These references are then used in the requests brokering to inject the relevant credentials on the way to the downstream system integrated with Snyk (i.e SCM, Jira, Artifactory, etc).
     
-    Credentials references are linked to a deployment, representing secret values passed into the container/deployment, either via environment variables or by secret mounting into secret files. It avoids hard coding these values in connections registered in the Snyk platform.
+    Credential references are linked to a deployment, representing secret values passed into the container/deployment, either via environment variables or by secret mounting into secret files. It avoids hard coding these values in connections registered in the Snyk platform.
 
-    Credentials references can be shared across connections of the same type in the same deployment. It provides flexibility in connections configuration as well as supporting specific use cases where several connections are required (i.e azure-repos integrations with numerous Azure Org names).
+    Credential references can be shared across connections of the same type in the same deployment. It provides flexibility in connections configuration as well as supporting specific use cases where several connections are required (i.e azure-repos integrations with numerous Azure Org names).
 
-    Further improvements will bring the ability to share multiple credentials references for a single parameter based on other factors.
+    Further improvements will bring the ability to share multiple credential references for a single parameter based on other factors.
 
     The "snyk-broker-config workflows credentials create" command will walk you through credentials creation steps.
     `,
       connections: `
-    Connections are now properly represented in the Snyk platform, with a stable identity, distinct from integrations. A connection represents a connection to a particular system type (github, gitlab, jira, ...) using a particular set of credentials defined as such under a given deployment (see credentials topic for more details).
+    Connections are now properly represented in the Snyk platform with a stable identity, distinct from integrations. A Connection represents a connection to a particular system type (github, gitlab, jira, ...) using a particular set of credentials defined as such under a given deployment (see credentials topic for more details).
 
     Whether this connection is in use by 1 or more integrations/organizations, we still reason about a single connection to a system, which is then integrated against a specific integration in an org. Since it is most likely to be integrated against more than one org/integration, one can simply 'integrate' an existing connection against the relevant integrationId without having to redefine the connection parameters or credentials.
 
-    Similarly, removing a connection for an org is a simple disconnection, not deleting the connection and possibly impacting other organizations' integrations.
+    Similarly, removing a Connection for an org is a simple disconnection, not deleting the connection and possibly impacting other organizations' integrations.
 
-    Create a connection once, and integrate against as many integrations as needed.
+    Create a Connection once, and integrate against as many integrations as needed.
 
     The "snyk-broker-config workflows connections create" command will walk you through the connection creation steps.
     The "snyk-broker-config workflows connections integrate" command will walk you through the integration steps.

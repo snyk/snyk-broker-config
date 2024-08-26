@@ -18,7 +18,7 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker Connections Integrations - List operation'
+  static description = 'Universal Broker Connections Integrations - Delete operation'
 
   static examples = [
     `[with exported TENANT_ID,INSTALL_ID]`,
@@ -45,11 +45,11 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
       this.log(
         ux.colorize(
           'cyan',
-          `Deleted Universal Broker Deployment for Tenant ${tenantId}, Connection ${args.connectionId}, Org ${args.orgId}, Integration ${args.integrationId}`,
+          `Deleted Universal Broker Connections Integration for Connection ${args.connectionId} for Org ${args.orgId}, Integration ${args.integrationId}, Tenant ${tenantId}`,
         ),
       )
       return JSON.stringify({responseCode: integrationsResponseCode})
     }
-    this.error(ux.colorize('red', `Error deleting deployment. Status code: ${integrationsResponseCode}.`))
+    this.error(ux.colorize('red', `Error deleting Deployment. Status code: ${integrationsResponseCode}.`))
   }
 }

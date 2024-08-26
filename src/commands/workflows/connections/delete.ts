@@ -11,7 +11,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker -  Delete Connection workflow'
+  static description = 'Universal Broker -  Delete Connection Workflow'
 
   static examples = [`<%= config.bin %> <%= command.id %>`]
 
@@ -34,7 +34,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
           `Please disconnect connection integration(s) first (connection disconnect workflow). Connection is used by org${connectionIntegration.data.length > 1 ? 's' : ''} ${connectionIntegration.data.map((x) => x.org_id).join(',')}.`,
         )
       }
-      this.log(ux.colorize('cyan', `Selected connection id ${selectedConnection.id}. Ready to delete connection.\n`))
+      this.log(ux.colorize('cyan', `Selected connection Id ${selectedConnection.id}. Ready to delete connection.\n`))
       if (
         await confirm({
           message: `Are you sure you want to delete connection ${selectedConnection.id} ?`,

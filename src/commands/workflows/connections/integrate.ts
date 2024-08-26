@@ -11,7 +11,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker - Connection Create Integration(s) workflow'
+  static description = 'Universal Broker - Connection Create Integration(s) Workflow'
 
   static examples = [`<%= config.bin %> <%= command.id %>`]
 

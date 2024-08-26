@@ -54,7 +54,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     let installId
     if (process.env.INSTALL_ID) {
       installId = process.env.INSTALL_ID
-    } else if (await confirm({message: 'Have you installed the broker app against an org?'})) {
+    } else if (await confirm({message: 'Have you installed the Broker App against an org?'})) {
       installId = await input({message: 'Enter your Broker App Install ID'})
       if (!isValidUUID(installId)) {
         this.error(`Must be a valid UUID.`)
@@ -67,7 +67,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       this.log(ux.colorize('purple', `App installed. Please store the following credentials securely:`))
       this.log(ux.colorize('purple', `- clientId: ${client_id}`))
       this.log(ux.colorize('purple', `- clientSecret: ${client_secret}`))
-      this.log(ux.colorize('purple', `You will need them to run your broker client.`))
+      this.log(ux.colorize('purple', `You will need them to run your Broker Client.`))
     }
     await getDeployments(tenantId, installId)
 
@@ -80,7 +80,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     let deploymentId
     if (deployments.errors) {
       this.log(`${deployments.errors[0].detail}`)
-      this.error(`Please first create a deployment by using the create worklow.`)
+      this.error(`Please first create a deployment by using the Create Workflow.`)
     } else if (deployments.data) {
       deploymentId =
         deployments.data.length === 1
