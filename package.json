@@ -18,6 +18,7 @@
     "@oclif/plugin-warn-if-update-available": "^3.1.11",
     "@snyk/log": "^5.3.0",
     "inquirer-select-pro": "^1.0.0-alpha.7",
+    "object-treeify": "^4.0.1",
     "snyk-config": "^5.3.0"
   },
   "devDependencies": {
@@ -68,7 +69,23 @@
       "@oclif/plugin-version"
     ],
     "topicSeparator": " ",
-    "topics": {},
+    "topics": {
+      "connections": {
+        "description": "Manages Universal Broker Connections"
+      },
+      "credentials": {
+        "description": "Manages Universal Broker credentials"
+      },
+      "deployments": {
+        "description": "Manages Universal Broker deployments"
+      },
+      "integrations": {
+        "description": "Manages Universal Broker Connections Integrations in Organizations"
+      },
+      "workflows": {
+        "description": "Interactive workflows for deployments, credentials, connections and integrations management"
+      }
+    },
     "theme": "theme.json"
   },
   "repository": "snyk/snyk-broker-config",
