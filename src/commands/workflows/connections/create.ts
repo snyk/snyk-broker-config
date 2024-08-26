@@ -20,24 +20,24 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
       const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
 
-      this.log(ux.colorize('cyan', `Now using Tenant Id ${tenantId} and Install Id ${installId}.\n`))
+      this.log(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
       const deploymentId = await this.setupOrSelectDeployment(tenantId, installId, appInstalledOnOrgId)
       this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
 
       const connectionType = await select({
-        message: 'Which connection type do you want to create?',
+        message: 'Which Connection type do you want to create?',
         choices: connectionTypes.map((x) => {
           return {id: x, value: x}
         }),
         pageSize: connectionTypes.length,
       })
-      this.log(ux.colorize('cyan', `Let's create a ${connectionType} connection now.\n`))
+      this.log(ux.colorize('cyan', `Let's create a ${connectionType} Connection now.\n`))
       const connectionId = await this.createNewConnection(tenantId, installId, deploymentId, connectionType)
       this.log(
         ux.colorize(
           'cyan',
-          `Connection created with Id ${connectionId}. Ready to configure integrations to use this connection.\n`,
+          `Connection created with ID ${connectionId}. Ready to configure integrations to use this Connection.\n`,
         ),
       )
       this.log(ux.colorize('red', 'Connection Create Workflow completed.'))

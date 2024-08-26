@@ -165,7 +165,7 @@ FLAGS
       --checkmarx_username=<value>           Checkmarx Username
       --cr_agent_url=<value>                 CR Agent Url
       --cr_base=<value>                      CR Base Url
-      --cr_external_id=<value>               CR External Id
+      --cr_external_id=<value>               CR External ID
       --cr_password=<value>                  CR Password Credentials Reference
       --cr_region=<value>                    CR Region
       --cr_role_arn=<value>                  CR Role Arn
@@ -173,9 +173,9 @@ FLAGS
       --cr_username=<value>                  CR Username
       --github=<value>                       Github Url
       --github_api=<value>                   Github Api Url
-      --github_app_client_id=<value>         Github App Client Id Credentials Refs
-      --github_app_id=<value>                Github App Id
-      --github_app_installation_id=<value>   Github App Installation Id
+      --github_app_client_id=<value>         Github App Client ID Credentials Refs
+      --github_app_id=<value>                Github App ID
+      --github_app_installation_id=<value>   Github App Installation ID
       --github_app_private_pem_path=<value>  Github Private Pem cert path
       --github_token=<value>                 Github Token Credentials Reference
       --gitlab=<value>                       Gitlab Hostname
@@ -308,7 +308,7 @@ FLAGS
       --checkmarx_username=<value>           Checkmarx Username
       --cr_agent_url=<value>                 CR Agent Url
       --cr_base=<value>                      CR Base Url
-      --cr_external_id=<value>               CR External Id
+      --cr_external_id=<value>               CR External ID
       --cr_password=<value>                  CR Password Credentials Reference
       --cr_region=<value>                    CR Region
       --cr_role_arn=<value>                  CR Role Arn
@@ -316,9 +316,9 @@ FLAGS
       --cr_username=<value>                  CR Username
       --github=<value>                       Github Url
       --github_api=<value>                   Github Api Url
-      --github_app_client_id=<value>         Github App Client Id Credentials Refs
-      --github_app_id=<value>                Github App Id
-      --github_app_installation_id=<value>   Github App Installation Id
+      --github_app_client_id=<value>         Github App Client ID Credentials Refs
+      --github_app_id=<value>                Github App ID
+      --github_app_installation_id=<value>   Github App Installation ID
       --github_app_private_pem_path=<value>  Github Private Pem cert path
       --github_token=<value>                 Github Token Credentials Reference
       --gitlab=<value>                       Gitlab Hostname
@@ -398,7 +398,7 @@ ARGUMENTS
   APIVERSION    [default: 2024-02-08~experimental] API Version
 
 FLAGS
-  -c, --credentialsIds=<value>  (required) Credentials reference(s) Id(s).
+  -c, --credentialsIds=<value>  (required) Credentials reference(s) ID(s).
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -470,7 +470,7 @@ ARGUMENTS
 
 FLAGS
   -c, --comment=<value>        (required) Comment about credentials reference(s).
-  -i, --credentialsId=<value>  (required) Credentials reference Id.
+  -i, --credentialsId=<value>  (required) Credentials reference ID.
   -n, --env_var_name=<value>   (required) Env var name(s) of the credentials reference(s). Comma separated to specify
                                more than one at a time.
   -t, --type=<value>           (required) Connection type

@@ -21,7 +21,7 @@ export const credentialsData = {
 export const credentialsIds = {
   credentialsIds: Flags.string({
     char: 'c',
-    description: 'Credentials reference(s) Id(s).',
+    description: 'Credentials reference(s) ID(s).',
     required: true,
   }),
 }
@@ -29,7 +29,7 @@ export const credentialsIds = {
 export const credentialId = {
   credentialsId: Flags.string({
     char: 'i',
-    description: 'Credentials reference Id.',
+    description: 'Credentials reference ID.',
     required: true,
   }),
 }

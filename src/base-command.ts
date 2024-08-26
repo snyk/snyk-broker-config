@@ -61,7 +61,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       }
       // process.env.INSTALL_ID = installId
     } else {
-      orgId = await input({message: `Enter Org Id to install Broker App. Must be in tenant ${tenantId}`})
+      orgId = await input({message: `Enter Org ID to install Broker App. Must be in tenant ${tenantId}`})
       const {install_id, client_id, client_secret} = await installAppsWorfklow(orgId)
       installId = install_id
       this.log(ux.colorize('purple', `App installed. Please store the following credentials securely:`))
@@ -156,15 +156,15 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   ): Promise<ConnectionId> {
     const existingConnections = await getConnectionsForDeployment(tenantID, installId, deploymentId)
     const regex = /^[\w-]+$/ // Any word character. Avoiding problems that way.
-    let connectionFriendlyName = await input({message: 'Enter a human friendly name for your connection.'})
+    let connectionFriendlyName = await input({message: 'Enter a human friendly name for your Connection.'})
     while (!regex.test(connectionFriendlyName)) {
       connectionFriendlyName = await input({
-        message: 'Please use only [a-Z0-9_-]. Enter a human friendly name for your connection.',
+        message: 'Please use only [a-Z0-9_-]. Enter a human friendly name for your Connection.',
       })
     }
     while (existingConnections.data.map((x) => x.attributes.name).includes(connectionFriendlyName)) {
       connectionFriendlyName = await input({
-        message: 'Name is already in use. Please enter a unique human friendly name for your connection.',
+        message: 'Name is already in use. Please enter a unique human friendly name for your Connection.',
       })
     }
     const params = await captureConnectionParams(tenantID, installId, deploymentId, connectionType)
@@ -186,13 +186,13 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   ): Promise<ConnectionSelection> {
     const existingConnections = await getConnectionsForDeployment(tenantID, installId, deploymentId)
     if (existingConnections.data.length === 0) {
-      this.error('No connection found.')
+      this.error('No Connection found.')
     }
     const selectedConnection =
       existingConnections.data.length === 1
         ? existingConnections.data[0].id
         : await select({
-            message: 'Which connection do you want to use?',
+            message: 'Which Connection do you want to use?',
             choices: existingConnections.data.map((x) => {
               return {
                 id: x.id,

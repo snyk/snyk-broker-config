@@ -23,10 +23,10 @@ export const captureConnectionParams = async (
         .map((x) => {
           return {id: x.id, value: x.attributes.environment_variable_name, description: x.attributes.comment}
         })
-      choices.push({id: 'new', value: 'CreateNew', description: 'Create a new Credentials Reference'})
+      choices.push({id: 'new', value: 'CreateNew', description: 'Create a new Credential Reference'})
 
       const choice = await select({
-        message: `${key} (Sensitive): ${choices.length > 1 ? 'Which credential reference do you want to use? Or create New?' : 'No existing credential reference for this connection type.'}`,
+        message: `${key} (Sensitive): ${choices.length > 1 ? 'Which Credential Reference do you want to use? Or create New?' : 'No existing Credential Reference for this Connection type.'}`,
         choices: choices,
         pageSize: existingCredentialsByTypeAndDeployment.data.length + 1,
       })
@@ -43,7 +43,7 @@ export const captureConnectionParams = async (
       } else {
         const selectedCredId = choices.find((x) => x.value === choice)
         if (!selectedCredId) {
-          throw new Error('Error selecting existing credentials id')
+          throw new Error('Error selecting existing Credential ID')
         }
         requiredParameters[key].input = selectedCredId.id
       }

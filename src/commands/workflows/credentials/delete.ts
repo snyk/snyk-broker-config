@@ -96,7 +96,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
       const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
 
-      this.log(ux.colorize('cyan', `Now using Tenant Id ${tenantId} and Install Id ${installId}.\n`))
+      this.log(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
       const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
       this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
@@ -131,7 +131,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
             this.log(
               ux.colorize(
                 'red',
-                `Cannot delete ${credentialsId}. In use by ${credential.data.relationships.broker_connections.length} connection${credential.data.relationships.broker_connections.length > 1 ? 's' : ''} (${credential.data.relationships.broker_connections.map((x) => x.data.id).join(',')}). Skipping.`,
+                `Cannot delete ${credentialsId}. In use by ${credential.data.relationships.broker_connections.length} Connection ${credential.data.relationships.broker_connections.length > 1 ? 's' : ''} (${credential.data.relationships.broker_connections.map((x) => x.data.id).join(',')}). Skipping.`,
               ),
             )
             continue
@@ -140,7 +140,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
           }
         }
       } else {
-        this.log(ux.colorize('cyan', 'Canceling.'))
+        this.log(ux.colorize('cyan', 'Cancelling.'))
       }
 
       this.log(ux.colorize('red', 'Credentials Deletion Workflow completed.'))

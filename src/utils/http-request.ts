@@ -49,7 +49,7 @@ export const makeRequest = async (req: HttpRequest, retries = MAX_RETRY): Promis
 
         response.on('error', (error) => {
           if (retries > 0) {
-            console.warn({msg: localRequest.url}, `Downstream Response failed. Retrying after 500ms...`)
+            console.warn({msg: localRequest.url}, `Downstream response failed. Retrying after 500ms...`)
             setTimeout(() => {
               resolve(makeRequest(localRequest, retries - 1))
             }, 500) // Wait for 0.5 second before retrying
