@@ -85,7 +85,7 @@ export default class Intro extends BaseCommand<typeof Intro> {
     `
     const introText2 = `
     Define this model once and start up your Broker client with the Deployment ID parameters. It will retrieve the connections the Deployment supports and will be waiting for traffic.
-    Once your connections are configured, you can integrate the connection with any org of your choice (currently restricted to the same group during Beta), now or later.
+    Once your connections are configured, you can integrate the Connection with any Org of your choice (currently restricted to the same group during Beta), now or later.
     `
     const connectionsIntegrationsIntroText = `
     Once connections are configured, they can be used by organizations' integrations.
@@ -99,9 +99,9 @@ export default class Intro extends BaseCommand<typeof Intro> {
     A Deployment is meant to be a set and forget component, running code which will handle Creating, Reading, Updating and Deleting Connections.
 
     The Deployment creation process requires the following parameters:
-    - tenant ID
-    - org ID against which the Broker App was installed
-    - the install ID associated
+    - Tenant ID
+    - Org ID against which the Broker App was installed
+    - The install ID associated
     - [optional] Key/value pairs metadata to help you keeping track of your Deployments
 
     The "snyk-broker-config workflows connection create" command will walk you through those steps.
@@ -120,9 +120,9 @@ export default class Intro extends BaseCommand<typeof Intro> {
       connections: `
     Connections are now properly represented in the Snyk platform with a stable identity, distinct from integrations. A Connection represents a connection to a particular system type (github, gitlab, jira, ...) using a particular set of credentials defined as such under a given deployment (see credentials topic for more details).
 
-    Whether this connection is in use by 1 or more integrations/organizations, we still reason about a single connection to a system, which is then integrated against a specific integration in an org. Since it is most likely to be integrated against more than one org/integration, one can simply 'integrate' an existing connection against the relevant integrationId without having to redefine the connection parameters or credentials.
+    Whether this connection is in use by 1 or more integrations/organizations, we still reason about a single connection to a system, which is then integrated against a specific integration in an Org. Since it is most likely to be integrated against more than one org/integration, one can simply 'integrate' an existing connection against the relevant integrationId without having to redefine the connection parameters or credentials.
 
-    Similarly, removing a Connection for an org is a simple disconnection, not deleting the connection and possibly impacting other organizations' integrations.
+    Similarly, removing a Connection for an Org is a simple disconnection, not deleting the connection and possibly impacting other organizations' integrations.
 
     Create a Connection once, and integrate against as many integrations as needed.
 

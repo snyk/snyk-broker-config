@@ -53,7 +53,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     let installId
     if (process.env.INSTALL_ID) {
       installId = process.env.INSTALL_ID
-    } else if (await confirm({message: 'Have you installed the Broker App against an org?'})) {
+    } else if (await confirm({message: 'Have you installed the Broker App against an Org?'})) {
       installId = await input({message: 'Enter your Broker App Install ID'})
       if (!isValidUUID(installId)) {
         this.error(`Must be a valid UUID.`)

@@ -54,7 +54,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       this.log(
         ux.colorize(
           'cyan',
-          `Connection ${connectionIntegration.data.id} (type: ${selectedConnection.type}) integrated with integration ${integrationId} on org ${orgId}.`,
+          `Connection ${connectionIntegration.data.id} (type: ${selectedConnection.type}) integrated with integration ${integrationId} on Org ${orgId}.`,
         ),
       )
       this.log(ux.colorize('red', 'Connection Integrate Workflow completed.'))

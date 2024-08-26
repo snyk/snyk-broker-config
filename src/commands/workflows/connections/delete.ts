@@ -31,7 +31,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       const connectionIntegration = await getIntegrationsForConnection(tenantId, selectedConnection.id)
       if (connectionIntegration.data.length > 0) {
         this.error(
-          `Please disconnect Connection integration(s) first (connection disconnect workflow). Connection is used by org ${connectionIntegration.data.length > 1 ? 's' : ''} ${connectionIntegration.data.map((x) => x.org_id).join(',')}.`,
+          `Please disconnect Connection integration(s) first (connection disconnect workflow). Connection is used by Org ${connectionIntegration.data.length > 1 ? 's' : ''} ${connectionIntegration.data.map((x) => x.org_id).join(',')}.`,
         )
       }
       this.log(ux.colorize('cyan', `Selected Connection ID ${selectedConnection.id}. Ready to delete Connection.\n`))
