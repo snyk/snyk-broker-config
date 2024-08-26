@@ -80,19 +80,19 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     let deploymentId
     if (deployments.errors) {
       this.log(`${deployments.errors[0].detail}`)
-      this.error(`Please first create a deployment by using the Create Workflow.`)
+      this.error(`Please first create a Deployment by using the Create Workflow.`)
     } else if (deployments.data) {
       deploymentId =
         deployments.data.length === 1
           ? deployments.data[0].id
           : await select({
-              message: 'Which deployment do you want to use?',
+              message: 'Which Deployment do you want to use?',
               choices: deployments.data.map((x) => {
                 return {id: x.id, value: x.id, description: `metadata: ${JSON.stringify(x.attributes.metadata)}`}
               }),
             })
     } else {
-      this.error('Unexpected error in deployment selection.')
+      this.error('Unexpected error in Deployment selection.')
     }
     return deploymentId
   }
@@ -124,12 +124,12 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     let deploymentId
     if (deployments.errors) {
       this.log(`${deployments.errors[0].detail}`)
-      if (await confirm({message: 'Do you want to create a new deployment?'})) {
+      if (await confirm({message: 'Do you want to create a new Deployment?'})) {
         const newDeployment = await this.createNewDeployment(tenantId, installId, appInstalledOnOrgId)
         deploymentId = newDeployment.data.id
       } else {
         this.error(
-          'A deployment is needed to get started. Please create one using the deployment create command or running this workflow again. Exiting.',
+          'A Deployment is needed to get started. Please create one using the Deployment create command or running this workflow again. Exiting.',
         )
       }
     } else if (deployments.data) {
@@ -137,13 +137,13 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         deployments.data.length === 1
           ? deployments.data[0].id
           : await select({
-              message: 'Which deployment do you want to use?',
+              message: 'Which Deployment do you want to use?',
               choices: deployments.data.map((x) => {
                 return {id: x.id, value: x.id, description: `metadata: ${JSON.stringify(x.attributes.metadata)}`}
               }),
             })
     } else {
-      this.error('Unexpected error in deployment selection.')
+      this.error('Unexpected error in Deployment selection.')
     }
     return deploymentId
   }

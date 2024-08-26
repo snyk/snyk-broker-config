@@ -84,7 +84,7 @@ export default class Intro extends BaseCommand<typeof Intro> {
     The general model can be viewed as follows:
     `
     const introText2 = `
-    Define this model once and start up your broker client with the deployment ID parameters. It will retrieve the connections the deployment supports and will be waiting for traffic.
+    Define this model once and start up your Broker client with the Deployment ID parameters. It will retrieve the connections the Deployment supports and will be waiting for traffic.
     Once your connections are configured, you can integrate the connection with any org of your choice (currently restricted to the same group during Beta), now or later.
     `
     const connectionsIntegrationsIntroText = `
@@ -92,7 +92,7 @@ export default class Intro extends BaseCommand<typeof Intro> {
     `
     const helpConcepts = {
       deployments: `
-    A Deployment represents the running broker client(s), either as a standalone container or a Kubernetes Deployment with multiple replicas in High Availability Mode. It represents the running code, configured with all the local environment variables required for proxy usage, private certificate authority, custom pod specs, etc.
+    A Deployment represents the running Broker client(s), either as a standalone container or a Kubernetes Deployment with multiple replicas in High Availability Mode. It represents the running code, configured with all the local environment variables required for proxy usage, private certificate authority, custom pod specs, etc.
 
     It is purposely not including any of the connection specifics which are instead defined remotely in the Snyk platform, this greatly simplifies the local configuration complexity while offering greater flexibility overall.
     
@@ -102,16 +102,16 @@ export default class Intro extends BaseCommand<typeof Intro> {
     - tenant ID
     - org ID against which the Broker App was installed
     - the install ID associated
-    - [optional] Key/value pairs metadata to help you keeping track of your deployments
+    - [optional] Key/value pairs metadata to help you keeping track of your Deployments
 
     The "snyk-broker-config workflows connection create" command will walk you through those steps.
     `,
       credentials: `
     In Universal Broker, Credential references are local environment variables expected to be found in a Deployment. Snyk Broker allows you to keep any sensitive value/token local to your network, never sharing them with Snyk. These references are then used in the requests brokering to inject the relevant credentials on the way to the downstream system integrated with Snyk (i.e SCM, Jira, Artifactory, etc).
     
-    Credential references are linked to a deployment, representing secret values passed into the container/deployment, either via environment variables or by secret mounting into secret files. It avoids hard coding these values in connections registered in the Snyk platform.
+    Credential references are linked to a Deployment, representing secret values passed into the container/deployment, either via environment variables or by secret mounting into secret files. It avoids hard coding these values in connections registered in the Snyk platform.
 
-    Credential references can be shared across connections of the same type in the same deployment. It provides flexibility in connections configuration as well as supporting specific use cases where several connections are required (i.e azure-repos integrations with numerous Azure Org names).
+    Credential references can be shared across connections of the same type in the same Deployment. It provides flexibility in connections configuration as well as supporting specific use cases where several connections are required (i.e azure-repos integrations with numerous Azure Org names).
 
     Further improvements will bring the ability to share multiple credential references for a single parameter based on other factors.
 

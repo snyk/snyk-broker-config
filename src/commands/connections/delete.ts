@@ -51,6 +51,6 @@ export default class Connections extends BaseCommand<typeof Connections> {
 
       return JSON.stringify({responseCode: deleteConnectionResponseCode})
     }
-    this.error(ux.colorize('red', `Error deleting broker connection. Status code: ${deleteConnectionResponseCode}.`))
+    this.error(ux.colorize('red', `Error deleting Broker Connection. Status code: ${deleteConnectionResponseCode}.`))
   }
 }

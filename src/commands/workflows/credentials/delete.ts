@@ -53,14 +53,14 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     let installId
     if (process.env.INSTALL_ID) {
       installId = process.env.INSTALL_ID
-    } else if (await confirm({message: 'Have you installed the broker app against an org?'})) {
+    } else if (await confirm({message: 'Have you installed the Broker App against an org?'})) {
       installId = await input({message: 'Enter your Broker App Install ID'})
       if (!isValidUUID(installId)) {
         this.error(`Must be a valid UUID.`)
       }
       // process.env.INSTALL_ID = installId
     } else {
-      this.error(`Please create a valid install first. You can use the create worklow.`)
+      this.error(`Please create a valid install first. You can use the Create Worklow.`)
     }
     await getDeployments(tenantId, installId)
 
@@ -73,19 +73,19 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     let deploymentId
     if (deployments.errors) {
       this.log(`${deployments.errors[0].detail}`)
-      this.error(`Please first create a deployment by using the create workflow.`)
+      this.error(`Please first create a Deployment by using the Create Workflow.`)
     } else if (deployments.data) {
       deploymentId =
         deployments.data.length === 1
           ? deployments.data[0].id
           : await select({
-              message: 'Which deployment do you want to use?',
+              message: 'Which Deployment do you want to use?',
               choices: deployments.data.map((x) => {
                 return {id: x.id, value: x.id, description: `metadata: ${JSON.stringify(x.attributes.metadata)}`}
               }),
             })
     } else {
-      this.error('Unexpected error in deployment selection.')
+      this.error('Unexpected error in Deployment selection.')
     }
     return deploymentId
   }
