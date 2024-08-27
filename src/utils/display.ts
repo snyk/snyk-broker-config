@@ -34,7 +34,7 @@ export function wrapText(text: string, maxWidth: number = 100): string {
   const lines = text.split('\n')
   let wrappedText = ''
 
-  for (let line of lines) {
+  for (const line of lines) {
     const words = line.split(' ')
     let currentLine = ''
 
