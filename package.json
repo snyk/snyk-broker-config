@@ -1,7 +1,7 @@
 {
   "name": "snyk-broker-config",
   "description": "Small utility to help with Universal Broker configuration and management",
-  "version": "1.4.0",
+  "version": "1.6.0",
   "author": "Snyk Ltd.",
   "bin": {
     "snyk-broker-config": "./bin/run.js"
@@ -16,7 +16,7 @@
     "@oclif/plugin-plugins": "^5",
     "@oclif/plugin-version": "^2.2.10",
     "@oclif/plugin-warn-if-update-available": "^3.1.11",
-    "@snyk/log": "^5.3.0",
+    "bunyan": "^1.8.15",
     "inquirer-select-pro": "^1.0.0-alpha.7",
     "object-treeify": "^4.0.1",
     "snyk-config": "^5.3.0"
@@ -24,6 +24,7 @@
   "devDependencies": {
     "@oclif/prettier-config": "^0.2.1",
     "@oclif/test": "^4",
+    "@types/bunyan": "^1.8.11",
     "@types/chai": "^4",
     "@types/mocha": "^10",
     "@types/node": "^18",
