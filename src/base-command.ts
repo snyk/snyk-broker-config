@@ -76,7 +76,12 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       }
     }
     // await getDeployments(tenantId, installId)
-
+    this.log(
+      ux.colorize(
+        'yellow',
+        `Helpful tip ! Set TENANT_ID, INSTALL_ID as environment values to avoid pasting the values in for every command.`,
+      ),
+    )
     const appInstalledOnOrgId = orgId ?? (await getAppInstalledOnOrgId(tenantId, installId))
     return {installId, tenantId, appInstalledOnOrgId}
   }
