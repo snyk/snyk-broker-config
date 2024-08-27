@@ -46,7 +46,10 @@ export const getDeployments = async (tenantId: string, installId: string) => {
     method: 'GET',
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  if (response.statusCode && response.statusCode === 404) {
+    return {data: [], errors: [{details: '404'}]}
+  }
   if (response.statusCode && response.statusCode > 299) {
     throw new Error(`${response.statusCode} - ${response.statusText ?? ''}`)
   }
@@ -76,7 +79,7 @@ export const createDeployment = async (
     body: JSON.stringify(body),
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
   return JSON.parse(response.body) as DeploymentResponse
 }
 
@@ -91,7 +94,7 @@ export const deleteDeployment = async (tenantId: string, installId: string, depl
     method: 'DELETE',
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
   return response.statusCode
 }
 
@@ -121,6 +124,6 @@ export const updateDeployment = async (
     body: JSON.stringify(body),
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
   return JSON.parse(response.body) as DeploymentResponse
 }

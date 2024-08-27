@@ -18,7 +18,7 @@ export const getCredentialsForDeployment = async (tenantId: string, installId: s
     method: 'GET',
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
   return JSON.parse(response.body) as CredentialsListResponse
 }
 
@@ -38,7 +38,7 @@ export const getCredentialForDeployment = async (
     method: 'GET',
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
   return JSON.parse(response.body) as CredentialsResponse
 }
 
@@ -64,7 +64,7 @@ export const createCredentials = async (
     body: JSON.stringify(body),
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
   return JSON.parse(response.body) as NewCredentialsResponse
 }
 
@@ -84,7 +84,7 @@ export const deleteCredentials = async (
     method: 'DELETE',
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
   return response.statusCode
 }
 
@@ -111,6 +111,6 @@ export const updateCredentials = async (
     body: JSON.stringify(body),
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
   return response.body
 }
