@@ -24,7 +24,7 @@ export const getIntegrationsForConnection = async (tenantId: string, connectionI
     method: 'GET',
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
   return JSON.parse(response.body) as IntegrationsResponse
 }
 
@@ -44,7 +44,7 @@ export const deleteIntegrationsForConnection = async (
     method: 'DELETE',
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
   return response.statusCode
 }
 
@@ -74,6 +74,6 @@ export const createIntegrationForConnection = async (
     body: JSON.stringify(body),
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
   return JSON.parse(response.body) as IntegrationResponse
 }

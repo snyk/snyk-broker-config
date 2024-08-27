@@ -62,14 +62,20 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       // process.env.INSTALL_ID = installId
     } else {
       orgId = await input({message: `Enter Org Id to install Broker App. Must be in tenant ${tenantId}`})
-      const {install_id, client_id, client_secret} = await installAppsWorfklow(orgId)
-      installId = install_id
-      this.log(ux.colorize('purple', `App installed. Please store the following credentials securely:`))
-      this.log(ux.colorize('purple', `- clientId: ${client_id}`))
-      this.log(ux.colorize('purple', `- clientSecret: ${client_secret}`))
-      this.log(ux.colorize('purple', `You will need them to run your broker client.`))
+      const appInstall = await installAppsWorfklow(orgId)
+      if (typeof appInstall === 'string') {
+        this.log(ux.colorize('purple', `Found an App already installed. Using install id ${appInstall}.`))
+        installId = appInstall
+      } else {
+        const {install_id, client_id, client_secret} = appInstall
+        installId = install_id
+        this.log(ux.colorize('purple', `App installed. Please store the following credentials securely:`))
+        this.log(ux.colorize('purple', `- clientId: ${client_id}`))
+        this.log(ux.colorize('purple', `- clientSecret: ${client_secret}`))
+        this.log(ux.colorize('purple', `You will need them to run your broker client.`))
+      }
     }
-    await getDeployments(tenantId, installId)
+    // await getDeployments(tenantId, installId)
 
     const appInstalledOnOrgId = orgId ?? (await getAppInstalledOnOrgId(tenantId, installId))
     return {installId, tenantId, appInstalledOnOrgId}

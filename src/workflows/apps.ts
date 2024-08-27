@@ -1,10 +1,14 @@
 import {input} from '@inquirer/prompts'
-import {installAppIdOnOrgId} from '../api/apps.js'
+import {getExistingAppInstalledOnOrgId, installAppIdOnOrgId} from '../api/apps.js'
 import {getDeployments} from '../api/deployments.js'
 import {AppInstallOutput} from '../api/types.js'
 import {isValidUUID} from '../utils/validation.js'
 
-export const installAppsWorfklow = async (orgId: string): Promise<AppInstallOutput> => {
+export const installAppsWorfklow = async (orgId: string): Promise<AppInstallOutput | string> => {
+  const existingInstall = await getExistingAppInstalledOnOrgId(orgId)
+  if (existingInstall) {
+    return existingInstall.id
+  }
   const installData = await installAppIdOnOrgId(orgId)
   return {
     install_id: installData.data.id,
@@ -16,7 +20,7 @@ export const installAppsWorfklow = async (orgId: string): Promise<AppInstallOutp
 export const getAppInstalledOnOrgId = async (tenantId: string, installId: string): Promise<string> => {
   let orgId
   const deployments = await getDeployments(tenantId, installId)
-  if (deployments.errors || (deployments.data && deployments.data.length === 0)) {
+  if (deployments.data && deployments.data.length === 0) {
     orgId = await input({message: 'Enter the Org ID where you installed your Broker App'})
     if (!isValidUUID(installId)) {
       throw new Error('Invalid Org ID entered.')

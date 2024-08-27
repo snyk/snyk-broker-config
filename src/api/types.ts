@@ -26,6 +26,17 @@ export interface AppInstallResponse {
     next?: string
   }
 }
+export interface AppInstallsResponse {
+  data: AppInstallResponseData[]
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
+}
 
 export interface AppInstallOutput {
   install_id: string
