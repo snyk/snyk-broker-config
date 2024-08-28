@@ -61,10 +61,10 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       }
       // process.env.INSTALL_ID = installId
     } else {
-      orgId = await input({message: `Enter Org Id to install Broker App. Must be in tenant ${tenantId}`})
+      orgId = await input({message: `Enter Org ID to install Broker App. Must be in Tenant ${tenantId}`})
       const appInstall = await installAppsWorfklow(orgId)
       if (typeof appInstall === 'string') {
-        this.log(ux.colorize('purple', `Found an App already installed. Using install id ${appInstall}.`))
+        this.log(ux.colorize('purple', `Found an App already installed. Using Install ID ${appInstall}.`))
         installId = appInstall
       } else {
         const {install_id, client_id, client_secret} = appInstall
@@ -72,7 +72,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         this.log(ux.colorize('purple', `App installed. Please store the following credentials securely:`))
         this.log(ux.colorize('purple', `- clientId: ${client_id}`))
         this.log(ux.colorize('purple', `- clientSecret: ${client_secret}`))
-        this.log(ux.colorize('purple', `You will need them to run your broker client.`))
+        this.log(ux.colorize('purple', `You will need them to run your Broker Client.`))
       }
     }
     // await getDeployments(tenantId, installId)
