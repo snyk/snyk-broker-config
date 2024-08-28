@@ -18,7 +18,7 @@ export const getConnectionsForDeployment = async (tenantId: string, installId: s
     method: 'GET',
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
   return JSON.parse(response.body) as ConnectionsResponse
 }
 
@@ -56,7 +56,7 @@ export const createConnectionForDeployment = async (
     body: JSON.stringify(body),
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
   return JSON.parse(response.body) as ConnectionResponse
 }
 
@@ -95,7 +95,7 @@ export const updateConnectionForDeployment = async (
     body: JSON.stringify(body),
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
   return response.body
 }
 
@@ -115,7 +115,7 @@ export const deleteConnectionForDeployment = async (
     method: 'DELETE',
   }
   const response = await makeRequest(req)
-  logger.debug({statusCode: response.statusCode, response: response.body}, 'Response')
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
 
   return response.statusCode
 }

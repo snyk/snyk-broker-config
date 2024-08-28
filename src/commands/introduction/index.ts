@@ -1,6 +1,6 @@
 import {select} from '@inquirer/prompts'
-import {Command, ux} from '@oclif/core'
-//@ts-ignore
+import {ux} from '@oclif/core'
+//  @ts-expect-error VSCode complain about types otherwise
 import * as treeify from 'object-treeify'
 import {wrapText} from '../../utils/display.js'
 import {BaseCommand} from '../../base-command.js'
@@ -146,19 +146,18 @@ export default class Intro extends BaseCommand<typeof Intro> {
 
     this.log(connectionsIntegrationsModelBasic)
     this.log(ux.colorize('cyan', '______________________________'))
-    const choices = [
-      ...Object.values(helpText).map((x) => {
-        return {id: x.id, value: x.value}
-      }),
-    ]
+    const choices = Object.values(helpText).map((x) => {
+      return {id: x.id, value: x.value}
+    })
+
     let choice
-    while (choice != 'exit') {
+    while (choice !== 'exit') {
       choice = await select({
         message: 'Learn more about >',
         choices: choices,
       })
 
-      const text = helpText[choice].text
+      const {text} = helpText[choice]
       this.log(ux.colorize('blue', text))
     }
   }
