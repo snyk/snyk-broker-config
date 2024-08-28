@@ -43,7 +43,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     this.args = args as Args<T>
   }
 
-  async setupFlow(): Promise<SetupParameters> {
+  async setupFlow(skipOrgId = false): Promise<SetupParameters> {
     const snykToken = process.env.SNYK_TOKEN ?? (await input({message: 'Enter your Snyk Token'}))
     process.env.SNYK_TOKEN = snykToken
 
@@ -82,6 +82,9 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         `Helpful tip ! Set TENANT_ID, INSTALL_ID as environment values to avoid pasting the values in for every command.`,
       ),
     )
+    if (skipOrgId) {
+      orgId = 'dummy'
+    }
     const appInstalledOnOrgId = orgId ?? (await getAppInstalledOnOrgId(tenantId, installId))
     return {installId, tenantId, appInstalledOnOrgId}
   }

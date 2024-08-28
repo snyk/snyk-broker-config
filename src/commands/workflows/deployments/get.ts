@@ -18,12 +18,17 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     try {
       this.log('\n' + ux.colorize('red', Workflows.description))
 
-      const {installId, tenantId} = await this.setupFlow()
+      const {installId, tenantId} = await this.setupFlow(true)
 
       this.log(ux.colorize('cyan', `Now using Tenant Id ${tenantId} and Install Id ${installId}.\n`))
 
       const deployments = await getDeployments(tenantId, installId)
-      this.log(printFormattedJSON(deployments.data))
+      if (deployments.data && deployments.data?.length > 0) {
+        this.log(printFormattedJSON(deployments.data))
+      } else {
+        this.log(ux.colorize('cyan', `No deployment found.\n`))
+      }
+
       this.log(ux.colorize('red', 'Get Deployments Workflow completed.'))
     } catch (error: any) {
       if (error.name === 'ExitPromptError') {
