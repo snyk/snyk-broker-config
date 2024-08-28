@@ -20,7 +20,7 @@ $ npm install -g snyk-broker-config
 $ snyk-broker-config COMMAND
 running command...
 $ snyk-broker-config (--version)
-snyk-broker-config/1.8.0 linux-x64 node-v20.14.0
+snyk-broker-config/1.8.1 linux-x64 node-v20.14.0
 $ snyk-broker-config --help [COMMAND]
 USAGE
   $ snyk-broker-config COMMAND
@@ -200,7 +200,7 @@ EXAMPLES
   $ snyk-broker-config connections create TENANT_ID INSTALL_ID DEPLOYMENT_ID --type github
 ```
 
-_See code: [src/commands/connections/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/connections/create.ts)_
+_See code: [src/commands/connections/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/connections/create.ts)_
 
 ## `snyk-broker-config connections delete INSTALLID DEPLOYMENTID CONNECTIONID [APIURL] [APIVERSION]`
 
@@ -236,7 +236,7 @@ EXAMPLES
   $ snyk-broker-config connections delete TENANT_ID INSTALL_ID DEPLOYMENT_ID CONNECTION_ID
 ```
 
-_See code: [src/commands/connections/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/connections/delete.ts)_
+_See code: [src/commands/connections/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/connections/delete.ts)_
 
 ## `snyk-broker-config connections list INSTALLID DEPLOYMENTID [APIURL] [APIVERSION]`
 
@@ -271,7 +271,7 @@ EXAMPLES
   $ snyk-broker-config connections list TENANT_ID INSTALL_ID DEPLOYMENT_ID
 ```
 
-_See code: [src/commands/connections/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/connections/list.ts)_
+_See code: [src/commands/connections/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/connections/list.ts)_
 
 ## `snyk-broker-config connections update INSTALLID DEPLOYMENTID CONNECTIONID [APIURL] [APIVERSION]`
 
@@ -346,7 +346,7 @@ EXAMPLES
   $ snyk-broker-config connections update TENANT_ID INSTALL_ID DEPLOYMENT_ID CONNECTION_ID --type github
 ```
 
-_See code: [src/commands/connections/update.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/connections/update.ts)_
+_See code: [src/commands/connections/update.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/connections/update.ts)_
 
 ## `snyk-broker-config credentials create INSTALLID DEPLOYMENTID [APIURL] [APIVERSION]`
 
@@ -387,7 +387,7 @@ EXAMPLES
   $ snyk-broker-config credentials create TENANT_ID INSTALL_ID DEPLOYMENT_ID --comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github
 ```
 
-_See code: [src/commands/credentials/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/credentials/create.ts)_
+_See code: [src/commands/credentials/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/credentials/create.ts)_
 
 ## `snyk-broker-config credentials delete INSTALLID DEPLOYMENTID [APIURL] [APIVERSION]`
 
@@ -425,7 +425,7 @@ EXAMPLES
   $ snyk-broker-config credentials delete TENANT_ID INSTALL_ID DEPLOYMENT_ID -c CREDENTIALS_ID
 ```
 
-_See code: [src/commands/credentials/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/credentials/delete.ts)_
+_See code: [src/commands/credentials/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/credentials/delete.ts)_
 
 ## `snyk-broker-config credentials list INSTALLID DEPLOYMENTID [APIURL] [APIVERSION]`
 
@@ -460,7 +460,7 @@ EXAMPLES
   $ snyk-broker-config credentials list TENANT_ID INSTALL_ID DEPLOYMENT_ID
 ```
 
-_See code: [src/commands/credentials/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/credentials/list.ts)_
+_See code: [src/commands/credentials/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/credentials/list.ts)_
 
 ## `snyk-broker-config credentials update INSTALLID DEPLOYMENTID [APIURL] [APIVERSION]`
 
@@ -502,7 +502,7 @@ EXAMPLES
   $ snyk-broker-config credentials update TENANT_ID INSTALL_ID DEPLOYMENT_ID --credentialsId CREDENTIALID --comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github
 ```
 
-_See code: [src/commands/credentials/update.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/credentials/update.ts)_
+_See code: [src/commands/credentials/update.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/credentials/update.ts)_
 
 ## `snyk-broker-config deployments create INSTALLID APPINSTALLEDINORGID [APIURL] [APIVERSION]`
 
@@ -541,7 +541,7 @@ EXAMPLES
   $ snyk-broker-config deployments create TENANT_ID INSTALL_ID APP_INSTALLED_ORG_ID --data mykey=myvalue,mykey2=myvalue2
 ```
 
-_See code: [src/commands/deployments/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/deployments/create.ts)_
+_See code: [src/commands/deployments/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/deployments/create.ts)_
 
 ## `snyk-broker-config deployments delete INSTALLID DEPLOYMENTID`
 
@@ -573,7 +573,7 @@ EXAMPLES
   $ snyk-broker-config deployments delete TENANT_ID INSTALL_ID DEPLOYMENT_ID
 ```
 
-_See code: [src/commands/deployments/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/deployments/delete.ts)_
+_See code: [src/commands/deployments/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/deployments/delete.ts)_
 
 ## `snyk-broker-config deployments list INSTALLID [APIURL] [APIVERSION]`
 
@@ -607,7 +607,7 @@ EXAMPLES
   $ snyk-broker-config deployments list TENANT_ID INSTALL_ID
 ```
 
-_See code: [src/commands/deployments/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/deployments/list.ts)_
+_See code: [src/commands/deployments/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/deployments/list.ts)_
 
 ## `snyk-broker-config deployments update INSTALLID DEPLOYMENTID`
 
@@ -644,7 +644,7 @@ EXAMPLES
   $ snyk-broker-config deployments update TENANT_ID INSTALL_ID DEPLOYMENT_ID --data mykey=myvalue,mykey2=myvalue2
 ```
 
-_See code: [src/commands/deployments/update.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/deployments/update.ts)_
+_See code: [src/commands/deployments/update.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/deployments/update.ts)_
 
 ## `snyk-broker-config help [COMMAND]`
 
@@ -702,7 +702,7 @@ EXAMPLES
   $ snyk-broker-config integrations create TENANT_ID INSTALL_ID CONNECTION_ID ORG_ID INTEGRATION_ID
 ```
 
-_See code: [src/commands/integrations/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/integrations/create.ts)_
+_See code: [src/commands/integrations/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/integrations/create.ts)_
 
 ## `snyk-broker-config integrations delete INSTALLID CONNECTIONID ORGID INTEGRATIONID [APIURL] [APIVERSION]`
 
@@ -739,7 +739,7 @@ EXAMPLES
   $ snyk-broker-config integrations delete TENANT_ID INSTALL_ID CONNECTION_ID ORG_ID INTEGRATION_ID
 ```
 
-_See code: [src/commands/integrations/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/integrations/delete.ts)_
+_See code: [src/commands/integrations/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/integrations/delete.ts)_
 
 ## `snyk-broker-config integrations list INSTALLID CONNECTIONID [APIURL] [APIVERSION]`
 
@@ -774,7 +774,7 @@ EXAMPLES
   $ snyk-broker-config integrations list TENANT_ID INSTALL_ID CONNECTION_ID
 ```
 
-_See code: [src/commands/integrations/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/integrations/list.ts)_
+_See code: [src/commands/integrations/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/integrations/list.ts)_
 
 ## `snyk-broker-config introduction`
 
@@ -796,7 +796,7 @@ EXAMPLES
   $ snyk-broker-config introduction
 ```
 
-_See code: [src/commands/introduction/index.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/introduction/index.ts)_
+_See code: [src/commands/introduction/index.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/introduction/index.ts)_
 
 ## `snyk-broker-config plugins`
 
@@ -1132,7 +1132,7 @@ EXAMPLES
   $ snyk-broker-config workflows connections create
 ```
 
-_See code: [src/commands/workflows/connections/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/workflows/connections/create.ts)_
+_See code: [src/commands/workflows/connections/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/workflows/connections/create.ts)_
 
 ## `snyk-broker-config workflows connections delete [APIURL] [APIVERSION]`
 
@@ -1159,7 +1159,7 @@ EXAMPLES
   $ snyk-broker-config workflows connections delete
 ```
 
-_See code: [src/commands/workflows/connections/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/workflows/connections/delete.ts)_
+_See code: [src/commands/workflows/connections/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/workflows/connections/delete.ts)_
 
 ## `snyk-broker-config workflows connections disconnect [APIURL] [APIVERSION]`
 
@@ -1186,7 +1186,7 @@ EXAMPLES
   $ snyk-broker-config workflows connections disconnect
 ```
 
-_See code: [src/commands/workflows/connections/disconnect.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/workflows/connections/disconnect.ts)_
+_See code: [src/commands/workflows/connections/disconnect.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/workflows/connections/disconnect.ts)_
 
 ## `snyk-broker-config workflows connections get [APIURL] [APIVERSION]`
 
@@ -1213,7 +1213,7 @@ EXAMPLES
   $ snyk-broker-config workflows connections get
 ```
 
-_See code: [src/commands/workflows/connections/get.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/workflows/connections/get.ts)_
+_See code: [src/commands/workflows/connections/get.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/workflows/connections/get.ts)_
 
 ## `snyk-broker-config workflows connections integrate [APIURL] [APIVERSION]`
 
@@ -1240,7 +1240,7 @@ EXAMPLES
   $ snyk-broker-config workflows connections integrate
 ```
 
-_See code: [src/commands/workflows/connections/integrate.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/workflows/connections/integrate.ts)_
+_See code: [src/commands/workflows/connections/integrate.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/workflows/connections/integrate.ts)_
 
 ## `snyk-broker-config workflows credentials delete INSTALLID [APIURL] [APIVERSION]`
 
@@ -1274,7 +1274,7 @@ EXAMPLES
   $ snyk-broker-config workflows credentials delete TENANT_ID INSTALL_ID
 ```
 
-_See code: [src/commands/workflows/credentials/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/workflows/credentials/delete.ts)_
+_See code: [src/commands/workflows/credentials/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/workflows/credentials/delete.ts)_
 
 ## `snyk-broker-config workflows deployments create [APIURL] [APIVERSION]`
 
@@ -1301,7 +1301,7 @@ EXAMPLES
   $ snyk-broker-config workflows deployments create
 ```
 
-_See code: [src/commands/workflows/deployments/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/workflows/deployments/create.ts)_
+_See code: [src/commands/workflows/deployments/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/workflows/deployments/create.ts)_
 
 ## `snyk-broker-config workflows deployments get [APIURL] [APIVERSION]`
 
@@ -1328,5 +1328,5 @@ EXAMPLES
   $ snyk-broker-config workflows deployments get
 ```
 
-_See code: [src/commands/workflows/deployments/get.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.0/src/commands/workflows/deployments/get.ts)_
+_See code: [src/commands/workflows/deployments/get.ts](https://github.com/snyk/snyk-broker-config/blob/v1.8.1/src/commands/workflows/deployments/get.ts)_
 <!-- commandsstop -->

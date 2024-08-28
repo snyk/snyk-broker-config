@@ -15,7 +15,7 @@ export const commonUniversalBrokerArgs = (): CommonUniversalBrokerArgs => {
       required: true,
     }),
     installId: Args.string({
-      description: 'Tenant ID',
+      description: 'Install ID',
       required: true,
     }),
   }
@@ -66,7 +66,7 @@ export const commonApiRelatedArgs = {
 
 export const getCommonIds = (args: Record<string, string>) => {
   const tenantId = args.tenantId ?? process.env.TENANT_ID
-  const installId = args.tenantId ?? process.env.INSTALL_ID
+  const installId = args.installId ?? process.env.INSTALL_ID
 
   return {tenantId, installId}
 }
