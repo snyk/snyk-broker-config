@@ -11,7 +11,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker -  Delete Connection workflow'
+  static description = 'Universal Broker -  Delete Connection Workflow'
 
   static examples = [`<%= config.bin %> <%= command.id %>`]
 
@@ -21,7 +21,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
       const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
 
-      this.log(ux.colorize('cyan', `Now using Tenant Id ${tenantId} and Install Id ${installId}.\n`))
+      this.log(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
       const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
       this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
@@ -31,16 +31,16 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       const connectionIntegration = await getIntegrationsForConnection(tenantId, selectedConnection.id)
       if (connectionIntegration.data.length > 0) {
         this.error(
-          `Please disconnect connection integration(s) first (connection disconnect workflow). Connection is used by org${connectionIntegration.data.length > 1 ? 's' : ''} ${connectionIntegration.data.map((x) => x.org_id).join(',')}.`,
+          `Please disconnect Connection integration(s) first (connection disconnect workflow). Connection is used by Org ${connectionIntegration.data.length > 1 ? 's' : ''} ${connectionIntegration.data.map((x) => x.org_id).join(',')}.`,
         )
       }
-      this.log(ux.colorize('cyan', `Selected connection id ${selectedConnection.id}. Ready to delete connection.\n`))
+      this.log(ux.colorize('cyan', `Selected Connection ID ${selectedConnection.id}. Ready to delete Connection.\n`))
       if (
         await confirm({
-          message: `Are you sure you want to delete connection ${selectedConnection.id} ?`,
+          message: `Are you sure you want to delete Connection ${selectedConnection.id} ?`,
         })
       ) {
-        this.log(ux.colorize('blue', `Deleting connection ${selectedConnection.id}`))
+        this.log(ux.colorize('blue', `Deleting Connection ${selectedConnection.id}`))
         await deleteConnectionForDeployment(tenantId, installId, deploymentId, selectedConnection.id)
       } else {
         this.log(ux.colorize('cyan', 'Canceling.'))

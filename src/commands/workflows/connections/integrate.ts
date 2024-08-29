@@ -11,7 +11,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker - Connection Create Integration(s) workflow'
+  static description = 'Universal Broker - Connection Create Integration(s) Workflow'
 
   static examples = [`<%= config.bin %> <%= command.id %>`]
 
@@ -21,7 +21,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
       const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
 
-      this.log(ux.colorize('cyan', `Now using Tenant Id ${tenantId} and Install Id ${installId}.\n`))
+      this.log(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
       const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
       this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
@@ -31,7 +31,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       this.log(
         ux.colorize(
           'cyan',
-          `Selected connection id ${selectedConnection.id}. Ready to configure integrations to use this connection.\n`,
+          `Selected Connection ID ${selectedConnection.id}. Ready to configure integrations to use this Connection.\n`,
         ),
       )
       const orgId = await input({message: 'Enter the OrgID you want to integrate.'})
@@ -54,7 +54,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       this.log(
         ux.colorize(
           'cyan',
-          `Connection ${connectionIntegration.data.id} (type: ${selectedConnection.type}) integrated with integration ${integrationId} on org ${orgId}.`,
+          `Connection ${connectionIntegration.data.id} (type: ${selectedConnection.type}) integrated with integration ${integrationId} on Org ${orgId}.`,
         ),
       )
       this.log(ux.colorize('red', 'Connection Integrate Workflow completed.'))

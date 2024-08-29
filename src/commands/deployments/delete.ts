@@ -38,6 +38,6 @@ export default class Deployments extends BaseCommand<typeof Deployments> {
       this.log(ux.colorize('cyan', `Deleted Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
       return JSON.stringify({responseCode: deploymentResponseCode})
     }
-    this.error(ux.colorize('red', `Error deleting deployment. Status code: ${deploymentResponseCode}.`))
+    this.error(ux.colorize('red', `Error deleting Deployment. Status code: ${deploymentResponseCode}.`))
   }
 }

@@ -54,7 +54,7 @@ export default class Credentials extends BaseCommand<typeof Credentials> {
           ),
         )
       } else {
-        this.error(ux.colorize('red', `Error deleting credentials for deployment. Status code: ${deleteResponseCode}.`))
+        this.error(ux.colorize('red', `Error deleting Credentials for Deployment. Status code: ${deleteResponseCode}.`))
       }
     }
     return JSON.stringify(jsonResponse)

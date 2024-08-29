@@ -54,17 +54,17 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     let installId
     if (process.env.INSTALL_ID) {
       installId = process.env.INSTALL_ID
-    } else if (await confirm({message: 'Have you installed the broker app against an org?'})) {
+    } else if (await confirm({message: 'Have you installed the Broker App against an Org?'})) {
       installId = await input({message: 'Enter your Broker App Install ID'})
       if (!isValidUUID(installId)) {
         this.error(`Must be a valid UUID.`)
       }
       // process.env.INSTALL_ID = installId
     } else {
-      orgId = await input({message: `Enter Org Id to install Broker App. Must be in tenant ${tenantId}`})
+      orgId = await input({message: `Enter Org ID to install Broker App. Must be in Tenant ${tenantId}`})
       const appInstall = await installAppsWorfklow(orgId)
       if (typeof appInstall === 'string') {
-        this.log(ux.colorize('purple', `Found an App already installed. Using install id ${appInstall}.`))
+        this.log(ux.colorize('purple', `Found an App already installed. Using Install ID ${appInstall}.`))
         installId = appInstall
       } else {
         const {install_id, client_id, client_secret} = appInstall
@@ -72,7 +72,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         this.log(ux.colorize('purple', `App installed. Please store the following credentials securely:`))
         this.log(ux.colorize('purple', `- clientId: ${client_id}`))
         this.log(ux.colorize('purple', `- clientSecret: ${client_secret}`))
-        this.log(ux.colorize('purple', `You will need them to run your broker client.`))
+        this.log(ux.colorize('purple', `You will need them to run your Broker Client.`))
       }
     }
     // await getDeployments(tenantId, installId)
@@ -94,19 +94,19 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     let deploymentId
     if (deployments.errors) {
       this.log(`${deployments.errors[0].detail}`)
-      this.error(`Please first create a deployment by using the create worklow.`)
+      this.error(`Please first create a Deployment by using the Create Workflow.`)
     } else if (deployments.data) {
       deploymentId =
         deployments.data.length === 1
           ? deployments.data[0].id
           : await select({
-              message: 'Which deployment do you want to use?',
+              message: 'Which Deployment do you want to use?',
               choices: deployments.data.map((x) => {
                 return {id: x.id, value: x.id, description: `metadata: ${JSON.stringify(x.attributes.metadata)}`}
               }),
             })
     } else {
-      this.error('Unexpected error in deployment selection.')
+      this.error('Unexpected error in Deployment selection.')
     }
     return deploymentId
   }
@@ -138,12 +138,12 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     let deploymentId
     if (deployments.errors) {
       this.log(`${deployments.errors[0].detail}`)
-      if (await confirm({message: 'Do you want to create a new deployment?'})) {
+      if (await confirm({message: 'Do you want to create a new Deployment?'})) {
         const newDeployment = await this.createNewDeployment(tenantId, installId, appInstalledOnOrgId)
         deploymentId = newDeployment.data.id
       } else {
         this.error(
-          'A deployment is needed to get started. Please create one using the deployment create command or running this workflow again. Exiting.',
+          'A Deployment is needed to get started. Please create one using the Deployment create command or running this workflow again. Exiting.',
         )
       }
     } else if (deployments.data) {
@@ -151,13 +151,13 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         deployments.data.length === 1
           ? deployments.data[0].id
           : await select({
-              message: 'Which deployment do you want to use?',
+              message: 'Which Deployment do you want to use?',
               choices: deployments.data.map((x) => {
                 return {id: x.id, value: x.id, description: `metadata: ${JSON.stringify(x.attributes.metadata)}`}
               }),
             })
     } else {
-      this.error('Unexpected error in deployment selection.')
+      this.error('Unexpected error in Deployment selection.')
     }
     return deploymentId
   }
@@ -170,15 +170,15 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   ): Promise<ConnectionId> {
     const existingConnections = await getConnectionsForDeployment(tenantID, installId, deploymentId)
     const regex = /^[\w-]+$/ // Any word character. Avoiding problems that way.
-    let connectionFriendlyName = await input({message: 'Enter a human friendly name for your connection.'})
+    let connectionFriendlyName = await input({message: 'Enter a human friendly name for your Connection.'})
     while (!regex.test(connectionFriendlyName)) {
       connectionFriendlyName = await input({
-        message: 'Please use only [a-Z0-9_-]. Enter a human friendly name for your connection.',
+        message: 'Please use only [a-Z0-9_-]. Enter a human friendly name for your Connection.',
       })
     }
     while (existingConnections.data.map((x) => x.attributes.name).includes(connectionFriendlyName)) {
       connectionFriendlyName = await input({
-        message: 'Name is already in use. Please enter a unique human friendly name for your connection.',
+        message: 'Name is already in use. Please enter a unique human friendly name for your Connection.',
       })
     }
     const params = await captureConnectionParams(tenantID, installId, deploymentId, connectionType)
@@ -200,13 +200,13 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   ): Promise<ConnectionSelection> {
     const existingConnections = await getConnectionsForDeployment(tenantID, installId, deploymentId)
     if (existingConnections.data.length === 0) {
-      this.error('No connection found.')
+      this.error('No Connection found.')
     }
     const selectedConnection =
       existingConnections.data.length === 1
         ? existingConnections.data[0].id
         : await select({
-            message: 'Which connection do you want to use?',
+            message: 'Which Connection do you want to use?',
             choices: existingConnections.data.map((x) => {
               return {
                 id: x.id,

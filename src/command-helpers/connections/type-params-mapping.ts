@@ -44,7 +44,7 @@ export interface TypeMapping {
 export const flagConnectionMapping: TypeMapping = {
   apprisk: {
     broker_client_url: {description: 'Broker Client Url'},
-    checkmarx: {description: 'Checkmarx hostname'},
+    checkmarx: {description: 'Checkmarx Hostname'},
     checkmarx_password: {description: 'Checkmarx Password Credentials Reference', sensitive: true},
     checkmarx_username: {description: 'Checkmarx Username'},
   },
@@ -91,18 +91,18 @@ export const flagConnectionMapping: TypeMapping = {
     broker_client_url: {description: 'Broker Client Url'},
     github: {description: 'Github Url'},
     github_api: {description: 'Github Api Url'},
-    github_app_client_id: {description: 'Github App Client Id Credentials Refs', sensitive: true},
-    github_app_id: {description: 'Github App Id'},
-    github_app_installation_id: {description: 'Github App Installation Id'},
+    github_app_client_id: {description: 'Github App Client ID Credentials Refs', sensitive: true},
+    github_app_id: {description: 'Github App ID'},
+    github_app_installation_id: {description: 'Github App Installation ID'},
     github_app_private_pem_path: {description: 'Github Private Pem cert path'},
   },
   'github-cloud-app': {
     broker_client_url: {description: 'Broker Client Url'},
     github: {description: 'Github Url'},
     github_api: {description: 'Github Api Url'},
-    github_app_client_id: {description: 'Github App Client Id Credentials Refs', sensitive: true},
-    github_app_id: {description: 'Github App Id'},
-    github_app_installation_id: {description: 'Github App Installation Id'},
+    github_app_client_id: {description: 'Github App Client ID Credentials Refs', sensitive: true},
+    github_app_id: {description: 'Github App ID'},
+    github_app_installation_id: {description: 'Github App Installation ID'},
     github_app_private_pem_path: {description: 'Github Private Pem cert path'},
   },
   gitlab: {
@@ -143,7 +143,7 @@ export const flagConnectionMapping: TypeMapping = {
     cr_base: {description: 'CR Base Url'},
     cr_role_arn: {description: 'CR Role Arn'},
     cr_region: {description: 'CR Region'},
-    cr_external_id: {description: 'CR External Id'},
+    cr_external_id: {description: 'CR External ID'},
   },
   gcr: {
     broker_client_url: {description: 'Broker Client Url'},

@@ -21,7 +21,7 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker Connections - Create operation'
+  static description = 'Universal Broker Connections Integrations - Create operation'
 
   static examples = [
     `[with exported TENANT_ID,INSTALL_ID]`,
@@ -47,7 +47,7 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
     this.log(
       ux.colorize(
         'cyan',
-        `Creating Universal Broker Integration for Connection ${args.connectionId} for Org ${args.orgId}, Integration ${args.integrationId}`,
+        `Creating Universal Broker Connections Integration for Connection ${args.connectionId} for Org ${args.orgId}, Integration ${args.integrationId}, Tenant ${tenantId},`,
       ),
     )
     this.log(printFormattedJSON(integrationResponse))

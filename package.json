@@ -75,16 +75,16 @@
         "description": "Manages Universal Broker Connections"
       },
       "credentials": {
-        "description": "Manages Universal Broker credentials"
+        "description": "Manages Universal Broker Credentials"
       },
       "deployments": {
-        "description": "Manages Universal Broker deployments"
+        "description": "Manages Universal Broker Deployments"
       },
       "integrations": {
-        "description": "Manages Universal Broker Connections Integrations in Organizations"
+        "description": "Manages Universal Broker Connection Integrations in Organizations"
       },
       "workflows": {
-        "description": "Interactive workflows for deployments, credentials, connections and integrations management"
+        "description": "Interactive workflows for Deployments, Credentials, Connections and Integrations management"
       }
     },
     "theme": "theme.json"

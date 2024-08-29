@@ -29,7 +29,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker -  Credentials Deletion workflow'
+  static description = 'Universal Broker -  Credentials Deletion Workflow'
 
   static examples = [
     `[with exported TENANT_ID,INSTALL_ID]`,
@@ -53,14 +53,14 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     let installId
     if (process.env.INSTALL_ID) {
       installId = process.env.INSTALL_ID
-    } else if (await confirm({message: 'Have you installed the broker app against an org?'})) {
+    } else if (await confirm({message: 'Have you installed the Broker App against an Org?'})) {
       installId = await input({message: 'Enter your Broker App Install ID'})
       if (!isValidUUID(installId)) {
         this.error(`Must be a valid UUID.`)
       }
       // process.env.INSTALL_ID = installId
     } else {
-      this.error(`Please create a valid install first. You can use the create worklow.`)
+      this.error(`Please create a valid install first. You can use the Create Worklow.`)
     }
     await getDeployments(tenantId, installId)
 
@@ -73,19 +73,19 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     let deploymentId
     if (deployments.errors) {
       this.log(`${deployments.errors[0].detail}`)
-      this.error(`Please first create a deployment by using the create worklow.`)
+      this.error(`Please first create a Deployment by using the Create Workflow.`)
     } else if (deployments.data) {
       deploymentId =
         deployments.data.length === 1
           ? deployments.data[0].id
           : await select({
-              message: 'Which deployment do you want to use?',
+              message: 'Which Deployment do you want to use?',
               choices: deployments.data.map((x) => {
                 return {id: x.id, value: x.id, description: `metadata: ${JSON.stringify(x.attributes.metadata)}`}
               }),
             })
     } else {
-      this.error('Unexpected error in deployment selection.')
+      this.error('Unexpected error in Deployment selection.')
     }
     return deploymentId
   }
@@ -96,7 +96,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
       const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
 
-      this.log(ux.colorize('cyan', `Now using Tenant Id ${tenantId} and Install Id ${installId}.\n`))
+      this.log(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
       const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
       this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
@@ -105,7 +105,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
       const credentials = await getCredentialsForDeployment(tenantId, installId, deploymentId)
       if (credentials.data.length === 0) {
-        this.error(`Not credentials found.`)
+        this.error(`No credentials found.`)
       }
 
       const choices = credentials.data.map((x) => {
@@ -131,7 +131,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
             this.log(
               ux.colorize(
                 'red',
-                `Cannot delete ${credentialsId}. In use by ${credential.data.relationships.broker_connections.length} connection${credential.data.relationships.broker_connections.length > 1 ? 's' : ''} (${credential.data.relationships.broker_connections.map((x) => x.data.id).join(',')}). Skipping.`,
+                `Cannot delete ${credentialsId}. In use by ${credential.data.relationships.broker_connections.length} Connection ${credential.data.relationships.broker_connections.length > 1 ? 's' : ''} (${credential.data.relationships.broker_connections.map((x) => x.data.id).join(',')}). Skipping.`,
               ),
             )
             continue
@@ -140,7 +140,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
           }
         }
       } else {
-        this.log(ux.colorize('cyan', 'Canceling.'))
+        this.log(ux.colorize('cyan', 'Cancelling.'))
       }
 
       this.log(ux.colorize('red', 'Credentials Deletion Workflow completed.'))

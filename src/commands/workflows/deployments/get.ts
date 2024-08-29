@@ -20,7 +20,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
       const {installId, tenantId} = await this.setupFlow(true)
 
-      this.log(ux.colorize('cyan', `Now using Tenant Id ${tenantId} and Install Id ${installId}.\n`))
+      this.log(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
       const deployments = await getDeployments(tenantId, installId)
       if (deployments.data && deployments.data?.length > 0) {

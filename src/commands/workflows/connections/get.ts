@@ -20,7 +20,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
       const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
 
-      this.log(ux.colorize('cyan', `Now using Tenant Id ${tenantId} and Install Id ${installId}.\n`))
+      this.log(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
       const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
       this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
@@ -30,7 +30,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       this.log(
         ux.colorize(
           'cyan',
-          `Selected connection id ${selectedConnection.id}. Ready to configure integrations to use this connection.\n`,
+          `Selected Connection ID ${selectedConnection.id}. Ready to configure integrations to use this Connection.\n`,
         ),
       )
       const selectedConnectionData = await getConnectionsForDeployment(tenantId, installId, deploymentId)
