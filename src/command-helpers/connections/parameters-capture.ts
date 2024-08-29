@@ -1,7 +1,8 @@
-import {input, select} from '@inquirer/prompts'
+import {input, select, confirm} from '@inquirer/prompts'
 import {flagConnectionMapping} from './type-params-mapping.js'
 import {createCredentials, getCredentialsForDeployment} from '../../api/credentials.js'
 import {CredentialsAttributes, CredentialsListResponse} from '../../api/types.js'
+import {isValidHostnameWithPort, isValidUrl, isValidUUID} from '../../utils/validation.js'
 
 export const captureConnectionParams = async (
   tenantID: string,
@@ -11,6 +12,14 @@ export const captureConnectionParams = async (
 ): Promise<Record<string, string>> => {
   const requiredParameters = flagConnectionMapping[connectionType]
   for (const [key, value] of Object.entries(requiredParameters)) {
+    if (value.skippable) {
+      const userWantsToEnterValue = await confirm({
+        message: `The ${key} field is optional in connection type ${connectionType}. Do you want to input value (Y) or skip (N)?`,
+      })
+      if (!userWantsToEnterValue) {
+        continue
+      }
+    }
     if (value.sensitive) {
       const existingCredentialsByTypeAndDeployment = await getExistingCredentialsReference(
         tenantID,
@@ -48,14 +57,41 @@ export const captureConnectionParams = async (
         requiredParameters[key].input = selectedCredId.id
       }
     } else {
-      requiredParameters[key].input = await input({
-        message: `${key}: ${value.description}`,
-      })
+      let isInputValidated = false
+      let message = `${key}: ${value.description}. `
+      if (requiredParameters[key].dataType) {
+        message += `Must be ${requiredParameters[key].dataType}.`
+      }
+      while (!isInputValidated) {
+        requiredParameters[key].input = await input({
+          message: message,
+        })
+        if (requiredParameters[key].dataType) {
+          switch (requiredParameters[key].dataType) {
+            case 'hostname': {
+              isInputValidated =
+                isValidHostnameWithPort(requiredParameters[key].input) || isValidUUID(requiredParameters[key].input)
+              break
+            }
+            case 'url': {
+              isInputValidated = isValidUrl(requiredParameters[key].input) || isValidUUID(requiredParameters[key].input)
+              break
+            }
+            default: {
+              isInputValidated = true
+            }
+          }
+        } else {
+          isInputValidated = true
+        }
+      }
     }
   }
   const connectionParams: Record<string, string> = {}
   for (const [key, value] of Object.entries(requiredParameters)) {
-    connectionParams[key] = value.input!
+    if (value.input) {
+      connectionParams[key] = value.input
+    }
   }
   return connectionParams
 }
