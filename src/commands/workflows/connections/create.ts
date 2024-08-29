@@ -25,6 +25,13 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       const deploymentId = await this.setupOrSelectDeployment(tenantId, installId, appInstalledOnOrgId)
       this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
 
+      this.log(
+        ux.colorize(
+          'yellow',
+          `Helpful tip ! You can use a credentials reference for any field by simply entering the creds ref UUID. Use workflows credentials create|get to create|list available credentials reference(s).\n`,
+        ),
+      )
+
       const connectionType = await select({
         message: 'Which Connection type do you want to create?',
         choices: connectionTypes.map((x) => {
