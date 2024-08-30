@@ -3,6 +3,7 @@ import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
 import {createLogger} from '../utils/logger.js'
+import {getDummyCredentialsForIntegrationType} from './integrations-utils.js'
 import {IntegrationResponse, IntegrationsResponse} from './types.js'
 
 const logger = createLogger('snyk-broker-config')
@@ -76,4 +77,38 @@ export const createIntegrationForConnection = async (
   const response = await makeRequest(req)
   logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
   return JSON.parse(response.body) as IntegrationResponse
+}
+
+export const disconnectIntegrationForOrgIdAndIntegrationId = async (
+  orgId: string,
+  integrationId: string,
+  type: string,
+): Promise<void> => {
+  const headers = {
+    'user-agent': 'Hybrid Platform Service',
+    'Content-Type': 'application/json; charset=utf-8',
+    ...getAuthHeader(),
+  }
+  const apiPath = `v1/org/${orgId}/integrations/${integrationId}`
+  const config = getConfig()
+
+  const integrationCredentials = getDummyCredentialsForIntegrationType(type)
+
+  const body = JSON.stringify({
+    type: type,
+    broker: {enabled: false},
+    credentials: integrationCredentials,
+  })
+
+  const req: HttpRequest = {
+    url: `${config.API_HOSTNAME}/${apiPath}`,
+    headers: headers,
+    method: 'PUT',
+    body: body,
+  }
+  const response = await makeRequest(req)
+  if (response.statusCode && response.statusCode > 299) {
+    throw new Error(`Error Disabling brokered integration ${integrationId} - ${response.statusCode}:${response.body}`)
+  }
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
 }
