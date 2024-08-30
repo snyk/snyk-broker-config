@@ -3,12 +3,12 @@ export function isValidUUID(val: string): boolean {
   return uuidRegex.test(val)
 }
 
-export function isValidHostnameWithPort(hostname: string) {
-  const regex = /^(?!:\/\/)([\w-]{1,63}\.)*[\dA-Za-z][\w-]{0,62}\.[A-Za-z]{2,6}(:\d{1,5})?$/
+export function isValidHostnameWithPort(hostname: string): boolean {
+  const regex = /^(?!:\/\/)([\dA-Za-z-]{1,63})(\.[\dA-Za-z-]{1,63})*(\.[A-Za-z]{2,6})?(:\d{1,5})?$/
   return regex.test(hostname)
 }
 
-export function isValidUrl(url: string) {
-  const regex = /^(https?:\/\/)([\w-]{1,63}\.)*[\dA-Za-z][\w-]{0,62}\.[A-Za-z]{2,6}(:\d{1,5})?(\/.*)?$/
+export function isValidUrl(url: string): boolean {
+  const regex = /^(https?:\/\/)([\dA-Za-z-]{1,63})(\.[\dA-Za-z-]{1,63})*(\.[A-Za-z]{2,6})?(:\d{1,5})?(\/.*)?$/
   return regex.test(url)
 }
