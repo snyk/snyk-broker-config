@@ -1,7 +1,7 @@
 {
   "name": "snyk-broker-config",
   "description": "Small utility to help with Universal Broker configuration and management",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "author": "Snyk Ltd.",
   "bin": {
     "snyk-broker-config": "./bin/run.js"
