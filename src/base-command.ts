@@ -8,6 +8,7 @@ import {createDeployment, DeploymentAttributes, DeploymentResponse, getDeploymen
 import {ConnectionId, ConnectionSelection, DeploymentId, InstallId, SetupParameters, TenantId} from './types.js'
 import {getConnectionsForDeployment, createConnectionForDeployment} from './api/connections.js'
 import {captureConnectionParams} from './command-helpers/connections/parameters-capture.js'
+import {getAccessibleTenants} from './api/tenants.js'
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<(typeof BaseCommand)['baseFlags'] & T['flags']>
 export type Args<T extends typeof Command> = Interfaces.InferredArgs<T['args']>
@@ -46,8 +47,25 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   async setupFlow(skipOrgId = false): Promise<SetupParameters> {
     const snykToken = process.env.SNYK_TOKEN ?? (await input({message: 'Enter your Snyk Token'}))
     process.env.SNYK_TOKEN = snykToken
-
-    const tenantId = process.env.TENANT_ID ?? (await input({message: 'Enter your tenantID'}))
+    if (!process.env.TENANT_ID) {
+      const accessibleTenants = await getAccessibleTenants()
+      if (accessibleTenants.data.length < 1) {
+        this.error(
+          'Not tenant accessible with your credentials. A Tenant is required for Universal Broker. Personal organizations are not compatible.',
+        )
+      } else if (accessibleTenants.data.length === 1) {
+        process.env.TENANT_ID = accessibleTenants.data[0].id
+        this.log(ux.colorize('yellow', `Found single accessible Tenant. Using ${process.env.TENANT_ID}.`))
+      } else {
+        this.log(
+          ux.colorize(
+            'yellow',
+            `Your credentials can access tenants ${accessibleTenants.data.map((x) => `[${x.attributes.name}:${x.id}]`).join(',')}. Please set TENANT_ID for the tenant of your choice.`,
+          ),
+        )
+      }
+    }
+    const tenantId = process.env.TENANT_ID ?? (await input({message: 'Enter your tenantID.'}))
     process.env.TENANT_ID = tenantId
 
     let orgId
