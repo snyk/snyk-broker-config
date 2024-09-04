@@ -25,7 +25,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       const metadata: Record<string, string> = {}
       while (
         await confirm({
-          message: `Do you want to add one more metadata entry (key/value paid)?`,
+          message: `Do you want to add one more metadata entry (key/value pair)?`,
         })
       ) {
         const key = await input({message: 'Enter metadata key.'})
