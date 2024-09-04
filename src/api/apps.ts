@@ -34,9 +34,13 @@ export const installAppIdOnOrgId = async (orgId: string): Promise<AppInstallResp
     method: 'POST',
     body: JSON.stringify(body),
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  return JSON.parse(response.body)
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return JSON.parse(response.body)
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 
 export const getExistingAppInstalledOnOrgId = async (orgId: string): Promise<AppInstallResponseData | undefined> => {
@@ -51,9 +55,13 @@ export const getExistingAppInstalledOnOrgId = async (orgId: string): Promise<App
     headers: headers,
     method: 'GET',
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  const installs = JSON.parse(response.body) as AppInstallsResponse
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    const installs = JSON.parse(response.body) as AppInstallsResponse
 
-  return installs.data.find((x) => x.relationships.app.data.id === appId)
+    return installs.data.find((x) => x.relationships.app.data.id === appId)
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }

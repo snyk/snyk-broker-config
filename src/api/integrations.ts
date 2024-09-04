@@ -24,9 +24,13 @@ export const getIntegrationsForConnection = async (tenantId: string, connectionI
     headers: headers,
     method: 'GET',
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  return JSON.parse(response.body) as IntegrationsResponse
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return JSON.parse(response.body) as IntegrationsResponse
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 
 export const deleteIntegrationsForConnection = async (
@@ -44,9 +48,13 @@ export const deleteIntegrationsForConnection = async (
     headers: headers,
     method: 'DELETE',
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  return response.statusCode
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return response.statusCode
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 
 export const createIntegrationForConnection = async (
@@ -74,9 +82,13 @@ export const createIntegrationForConnection = async (
     method: 'POST',
     body: JSON.stringify(body),
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  return JSON.parse(response.body) as IntegrationResponse
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return JSON.parse(response.body) as IntegrationResponse
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 
 export const disconnectIntegrationForOrgIdAndIntegrationId = async (
@@ -106,9 +118,13 @@ export const disconnectIntegrationForOrgIdAndIntegrationId = async (
     method: 'PUT',
     body: body,
   }
-  const response = await makeRequest(req)
-  if (response.statusCode && response.statusCode > 299) {
-    throw new Error(`Error Disabling brokered integration ${integrationId} - ${response.statusCode}:${response.body}`)
+  try {
+    const response = await makeRequest(req)
+    if (response.statusCode && response.statusCode > 299) {
+      throw new Error(`Error Disabling brokered integration ${integrationId} - ${response.statusCode}:${response.body}`)
+    }
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  } catch (error: any) {
+    throw new Error(error)
   }
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
 }

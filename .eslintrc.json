@@ -41,7 +41,8 @@
     "unicorn/no-for-loop": "off",
     "perfectionist/sort-object-types": "off",
     "max-params": "off",
-    "unicorn/no-negated-condition": "off"
+    "unicorn/no-negated-condition": "off",
+    "prefer-promise-reject-errors": "warn"
   },
   "overrides": [
     {
