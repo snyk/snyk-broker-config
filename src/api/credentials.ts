@@ -17,9 +17,13 @@ export const getCredentialsForDeployment = async (tenantId: string, installId: s
     headers: headers,
     method: 'GET',
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  return JSON.parse(response.body) as CredentialsListResponse
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return JSON.parse(response.body) as CredentialsListResponse
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 
 export const getCredentialForDeployment = async (
@@ -37,9 +41,13 @@ export const getCredentialForDeployment = async (
     headers: headers,
     method: 'GET',
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  return JSON.parse(response.body) as CredentialsResponse
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return JSON.parse(response.body) as CredentialsResponse
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 
 export const createCredentials = async (
@@ -63,9 +71,13 @@ export const createCredentials = async (
     method: 'POST',
     body: JSON.stringify(body),
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  return JSON.parse(response.body) as NewCredentialsResponse
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return JSON.parse(response.body) as NewCredentialsResponse
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 
 export const deleteCredentials = async (
@@ -83,9 +95,13 @@ export const deleteCredentials = async (
     headers: headers,
     method: 'DELETE',
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  return response.statusCode
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return response.statusCode
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 
 export const updateCredentials = async (
@@ -110,7 +126,11 @@ export const updateCredentials = async (
     method: 'PATCH',
     body: JSON.stringify(body),
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  return response.body
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return response.body
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }

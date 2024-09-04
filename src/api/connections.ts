@@ -17,9 +17,13 @@ export const getConnectionsForDeployment = async (tenantId: string, installId: s
     headers: headers,
     method: 'GET',
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  return JSON.parse(response.body) as ConnectionsResponse
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return JSON.parse(response.body) as ConnectionsResponse
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 
 export const createConnectionForDeployment = async (
@@ -55,9 +59,13 @@ export const createConnectionForDeployment = async (
     method: 'POST',
     body: JSON.stringify(body),
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  return JSON.parse(response.body) as ConnectionResponse
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return JSON.parse(response.body) as ConnectionResponse
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 
 export const updateConnectionForDeployment = async (
@@ -94,9 +102,13 @@ export const updateConnectionForDeployment = async (
     method: 'PATCH',
     body: JSON.stringify(body),
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  return response.body
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return response.body
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 
 export const deleteConnectionForDeployment = async (
@@ -114,8 +126,12 @@ export const deleteConnectionForDeployment = async (
     headers: headers,
     method: 'DELETE',
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
 
-  return response.statusCode
+    return response.statusCode
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }

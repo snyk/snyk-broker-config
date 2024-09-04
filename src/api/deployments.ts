@@ -78,9 +78,13 @@ export const createDeployment = async (
     method: 'POST',
     body: JSON.stringify(body),
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  return JSON.parse(response.body) as DeploymentResponse
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return JSON.parse(response.body) as DeploymentResponse
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 
 export const deleteDeployment = async (tenantId: string, installId: string, deploymentId: string) => {
