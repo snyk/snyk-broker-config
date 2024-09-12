@@ -2,7 +2,7 @@ import {input, select, confirm} from '@inquirer/prompts'
 import {flagConnectionMapping} from './type-params-mapping.js'
 import {createCredentials, getCredentialsForDeployment} from '../../api/credentials.js'
 import {CredentialsAttributes, CredentialsListResponse} from '../../api/types.js'
-import {isValidHostnameWithPort, isValidUrl, isValidUUID} from '../../utils/validation.js'
+import {isNotProhibitedValue, isValidHostnameWithPort, isValidUrl, isValidUUID} from '../../utils/validation.js'
 
 export const captureConnectionParams = async (
   tenantID: string,
@@ -60,7 +60,7 @@ export const captureConnectionParams = async (
       let isInputValidated = false
       let message = `${key}: ${value.description}. `
       if (requiredParameters[key].dataType) {
-        message += `Must be ${requiredParameters[key].dataType}.`
+        message += `Must be ${requiredParameters[key].dataType}${requiredParameters[key].prohibitedValues.length > 0 ? ', excluding ' + requiredParameters[key].prohibitedValues.join(',') : ''}.`
       }
       while (!isInputValidated) {
         requiredParameters[key].input = await input({
@@ -70,11 +70,15 @@ export const captureConnectionParams = async (
           switch (requiredParameters[key].dataType) {
             case 'hostname': {
               isInputValidated =
-                isValidHostnameWithPort(requiredParameters[key].input) || isValidUUID(requiredParameters[key].input)
+                (isValidHostnameWithPort(requiredParameters[key].input) ||
+                  isValidUUID(requiredParameters[key].input)) &&
+                isNotProhibitedValue(requiredParameters[key].prohibitedValues, requiredParameters[key].input)
               break
             }
             case 'url': {
-              isInputValidated = isValidUrl(requiredParameters[key].input) || isValidUUID(requiredParameters[key].input)
+              isInputValidated =
+                (isValidUrl(requiredParameters[key].input) || isValidUUID(requiredParameters[key].input)) &&
+                isNotProhibitedValue(requiredParameters[key].prohibitedValues, requiredParameters[key].input)
               break
             }
             default: {
