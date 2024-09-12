@@ -13,3 +13,7 @@ export function isValidUrl(url: string): boolean {
   const regex = /^(https?:\/\/)([\dA-Za-z-]{1,63})(\.[\dA-Za-z-]{1,63})*(\.[A-Za-z]{2,6})?(:\d{1,5})?(\/.*)?$/
   return regex.test(url)
 }
+
+export function isNotProhibitedValue(prohibitedValues: string[], value: string) {
+  return !prohibitedValues.includes(value)
+}
