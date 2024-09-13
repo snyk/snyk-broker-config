@@ -7,6 +7,7 @@ import {isValidUUID} from '../../../utils/validation.js'
 import {BaseCommand} from '../../../base-command.js'
 import * as multiSelect from 'inquirer-select-pro'
 import {deleteCredentials, getCredentialForDeployment, getCredentialsForDeployment} from '../../../api/credentials.js'
+import {validatedInput, ValidationType} from '../../../utils/input-validation.js'
 
 interface SetupParameters {
   installId: string
@@ -46,7 +47,8 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     const snykToken = process.env.SNYK_TOKEN ?? (await input({message: 'Enter your Snyk Token'}))
     process.env.SNYK_TOKEN = snykToken
 
-    const tenantId = process.env.TENANT_ID ?? (await input({message: 'Enter your tenantID'}))
+    const tenantId =
+      process.env.TENANT_ID ?? (await validatedInput({message: 'Enter your tenantID'}, ValidationType.UUID))
     process.env.TENANT_ID = tenantId
 
     let orgId
@@ -54,7 +56,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     if (process.env.INSTALL_ID) {
       installId = process.env.INSTALL_ID
     } else if (await confirm({message: 'Have you installed the Broker App against an Org?'})) {
-      installId = await input({message: 'Enter your Broker App Install ID'})
+      installId = await validatedInput({message: 'Enter your Broker App Install ID'}, ValidationType.UUID)
       if (!isValidUUID(installId)) {
         this.error(`Must be a valid UUID.`)
       }

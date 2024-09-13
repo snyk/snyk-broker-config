@@ -2,9 +2,10 @@ import {ux} from '@oclif/core'
 import {commonApiRelatedArgs} from '../../../common/args.js'
 import {confirm} from '@inquirer/prompts'
 import {BaseCommand} from '../../../base-command.js'
-import {deleteConnectionForDeployment} from '../../../api/connections.js'
+import {deleteConnectionForDeployment, getConnectionsForDeployment} from '../../../api/connections.js'
 import {getIntegrationsForConnection} from '../../../api/integrations.js'
 import {deleteDeployment} from '../../../api/deployments.js'
+import {getCredentialsForDeployment} from '../../../api/credentials.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -25,7 +26,16 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       this.log(ux.colorize('cyan', `Now using Tenant Id ${tenantId} and Install Id ${installId}.\n`))
 
       const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
-
+      const connectionsForDeployment = await getConnectionsForDeployment(tenantId, installId, deploymentId)
+      if (connectionsForDeployment.data.length > 0) {
+        this.error('You cannot delete deployments supporting connections. Disconnect and delete connections first.')
+      }
+      const credentialsRefsForDeployment = await getCredentialsForDeployment(tenantId, installId, deploymentId)
+      if (credentialsRefsForDeployment.data.length > 0) {
+        this.error(
+          'You cannot delete deployments with associated credentials references. Delete the credentials reference(s) first.',
+        )
+      }
       this.log(ux.colorize('cyan', `Selected deployment id ${deploymentId}. Ready to delete deployment.\n`))
       if (
         await confirm({
