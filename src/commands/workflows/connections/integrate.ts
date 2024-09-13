@@ -4,6 +4,7 @@ import {input} from '@inquirer/prompts'
 import {BaseCommand} from '../../../base-command.js'
 import {nonSourceIntegrations} from '../../../command-helpers/connections/type-params-mapping.js'
 import {createIntegrationForConnection} from '../../../api/integrations.js'
+import {validatedInput, ValidationType} from '../../../utils/input-validation.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -26,7 +27,6 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
       this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
 
-      // this.log(ux.colorize('cyan', `Let's create a ${connectionType} connection now.\n`))
       const selectedConnection = await this.selectConnection(tenantId, installId, deploymentId)
       this.log(
         ux.colorize(
@@ -34,12 +34,16 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
           `Selected Connection ID ${selectedConnection.id}. Ready to configure integrations to use this Connection.\n`,
         ),
       )
-      const orgId = await input({message: 'Enter the OrgID you want to integrate.'})
+
+      const orgId = await validatedInput({message: 'Enter the OrgID you want to integrate.'}, ValidationType.UUID)
       let integrationId
       if (!nonSourceIntegrations.has(selectedConnection.type)) {
-        integrationId = await input({
-          message: `Enter the integrationID you want to integrate. Must be of type ${selectedConnection.type}`,
-        })
+        integrationId = await validatedInput(
+          {
+            message: `Enter the integrationID you want to integrate. Must be of type ${selectedConnection.type}`,
+          },
+          ValidationType.UUID,
+        )
       }
       const connectionIntegration = await createIntegrationForConnection(
         tenantId,

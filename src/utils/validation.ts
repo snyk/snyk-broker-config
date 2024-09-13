@@ -17,3 +17,8 @@ export function isValidUrl(url: string): boolean {
 export function isNotProhibitedValue(prohibitedValues: string[], value: string) {
   return !prohibitedValues.includes(value)
 }
+
+export function isValidEnvVar(name: string): boolean {
+  const regex = /^[A-Z_][A-Z0-9_]*$/
+  return regex.test(name)
+}

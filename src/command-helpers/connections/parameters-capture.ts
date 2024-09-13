@@ -3,6 +3,7 @@ import {flagConnectionMapping} from './type-params-mapping.js'
 import {createCredentials, getCredentialsForDeployment} from '../../api/credentials.js'
 import {CredentialsAttributes, CredentialsListResponse} from '../../api/types.js'
 import {isNotProhibitedValue, isValidHostnameWithPort, isValidUrl, isValidUUID} from '../../utils/validation.js'
+import {validatedInput, ValidationType} from '../../utils/input-validation.js'
 
 export const captureConnectionParams = async (
   tenantID: string,
@@ -40,9 +41,12 @@ export const captureConnectionParams = async (
         pageSize: existingCredentialsByTypeAndDeployment.data.length + 1,
       })
       if (choice === 'CreateNew') {
-        const envVarName = await input({
-          message: `Env Var Name (i.e MY_GITHUB_TOKEN)`,
-        })
+        const envVarName = await validatedInput(
+          {
+            message: `Env Var Name (i.e MY_GITHUB_TOKEN)`,
+          },
+          ValidationType.ENVVAR,
+        )
         const comment = await input({
           message: `Comment`,
         })

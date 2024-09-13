@@ -6,6 +6,7 @@ import {connectionTypes} from '../../../command-helpers/connections/type-params-
 import {CredentialsAttributes} from '../../../api/types.js'
 import {createCredentials} from '../../../api/credentials.js'
 import {printFormattedJSON} from '../../../utils/display.js'
+import {validatedInput, ValidationType} from '../../../utils/input-validation.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -36,12 +37,16 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         }),
         pageSize: connectionTypes.length,
       })
-      const env_var_name = await input({
-        message: 'Enter the credentials reference environment variable name.',
-      })
-      const comment = await input({
-        message: 'Enter a helpful comment to identify this credentials reference among others.',
-      })
+      const env_var_name = await validatedInput(
+        {
+          message: 'Enter the credentials reference environment variable name.',
+        },
+        ValidationType.ENVVAR,
+      )
+      const comment =
+        (await input({
+          message: 'Enter a helpful comment to identify this credentials reference among others.',
+        })) ?? ''
 
       for (const envVarName of env_var_name.split(',')) {
         attributes.push({comment: comment, environment_variable_name: envVarName, type: type})

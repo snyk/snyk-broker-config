@@ -7,6 +7,7 @@ import {
   createIntegrationForConnection,
   disconnectIntegrationForOrgIdAndIntegrationId,
 } from '../../../api/integrations.js'
+import {validatedInput, ValidationType} from '../../../utils/input-validation.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -40,10 +41,13 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       let orgId
       let integrationId
       if (!nonSourceIntegrations.has(selectedConnection.type)) {
-        orgId = await input({message: 'Enter the OrgID you want to migrate.'})
-        integrationId = await input({
-          message: `Enter the integrationID you want to migrate. Must be of type ${selectedConnection.type}`,
-        })
+        orgId = await validatedInput({message: 'Enter the OrgID you want to migrate.'}, ValidationType.UUID)
+        integrationId = await validatedInput(
+          {
+            message: `Enter the integrationID you want to migrate. Must be of type ${selectedConnection.type}`,
+          },
+          ValidationType.UUID,
+        )
       } else {
         this.log(
           ux.colorize(

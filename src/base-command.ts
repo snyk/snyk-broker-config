@@ -9,6 +9,7 @@ import {ConnectionId, ConnectionSelection, DeploymentId, InstallId, SetupParamet
 import {getConnectionsForDeployment, createConnectionForDeployment} from './api/connections.js'
 import {captureConnectionParams} from './command-helpers/connections/parameters-capture.js'
 import {getAccessibleTenants} from './api/tenants.js'
+import {validatedInput, ValidationType} from './utils/input-validation.js'
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<(typeof BaseCommand)['baseFlags'] & T['flags']>
 export type Args<T extends typeof Command> = Interfaces.InferredArgs<T['args']>
@@ -65,7 +66,8 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         )
       }
     }
-    const tenantId = process.env.TENANT_ID ?? (await input({message: 'Enter your tenantID.'}))
+    const tenantId =
+      process.env.TENANT_ID ?? (await validatedInput({message: 'Enter your tenantID.'}, ValidationType.UUID))
     process.env.TENANT_ID = tenantId
 
     let orgId
@@ -73,13 +75,16 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     if (process.env.INSTALL_ID) {
       installId = process.env.INSTALL_ID
     } else if (await confirm({message: 'Have you installed the Broker App against an Org?'})) {
-      installId = await input({message: 'Enter your Broker App Install ID'})
+      installId = await validatedInput({message: 'Enter your Broker App Install ID'}, ValidationType.UUID)
       if (!isValidUUID(installId)) {
         this.error(`Must be a valid UUID.`)
       }
       // process.env.INSTALL_ID = installId
     } else {
-      orgId = await input({message: `Enter Org ID to install Broker App. Must be in Tenant ${tenantId}`})
+      orgId = await validatedInput(
+        {message: `Enter Org ID to install Broker App. Must be in Tenant ${tenantId}`},
+        ValidationType.UUID,
+      )
       const appInstall = await installAppsWorfklow(orgId)
       if (typeof appInstall === 'string') {
         this.log(ux.colorize('purple', `Found an App already installed. Using Install ID ${appInstall}.`))
