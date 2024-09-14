@@ -138,10 +138,12 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     tenantId: string,
     installId: string,
     appInstalledOnOrgId: string,
+    email: string,
     metadata?: Record<string, string>,
   ): Promise<DeploymentResponse> {
     const attributes: DeploymentAttributes = {
       broker_app_installed_in_org_id: appInstalledOnOrgId,
+      service_contact: {email: email},
       metadata: {
         createdAt: new Date().toUTCString(),
         comment: `Created interactively by snyk-broker-config`,
@@ -162,7 +164,11 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     if (deployments.errors) {
       this.log(`${deployments.errors[0].detail}`)
       if (await confirm({message: 'Do you want to create a new Deployment?'})) {
-        const newDeployment = await this.createNewDeployment(tenantId, installId, appInstalledOnOrgId)
+        const email = await validatedInput(
+          {message: 'Enter Service Contact email (strictly used for Broker-related service notifications).'},
+          ValidationType.EMAIL,
+        )
+        const newDeployment = await this.createNewDeployment(tenantId, installId, appInstalledOnOrgId, email)
         deploymentId = newDeployment.data.id
       } else {
         this.error(

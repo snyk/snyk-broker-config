@@ -30,6 +30,7 @@ export const commonUniversalBrokerArgs = (): CommonUniversalBrokerArgs => {
 
 export const commonUniversalBrokerNewDeploymentArgs = {
   appInstalledInOrgId: Args.string({description: 'Broker App Installed in Org ID', required: true, default: ''}),
+  email: Args.string({description: 'A valid email address', required: true}),
 }
 
 export const commonUniversalBrokerDeploymentId = (required = false) => {

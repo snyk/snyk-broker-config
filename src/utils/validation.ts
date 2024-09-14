@@ -22,3 +22,8 @@ export function isValidEnvVar(name: string): boolean {
   const regex = /^[A-Z_][A-Z0-9_]*$/
   return regex.test(name)
 }
+
+export function isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
+}

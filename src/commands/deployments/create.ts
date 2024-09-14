@@ -9,6 +9,7 @@ import {printFormattedJSON} from '../../utils/display.js'
 import {createDeployment, DeploymentAttributes} from '../../api/deployments.js'
 import {deploymentMetadata} from '../../command-helpers/deployments/flags.js'
 import {BaseCommand} from '../../base-command.js'
+import {isValidEmail} from '../../utils/validation.js'
 
 export default class Deployments extends BaseCommand<typeof Deployments> {
   static args = {
@@ -38,9 +39,12 @@ export default class Deployments extends BaseCommand<typeof Deployments> {
       const dataSplit = x.split('=')
       return {[dataSplit[0]]: dataSplit[1]}
     })
-
+    if (!isValidEmail(args.email)) {
+      this.error('Email invalid. Please provide valid email address.')
+    }
     const attributes: DeploymentAttributes = {
       broker_app_installed_in_org_id: args.appInstalledInOrgId,
+      service_contact: {email: args.email},
       metadata: {},
     }
     for (const dataValue of metadataValues) {

@@ -11,6 +11,7 @@ export interface DeploymentAttributesMetadata {
 }
 export interface DeploymentAttributes {
   broker_app_installed_in_org_id: string
+  service_contact: {email: string}
   metadata: DeploymentAttributesMetadata
 }
 
@@ -19,6 +20,7 @@ export interface DeploymentResponseData {
   type: string
   attributes: {
     broker_app_installed_in_org_id: string
+    service_contact?: {email: string}
     metadata: Record<string, string>
   }
 }

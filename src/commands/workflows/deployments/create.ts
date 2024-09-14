@@ -3,6 +3,7 @@ import {commonApiRelatedArgs} from '../../../common/args.js'
 import {confirm, input} from '@inquirer/prompts'
 import {BaseCommand} from '../../../base-command.js'
 import {printFormattedJSON} from '../../../utils/display.js'
+import {validatedInput, ValidationType} from '../../../utils/input-validation.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -22,6 +23,10 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
       this.log(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
+      const email = await validatedInput(
+        {message: 'Enter Service Contact email (strictly used for Broker-related service notifications).'},
+        ValidationType.EMAIL,
+      )
       const metadata: Record<string, string> = {}
       while (
         await confirm({
@@ -33,7 +38,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         metadata[key] = value
       }
 
-      const newDeployment = await this.createNewDeployment(tenantId, installId, appInstalledOnOrgId, metadata)
+      const newDeployment = await this.createNewDeployment(tenantId, installId, appInstalledOnOrgId, email, metadata)
 
       this.log(ux.colorize('cyan', `Created Deployment ${newDeployment.data.id}.\n`))
       this.log(printFormattedJSON(newDeployment.data))

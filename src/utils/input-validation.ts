@@ -1,5 +1,5 @@
 import {input} from '@inquirer/prompts'
-import {isValidEnvVar, isValidUUID} from './validation.js'
+import {isValidEmail, isValidEnvVar, isValidUUID} from './validation.js'
 
 export interface InputObject {
   message: string
@@ -7,6 +7,7 @@ export interface InputObject {
 export enum ValidationType {
   UUID = 'uuid',
   ENVVAR = 'envvar',
+  EMAIL = 'email',
 }
 
 export const validatedInput = async (data: InputObject, typeToValidate?: ValidationType): Promise<string> => {
@@ -25,6 +26,10 @@ export const validatedInput = async (data: InputObject, typeToValidate?: Validat
         }
         case ValidationType.ENVVAR: {
           isInputValidated = isValidEnvVar(value)
+          break
+        }
+        case ValidationType.EMAIL: {
+          isInputValidated = isValidEmail(value)
           break
         }
         default: {
