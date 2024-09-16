@@ -3,6 +3,7 @@ import {isValidEnvVar, isValidUUID} from './validation.js'
 
 export interface InputObject {
   message: string
+  default?: string
 }
 export enum ValidationType {
   UUID = 'uuid',
@@ -15,7 +16,7 @@ export const validatedInput = async (data: InputObject, typeToValidate?: Validat
   let overloadedMessage = `${data.message}. ${typeToValidate ? '(Must be a valid ' + typeToValidate + ').' : ''}`
 
   while (!isInputValidated) {
-    value = await input({message: overloadedMessage})
+    value = await input({message: overloadedMessage, default: data.default ? data.default : ''})
 
     if (typeToValidate) {
       switch (typeToValidate) {
