@@ -13,12 +13,17 @@ export interface DeploymentAttributes {
   broker_app_installed_in_org_id: string
   metadata: DeploymentAttributesMetadata
 }
-
+export interface UpdateDeploymentAttributes {
+  broker_app_installed_in_org_id: string
+  install_id: string
+  metadata: DeploymentAttributesMetadata
+}
 export interface DeploymentResponseData {
   id: string
   type: string
   attributes: {
     broker_app_installed_in_org_id: string
+    install_id: string
     metadata: Record<string, string>
   }
 }
@@ -106,7 +111,8 @@ export const updateDeployment = async (
   tenantId: string,
   installId: string,
   deploymentId: string,
-  deploymentAttributes: DeploymentAttributesMetadata,
+  deploymentMetadata: DeploymentAttributesMetadata,
+  deploymentAttributes?: Omit<UpdateDeploymentAttributes, 'metadata'>,
 ) => {
   const headers = {...commonHeaders, ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}`
@@ -116,8 +122,9 @@ export const updateDeployment = async (
       type: 'broker_deployment',
       attributes: {
         metadata: {
-          ...deploymentAttributes,
+          ...deploymentMetadata,
         },
+        ...(deploymentAttributes ?? {}),
       },
     },
   }
