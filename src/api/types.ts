@@ -49,6 +49,8 @@ export interface CredentialsAttributes {
   environment_variable_name: string
   type: string
 }
+export type CredentialsAttributesEnvVarNames = Record<string, string>
+
 export interface CredentialsListResponseData {
   id: string
   type: string
