@@ -1,0 +1,109 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@6.2.0
+  prodsec: snyk/prodsec-orb@1
+
+defaults: &defaults
+  resource_class: small
+  docker:
+    - image: cimg/node:20.18
+  working_directory: ~/snyk-broker-config
+filter-non-main-branches: &filter-non-main-branches
+  filters:
+    branches:
+      ignore: main
+filter-main-branch-only: &filter-main-branch-only
+  filters:
+    branches:
+      only: main
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Build package
+          command: npm run build
+  install-npm-packages:
+    <<: *defaults
+    environment:
+      NODE_ENV: development
+    steps:
+      - checkout
+      - node/install-packages:
+          cache-only-lockfile: false
+          cache-path: ./node_modules
+          include-branch-in-cache-key: false
+      - persist_to_workspace:
+          root: .
+          paths:
+            - node_modules
+  lint-npm:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Lint
+          command: npm run lint
+  security-scans:
+    <<: *defaults
+    resource_class: medium
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - prodsec/security_scans:
+          mode: auto
+          open-source-additional-arguments: --exclude=test
+  test:
+    <<: *defaults
+    resource_class: medium
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run tests
+          command: npm run test
+
+workflows:
+  version: 2
+  CICD:
+    jobs:
+      - prodsec/secrets-scan:
+          name: Scan repository for secrets
+          context:
+            - snyk-bot-slack
+          channel: broker-alerts-cicd
+          <<: *filter-non-main-branches
+      - install-npm-packages:
+          name: Install NPM packages
+          context:
+            - nodejs-install
+          requires:
+            - Scan repository for secrets
+          <<: *filter-non-main-branches
+      - lint-npm:
+          name: Lint source code
+          requires:
+            - Install NPM packages
+          <<: *filter-non-main-branches
+#      - security-scans:
+#          name: Snyk Security Scans
+#          context:
+#            - nodejs-install
+#            - team-hybrid-snyk
+#          requires:
+#            - Install NPM packages
+#          <<: *filter-non-main-branches
+      - test:
+          name: Run tests
+          requires:
+            - Install NPM packages
+          <<: *filter-non-main-branches
