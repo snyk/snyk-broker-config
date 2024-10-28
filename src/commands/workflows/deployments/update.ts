@@ -74,7 +74,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
       this.log(ux.colorize('cyan', `Updated Deployment ${updatedDeployment.data.id}.\n`))
       this.log(printFormattedJSON(updatedDeployment.data))
-      if (updatedDeployment.data.attributes.install_id != installId) {
+      if (updatedDeployment.data.attributes.install_id !== installId) {
         this.log(ux.colorize('red', 'CAUTION'))
         this.log(
           ux.colorize('red', 'Your install ID changed, make sure to update your INSTALL_ID environment variable !'),

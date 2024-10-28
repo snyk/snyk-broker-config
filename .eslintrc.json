@@ -6,11 +6,15 @@
     "jest": true
   },
   "plugins": ["@typescript-eslint"],
-  "extends": ["oclif", "oclif-typescript","eslint:recommended",
+  "extends": [
+    "oclif",
+    "oclif-typescript",
+    "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"],
-    "rules": {
+    "prettier"
+  ],
+  "rules": {
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "off",
@@ -41,6 +45,7 @@
     "unicorn/no-for-loop": "off",
     "perfectionist/sort-object-types": "off",
     "max-params": "off",
+    "unicorn/better-regex": ["error", {"sortCharacterClasses": false}],
     "unicorn/no-negated-condition": "off",
     "prefer-promise-reject-errors": "warn"
   },
@@ -48,7 +53,8 @@
     {
       "files": ["*.ts"],
       "rules": {
-        "id-blacklist": ["error", "exports"] // in TS, use "export" instead of Node's "module.exports"
+        "id-blacklist": ["error", "exports"]
+        // in TS, use "export" instead of Node's "module.exports"
       }
     }
   ]
