@@ -7,8 +7,9 @@ import {
   commonUniversalBrokerConnectionId,
 } from '../../common/args.js'
 import {printFormattedJSON} from '../../utils/display.js'
-import {connectionsData} from '../../command-helpers/connections/flags.js'
-import {updateConnectionForDeployment} from '../../api/connections.js'
+import {updateConnectionsData} from '../../command-helpers/connections/flags.js'
+import {getConnectionsForDeployment, updateConnectionForDeployment} from '../../api/connections.js'
+import {convertCredsToUuid} from '../../api/credentials.js'
 
 export default class Connections extends Command {
   static args = {
@@ -19,7 +20,7 @@ export default class Connections extends Command {
   }
 
   static flags = {
-    ...connectionsData,
+    ...updateConnectionsData,
   }
 
   static description = 'Universal Broker Connections - Update operation'
@@ -37,6 +38,23 @@ export default class Connections extends Command {
 
     const {tenantId, installId} = getCommonIds(args)
 
+    const connections = await getConnectionsForDeployment(tenantId, installId, args.deploymentId)
+    const existingConnection = connections.data.find((x) => x.id === args.connectionId)
+    if (!existingConnection) {
+      throw new Error(`Connection not found for deployment ${args.deploymentId} in tenant ${tenantId}`)
+    }
+    const existingAttributes = existingConnection.attributes.configuration.required as Record<string, string>
+    const onlyCredentialsAttributes = Object.fromEntries(
+      Object.entries(existingAttributes).filter(([_, value]) => /\${[^}]+}/.test(value)),
+    )
+    const credentialsUuid = await convertCredsToUuid(
+      tenantId,
+      installId,
+      args.deploymentId,
+      onlyCredentialsAttributes,
+      flags.type,
+    )
+
     const attributes = structuredClone(flags) as Omit<typeof flags, 'name' | 'type'>
     delete attributes.name
     delete attributes.type
@@ -47,7 +65,7 @@ export default class Connections extends Command {
       args.connectionId,
       flags.name,
       flags.type,
-      attributes,
+      {...existingAttributes, ...credentialsUuid, ...attributes},
     )
     const connectionResponse = JSON.parse(connection).data
 

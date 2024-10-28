@@ -15,3 +15,17 @@ export const connectionsData = {
   }),
   ...allConnectionsParametersFlagsFunc(),
 }
+
+export const updateConnectionsData = {
+  type: Flags.string({
+    char: 't',
+    description: 'Connection type',
+    required: true,
+  }),
+  name: Flags.string({
+    char: 'n',
+    description: 'Connection name',
+    required: true,
+  }),
+  ...allConnectionsParametersFlagsFunc(),
+}
