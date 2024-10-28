@@ -19,6 +19,6 @@ export function isNotProhibitedValue(prohibitedValues: string[], value: string) 
 }
 
 export function isValidEnvVar(name: string): boolean {
-  const regex = /^[A-Z_][A-Z0-9_]*$/
+  const regex = /^[A-Z_][A-Z\d_]*$/
   return regex.test(name)
 }

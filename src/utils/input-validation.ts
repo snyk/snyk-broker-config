@@ -6,17 +6,17 @@ export interface InputObject {
   default?: string
 }
 export enum ValidationType {
-  UUID = 'uuid',
   ENVVAR = 'envvar',
+  UUID = 'uuid',
 }
 
 export const validatedInput = async (data: InputObject, typeToValidate?: ValidationType): Promise<string> => {
   let value = ''
   let isInputValidated = false
-  let overloadedMessage = `${data.message}. ${typeToValidate ? '(Must be a valid ' + typeToValidate + ').' : ''}`
+  const overloadedMessage = `${data.message}. ${typeToValidate ? '(Must be a valid ' + typeToValidate + ').' : ''}`
 
   while (!isInputValidated) {
-    value = await input({message: overloadedMessage, default: data.default ? data.default : ''})
+    value = await input({message: overloadedMessage, default: data.default ?? ''})
 
     if (typeToValidate) {
       switch (typeToValidate) {

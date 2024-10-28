@@ -50,7 +50,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     process.env.SNYK_TOKEN = snykToken
     if (!process.env.TENANT_ID) {
       const accessibleTenants = await getAccessibleTenants()
-      if (accessibleTenants.data.length < 1) {
+      if (accessibleTenants.data.length === 0) {
         this.error(
           'Not tenant accessible with your credentials. A Tenant is required for Universal Broker. Personal organizations are not compatible.',
         )

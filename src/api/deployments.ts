@@ -124,7 +124,7 @@ export const updateDeployment = async (
         metadata: {
           ...deploymentMetadata,
         },
-        ...(deploymentAttributes ?? {}),
+        ...deploymentAttributes,
       },
     },
   }
