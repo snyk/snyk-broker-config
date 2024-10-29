@@ -3,7 +3,7 @@ import {commonApiRelatedArgs} from '../../../common/args.js'
 import {confirm} from '@inquirer/prompts'
 import {BaseCommand} from '../../../base-command.js'
 import {deleteConnectionForDeployment} from '../../../api/connections.js'
-import {getIntegrationsForConnection} from '../../../api/integrations.js'
+import {deleteIntegrationsForConnection, getIntegrationsForConnection} from '../../../api/integrations.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -30,9 +30,31 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       const selectedConnection = await this.selectConnection(tenantId, installId, deploymentId)
       const connectionIntegration = await getIntegrationsForConnection(tenantId, selectedConnection.id)
       if (connectionIntegration.data.length > 0) {
-        this.error(
-          `Please disconnect Connection integration(s) first (connection disconnect workflow). Connection is used by Org ${connectionIntegration.data.length > 1 ? 's' : ''} ${connectionIntegration.data.map((x) => x.org_id).join(',')}.`,
-        )
+        if (
+          (await confirm({
+            message: `Connection ${selectedConnection.id} is used by ${connectionIntegration.data.length} orgs/integrations. Do you want to disconnect them all?`,
+          })) &&
+          (await confirm({
+            message: `Are you sure? Please confirm. Disconnecting integration(s) WILL impact service.`,
+          }))
+        ) {
+          for (let i = 0; i < connectionIntegration.data.length; i++) {
+            this.log(
+              `Disconnecting integration ${connectionIntegration.data[i].id} in org ${connectionIntegration.data[i].org_id}}`,
+            )
+            await deleteIntegrationsForConnection(
+              tenantId,
+              selectedConnection.id,
+              connectionIntegration.data[i].org_id,
+              connectionIntegration.data[i].id,
+            )
+          }
+          this.log(`✔ Disconnected.`)
+        } else {
+          this.error(
+            `Please disconnect Connection integration(s) first (connection disconnect workflow). Connection is used by Org ${connectionIntegration.data.length > 1 ? 's' : ''} ${connectionIntegration.data.map((x) => x.org_id).join(',')}.`,
+          )
+        }
       }
       this.log(ux.colorize('cyan', `Selected Connection ID ${selectedConnection.id}. Ready to delete Connection.\n`))
       if (
