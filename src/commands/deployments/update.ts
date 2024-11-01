@@ -1,6 +1,6 @@
 import {ux} from '@oclif/core'
 import {commonUniversalBrokerArgs, commonUniversalBrokerDeploymentId, getCommonIds} from '../../common/args.js'
-import {updateDeployment} from '../../api/deployments.js'
+import {getDeployments, updateDeployment} from '../../api/deployments.js'
 import {deploymentMetadata} from '../../command-helpers/deployments/flags.js'
 import {printFormattedJSON} from '../../utils/display.js'
 import {BaseCommand} from '../../base-command.js'
@@ -46,7 +46,25 @@ export default class Deployments extends BaseCommand<typeof Deployments> {
       }
     }
 
-    const deployment = await updateDeployment(tenantId, installId, args.deploymentId!, attributes)
+    const existingDeployments = await getDeployments(tenantId, installId)
+    const existingDeployment = existingDeployments.data?.find((x) => x.id === args.deploymentId)
+    if (!existingDeployment) {
+      throw new Error('Deployment not found.')
+    }
+
+    if (flags.overwrite) {
+      existingDeployment.attributes.metadata = attributes
+    } else {
+      existingDeployment.attributes.metadata = {...existingDeployment?.attributes.metadata, ...attributes}
+    }
+
+    const deployment = await updateDeployment(
+      tenantId,
+      installId,
+      args.deploymentId!,
+      existingDeployment.attributes.metadata,
+      existingDeployment.attributes,
+    )
 
     this.log(ux.colorize('cyan', `Updated Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
     this.log(printFormattedJSON(deployment))
