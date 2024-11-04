@@ -52,11 +52,9 @@ export default class Deployments extends BaseCommand<typeof Deployments> {
       throw new Error('Deployment not found.')
     }
 
-    if (flags.overwrite) {
-      existingDeployment.attributes.metadata = attributes
-    } else {
-      existingDeployment.attributes.metadata = {...existingDeployment?.attributes.metadata, ...attributes}
-    }
+    existingDeployment.attributes.metadata = flags.overwrite
+      ? attributes
+      : {...existingDeployment?.attributes.metadata, ...attributes}
 
     const deployment = await updateDeployment(
       tenantId,
