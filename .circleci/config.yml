@@ -91,19 +91,16 @@ workflows:
           context:
             - snyk-bot-slack
           channel: broker-alerts-cicd
-          <<: *filter-non-main-branches
       - install-npm-packages:
           name: Install NPM packages
           context:
             - nodejs-install
           requires:
             - Scan repository for secrets
-          <<: *filter-non-main-branches
       - lint-npm:
           name: Lint source code
           requires:
             - Install NPM packages
-          <<: *filter-non-main-branches
 #      - security-scans:
 #          name: Snyk Security Scans
 #          context:
@@ -116,7 +113,6 @@ workflows:
           name: Run tests
           requires:
             - Install NPM packages
-          <<: *filter-non-main-branches
       - release:
           name: Release to GitHub and NPM
           context:
