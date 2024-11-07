@@ -71,6 +71,16 @@ jobs:
       - run:
           name: Run tests
           command: npm run test
+  release:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Release to GitHub and NPM
+          command: |
+            npx semantic-release
 
 workflows:
   version: 2
@@ -107,3 +117,11 @@ workflows:
           requires:
             - Install NPM packages
           <<: *filter-non-main-branches
+      - release:
+          name: Release to GitHub and NPM
+          context:
+            - nodejs-lib-release
+            - team-broker-snyk
+          requires:
+            - Run tests
+          <<: *filter-main-branch-only
