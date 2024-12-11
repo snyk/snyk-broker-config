@@ -1,35 +1,17 @@
-// import {expect} from 'chai'
-// import nock from 'nock'
+import {getDummyCredentialsForIntegrationType} from '../../src/api/integrations-utils'
+import {expect} from 'chai'
 
-// describe('Integrations utils', () => {
-
-//   before(() => {
-//     process.env.SNYK_TOKEN = 'dummy'
-//     nock('https://api.snyk.io')
-//       .persist()
-//       .post(
-//         '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments/00000000-0000-0000-0000-000000000000/connections?version=2024-02-08~experimental',
-//       )
-//       .reply((uri, body) => {
-
-//         return [200, {}]
-//       })
-//       .patch(
-//         '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments/00000000-0000-0000-0000-000000000000/connections/00000000-0000-0000-0000-000000000000?version=2024-02-08~experimental',
-//       )
-//       .reply((uri, body) => {
-
-//         return [200, {}]
-//       })
-//       .delete(
-//         '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments/00000000-0000-0000-0000-000000000000/connections/00000000-0000-0000-0000-000000000000?version=2024-02-08~experimental',
-//       )
-//       .reply(() => {
-//         return [204]
-//       })
-//   })
-//   it('createConnectionForDeployment', async () => {
-
-//     expect(true).to.equal(true)
-//   })
-// })
+describe('Integrations utils', () => {
+  it('getDummyCredentialsForIntegrationType gitlab', async () => {
+    const dummyGitlabCreds = getDummyCredentialsForIntegrationType('gitlab')
+    expect(dummyGitlabCreds).to.deep.equal({token: '', url: ''})
+  })
+  it('getDummyCredentialsForIntegrationType invalid', async () => {
+    try {
+      getDummyCredentialsForIntegrationType('non-existent')
+      expect(true).to.be.false
+    } catch (err) {
+      expect(err).to.be.instanceOf(Error)
+    }
+  })
+})
