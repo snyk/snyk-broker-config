@@ -59,6 +59,7 @@ export const createConnectionForDeployment = async (
     method: 'POST',
     body: JSON.stringify(body),
   }
+
   try {
     const response = await makeRequest(req)
     logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
