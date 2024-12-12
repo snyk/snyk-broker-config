@@ -5,12 +5,12 @@ import {stdin as fstdin} from 'mock-stdin'
 import Deployments from '../../../src/commands/workflows/deployments/get'
 import {beforeStep, orgId, snykToken} from '../../test-utils/nock-utils'
 import {sendScenario} from '../../test-utils/stdin-utils'
-const stdin = fstdin()
 
 describe('deployment workflows', () => {
   before(beforeStep)
 
   it('runs workflow deployment list', async () => {
+    const stdin = fstdin()
     // @ts-ignore
     const cfg: Config = {}
     const getDeployment = new Deployments([], cfg)

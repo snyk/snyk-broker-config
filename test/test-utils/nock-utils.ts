@@ -7,11 +7,14 @@ export const appId = 'cb43d761-bd17-4b44-9b6c-e5b8ad077d33'
 export const snykToken = 'dummy'
 export const orgId = '3a7c1ab9-8914-4f39-a8c0-5752af653a88'
 export const orgId2 = '3a7c1ab9-8914-4f39-a8c0-5752af653a89'
+export const orgId3 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8a'
 export const tenantId = '00000000-0000-0000-0000-000000000000'
 export const installId = '00000000-0000-0000-0000-000000000000'
 export const installId2 = '00000000-0000-0000-0000-000000000002'
+export const installId3 = '00000000-0000-0000-0000-000000000003'
 export const deploymentId = '00000000-0000-0000-0000-000000000000'
 export const deploymentId2 = '00000000-0000-0000-0000-000000000002'
+export const deploymentId3 = '00000000-0000-0000-0000-000000000003'
 export const clientId = '00000000-1234-0000-0000-000000000000'
 const createConnectionResponse: ConnectionResponse = {
   data: {
@@ -99,6 +102,26 @@ export const appResponse2 = {
     },
   ],
 }
+export const appResponse3 = {
+  data: [
+    {
+      id: `00000000-0000-0000-0000-000000000003`,
+      type: 'app_install',
+      attributes: {
+        client_id: clientId,
+        installed_at: '2024-07-17T18:51:02Z',
+      },
+      relationships: {
+        app: {
+          data: {
+            id: appId,
+            type: 'app',
+          },
+        },
+      },
+    },
+  ],
+}
 
 export const createCredentialsResponse = {
   data: [
@@ -116,6 +139,7 @@ export const createCredentialsResponse = {
 
 const urlPrefixTenantIdAndInstallId = `/rest/tenants/${tenantId}/brokers/installs/${installId}`
 const urlPrefixTenantIdAndInstallId2 = `/rest/tenants/${tenantId}/brokers/installs/${installId2}`
+const urlPrefixTenantIdAndInstallId3 = `/rest/tenants/${tenantId}/brokers/installs/${installId3}`
 
 export const beforeStep = () => {
   const apiResponseSchema = {data: {}, links: {}}
@@ -128,6 +152,10 @@ export const beforeStep = () => {
     .get(`/rest/orgs/${orgId2}/apps/installs?version=2024-05-31`)
     .reply(() => {
       return [200, appResponse2]
+    })
+    .get(`/rest/orgs/${orgId3}/apps/installs?version=2024-05-31`)
+    .reply(() => {
+      return [200, appResponse3]
     })
     .get('/rest/tenants?version=2024-04-11~experimental')
     .reply(() => {
@@ -165,19 +193,60 @@ export const beforeStep = () => {
       ]
       return [200, response]
     })
-    .get(`${urlPrefixTenantIdAndInstallId}/deployments/${deploymentId}/connections?version=2024-02-08~experimental`)
+    .get(`${urlPrefixTenantIdAndInstallId3}/deployments?version=2024-02-08~experimental`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = [
-        // {
-        //   attributes: {
-        //     broker_app_installed_in_org_id: '00000000-0000-0000-0000-000000000000',
-        //     install_id: '00000000-0000-0000-0000-000000000000',
-        //     metadata: {},
-        //   },
-        //   id: '00000000-0000-0000-0000-000000000000',
-        //   type: 'broker_deployment',
-        // },
+        {
+          attributes: {
+            broker_app_installed_in_org_id: '00000000-0000-0000-0000-000000000000',
+            install_id: '00000000-0000-0000-0000-000000000003',
+            metadata: {},
+          },
+          id: '00000000-0000-0000-0000-000000000003',
+          type: 'broker_deployment',
+        },
+      ]
+      return [200, response]
+    })
+    .get(`${urlPrefixTenantIdAndInstallId}/deployments/${deploymentId}/connections?version=2024-02-08~experimental`)
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = []
+      return [200, response]
+    })
+    .get(`${urlPrefixTenantIdAndInstallId3}/deployments/${deploymentId3}/connections?version=2024-02-08~experimental`)
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = [
+        {
+          attributes: {
+            deployment_id: deploymentId,
+            identifier: '00000000-0000-0000-0000-000000000000',
+            name: 'test-conn',
+            secrets: {
+              primary: {
+                encrypted: '',
+                expires_at: '1970-01-01T00:00:00.000Z',
+                nonce: '',
+              },
+              secondary: {
+                encrypted: '',
+                expires_at: '1970-01-01T00:00:00.000Z',
+                nonce: '',
+              },
+            },
+            configuration: {
+              required: {
+                key: 'value',
+              },
+              type: 'github',
+              validations: [{key: 'value'}],
+            },
+          },
+          id: '00000000-0000-0000-0000-000000000000',
+          type: 'broker_connection',
+        },
       ]
       return [200, response]
     })
