@@ -23,7 +23,7 @@ describe('connections workflows', () => {
       {print: false},
     )
     expect(error).to.be.undefined
-    expect(stdout).to.contain(`- id: 00000000-0000-0000-0000-000000000000
+    expect(stdout).to.contain(`- id: 00000000-0000-0000-0000-000000000003
     attributes:
         deployment_id: 00000000-0000-0000-0000-000000000000
         identifier: 00000000-0000-0000-0000-000000000000
