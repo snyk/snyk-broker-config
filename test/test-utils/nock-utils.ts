@@ -6,9 +6,12 @@ export const downArrow = '\u001b[B'
 export const appId = 'cb43d761-bd17-4b44-9b6c-e5b8ad077d33'
 export const snykToken = 'dummy'
 export const orgId = '3a7c1ab9-8914-4f39-a8c0-5752af653a88'
+export const orgId2 = '3a7c1ab9-8914-4f39-a8c0-5752af653a89'
 export const tenantId = '00000000-0000-0000-0000-000000000000'
 export const installId = '00000000-0000-0000-0000-000000000000'
+export const installId2 = '00000000-0000-0000-0000-000000000002'
 export const deploymentId = '00000000-0000-0000-0000-000000000000'
+export const deploymentId2 = '00000000-0000-0000-0000-000000000002'
 export const clientId = '00000000-1234-0000-0000-000000000000'
 const createConnectionResponse: ConnectionResponse = {
   data: {
@@ -76,8 +79,43 @@ export const appResponse = {
     },
   ],
 }
+export const appResponse2 = {
+  data: [
+    {
+      id: `00000000-0000-0000-0000-000000000002`,
+      type: 'app_install',
+      attributes: {
+        client_id: clientId,
+        installed_at: '2024-07-17T18:51:02Z',
+      },
+      relationships: {
+        app: {
+          data: {
+            id: appId,
+            type: 'app',
+          },
+        },
+      },
+    },
+  ],
+}
+
+export const createCredentialsResponse = {
+  data: [
+    {
+      attributes: {
+        comment: '',
+        deployment_id: '',
+        environment_variable_name: '',
+        type: '',
+      },
+      id: '00000000-0000-0000-0000-0000000000001',
+    },
+  ],
+}
 
 const urlPrefixTenantIdAndInstallId = `/rest/tenants/${tenantId}/brokers/installs/${installId}`
+const urlPrefixTenantIdAndInstallId2 = `/rest/tenants/${tenantId}/brokers/installs/${installId2}`
 
 export const beforeStep = () => {
   const apiResponseSchema = {data: {}, links: {}}
@@ -86,6 +124,10 @@ export const beforeStep = () => {
     .get(`/rest/orgs/${orgId}/apps/installs?version=2024-05-31`)
     .reply(() => {
       return [200, appResponse]
+    })
+    .get(`/rest/orgs/${orgId2}/apps/installs?version=2024-05-31`)
+    .reply(() => {
+      return [200, appResponse2]
     })
     .get('/rest/tenants?version=2024-04-11~experimental')
     .reply(() => {
@@ -107,6 +149,22 @@ export const beforeStep = () => {
       ]
       return [200, response]
     })
+    .get(`${urlPrefixTenantIdAndInstallId2}/deployments?version=2024-02-08~experimental`)
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = [
+        {
+          attributes: {
+            broker_app_installed_in_org_id: '00000000-0000-0000-0000-000000000000',
+            install_id: '00000000-0000-0000-0000-000000000002',
+            metadata: {},
+          },
+          id: '00000000-0000-0000-0000-000000000002',
+          type: 'broker_deployment',
+        },
+      ]
+      return [200, response]
+    })
     .get(`${urlPrefixTenantIdAndInstallId}/deployments/${deploymentId}/connections?version=2024-02-08~experimental`)
     .reply((uri, body) => {
       const response = apiResponseSchema
@@ -123,20 +181,30 @@ export const beforeStep = () => {
       ]
       return [200, response]
     })
-    .get(`${urlPrefixTenantIdAndInstallId}/deployments/${deploymentId}/credentials?version=2024-02-08~experimental`)
+    .get(`${urlPrefixTenantIdAndInstallId2}/deployments/${deploymentId2}/connections?version=2024-02-08~experimental`)
     .reply((uri, body) => {
       const response = apiResponseSchema
-      response.data = [
-        // {
-        //   attributes: {
-        //     broker_app_installed_in_org_id: '00000000-0000-0000-0000-000000000000',
-        //     install_id: '00000000-0000-0000-0000-000000000000',
-        //     metadata: {},
-        //   },
-        //   id: '00000000-0000-0000-0000-000000000000',
-        //   type: 'broker_deployment',
-        // },
-      ]
+      response.data = []
+      return [200, response]
+    })
+    .get(`${urlPrefixTenantIdAndInstallId}/deployments/${deploymentId}/credentials?version=2024-02-08~experimental`)
+    .reply((uri, body) => {
+      const createCredentialsNockResponse = {
+        ...createCredentialsResponse,
+      }
+
+      createCredentialsNockResponse.data[0].attributes.comment = 'comment'
+      createCredentialsNockResponse.data[0].attributes.environment_variable_name = 'TEST_ENV_VAR'
+      createCredentialsNockResponse.data[0].attributes.type = 'github'
+      createCredentialsNockResponse.data[0].attributes.deployment_id = '00000000-0000-0000-0000-000000000000'
+
+      return [200, createCredentialsNockResponse]
+    })
+    .get(`${urlPrefixTenantIdAndInstallId2}/deployments/${deploymentId2}/credentials?version=2024-02-08~experimental`)
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = []
+
       return [200, response]
     })
     .post(`${urlPrefixTenantIdAndInstallId}/deployments?version=2024-02-08~experimental`)
@@ -163,6 +231,21 @@ export const beforeStep = () => {
       createNockResponse.data.attributes = JSON.parse(body.toString()).data.attributes
       createNockResponse.data.id = '00000000-0000-0000-0000-000000000000'
       return [200, createNockResponse]
+    })
+    .post(
+      `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000/credentials?version=2024-02-08~experimental`,
+    )
+    .reply((uri, body) => {
+      const createCredentialsNockResponse = {
+        ...createCredentialsResponse,
+      }
+      const credsValues = JSON.parse(body.toString()).data.attributes[0]
+
+      createCredentialsNockResponse.data[0].attributes.comment = credsValues.comment
+      createCredentialsNockResponse.data[0].attributes.environment_variable_name = credsValues.environment_variable_name
+      createCredentialsNockResponse.data[0].attributes.type = credsValues.type
+      createCredentialsNockResponse.data[0].attributes.deployment_id = '00000000-0000-0000-0000-000000000000'
+      return [200, JSON.stringify(createCredentialsNockResponse)]
     })
     .patch(
       `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000/connections/00000000-0000-0000-0000-000000000000?version=2024-02-08~experimental`,
@@ -201,6 +284,12 @@ export const beforeStep = () => {
     })
     .delete(
       `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000?version=2024-02-08~experimental`,
+    )
+    .reply(() => {
+      return [204]
+    })
+    .delete(
+      `${urlPrefixTenantIdAndInstallId2}/deployments/00000000-0000-0000-0000-000000000002?version=2024-02-08~experimental`,
     )
     .reply(() => {
       return [204]

@@ -43,55 +43,6 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async setupFlow(): Promise<SetupParameters> {
-    const snykToken = process.env.SNYK_TOKEN ?? (await input({message: 'Enter your Snyk Token'}))
-    process.env.SNYK_TOKEN = snykToken
-
-    const tenantId =
-      process.env.TENANT_ID ?? (await validatedInput({message: 'Enter your tenantID'}, ValidationType.UUID))
-    process.env.TENANT_ID = tenantId
-
-    let orgId
-    let installId
-    if (process.env.INSTALL_ID) {
-      installId = process.env.INSTALL_ID
-    } else if (await confirm({message: 'Have you installed the Broker App against an Org?'})) {
-      installId = await validatedInput({message: 'Enter your Broker App Install ID'}, ValidationType.UUID)
-      if (!isValidUUID(installId)) {
-        this.error(`Must be a valid UUID.`)
-      }
-      // process.env.INSTALL_ID = installId
-    } else {
-      this.error(`Please create a valid install first. You can use the Create Worklow.`)
-    }
-    await getDeployments(tenantId, installId)
-
-    const appInstalledOnOrgId = orgId ?? (await getAppInstalledOnOrgId(tenantId, installId))
-    return {installId, tenantId, appInstalledOnOrgId}
-  }
-
-  async selectDeployment(tenantId: string, installId: string, _appInstalledOnOrgId: string): Promise<DeploymentId> {
-    const deployments = await getDeployments(tenantId, installId)
-    let deploymentId
-    if (deployments.errors) {
-      this.log(`${deployments.errors[0].detail}`)
-      this.error(`Please first create a Deployment by using the Create Workflow.`)
-    } else if (deployments.data) {
-      deploymentId =
-        deployments.data.length === 1
-          ? deployments.data[0].id
-          : await select({
-              message: 'Which Deployment do you want to use?',
-              choices: deployments.data.map((x) => {
-                return {id: x.id, value: x.id, description: `metadata: ${JSON.stringify(x.attributes.metadata)}`}
-              }),
-            })
-    } else {
-      this.error('Unexpected error in Deployment selection.')
-    }
-    return deploymentId
-  }
-
   async run(): Promise<string> {
     try {
       this.log('\n' + ux.colorize('red', Workflows.description))
@@ -106,6 +57,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       // this.log(ux.colorize('cyan', `Let's create a ${connectionType} connection now.\n`))
 
       const credentials = await getCredentialsForDeployment(tenantId, installId, deploymentId)
+
       if (credentials.data.length === 0) {
         this.error(`No credentials found.`)
       }
