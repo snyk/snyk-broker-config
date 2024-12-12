@@ -3,10 +3,8 @@ import {expect} from 'chai'
 import {stdin as fstdin} from 'mock-stdin'
 
 import Deployments from '../../../src/commands/workflows/deployments/create'
-import {Config} from '@oclif/core/config'
-
-import {beforeStep, orgId, snykToken} from './nock-utils'
-import {sendScenario} from './stdin-utils'
+import {beforeStep, orgId, snykToken} from '../../test-utils/nock-utils'
+import {sendScenario} from '../../test-utils/stdin-utils'
 
 const stdin = fstdin()
 
