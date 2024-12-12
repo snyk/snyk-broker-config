@@ -13,3 +13,11 @@ export const sendScenario = (stdinFn: MockSTDIN, data: Array<string>) => {
     )
   }
 }
+
+export const sendScenarioWithOutAutoEnter = (stdinFn: MockSTDIN, data: Array<string>) => {
+  for (let i = 0; i < data.length; i++) {
+    setTimeout(() => {
+      stdinFn.send(data[i])
+    }, 100 * i)
+  }
+}

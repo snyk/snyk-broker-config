@@ -4,6 +4,7 @@ import {stdin as fstdin} from 'mock-stdin'
 
 import Intro from '../../src/commands/introduction/index'
 import {Config} from '@oclif/core/config'
+import {sendScenarioWithOutAutoEnter} from '../test-utils/stdin-utils'
 
 const stdin = fstdin()
 const upArrow = '\u001b[A'
@@ -15,42 +16,20 @@ describe('documentation', () => {
     const introduction = new Intro([], cfg)
     const {stdout} = await captureOutput(
       async () => {
-        setTimeout(() => {
-          stdin.send('\n')
-        }, 800)
-        setTimeout(() => {
-          stdin.send(downArrow)
-        }, 1000)
-        setTimeout(() => {
-          stdin.send('\n')
-        }, 1100)
-        setTimeout(() => {
-          stdin.send(downArrow)
-        }, 1200)
-        setTimeout(() => {
-          stdin.send(downArrow)
-        }, 1210)
-        setTimeout(() => {
-          stdin.send('\n')
-        }, 1300)
-        setTimeout(() => {
-          stdin.send(downArrow)
-        }, 1400)
-        setTimeout(() => {
-          stdin.send(downArrow)
-        }, 1410)
-        setTimeout(() => {
-          stdin.send(downArrow)
-        }, 1420)
-        setTimeout(() => {
-          stdin.send('\n')
-        }, 1450)
-        setTimeout(() => {
-          stdin.send(upArrow)
-        }, 1500)
-        setTimeout(() => {
-          stdin.send('\n')
-        }, 1550)
+        sendScenarioWithOutAutoEnter(stdin, [
+          '\n',
+          downArrow,
+          '\n',
+          downArrow,
+          downArrow,
+          '\n',
+          downArrow,
+          downArrow,
+          downArrow,
+          '\n',
+          upArrow,
+          '\n',
+        ])
         return introduction.run()
       },
       {print: false},
