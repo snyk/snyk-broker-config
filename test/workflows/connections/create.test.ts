@@ -35,7 +35,7 @@ describe('deployment workflows', () => {
       },
       {print: false},
     )
-    expect(stderr).to.contain('Connection Create Workflow completed.')
+    expect(stdout).to.contain('Connection Create Workflow completed.')
     expect(error).to.be.undefined
   })
 })
