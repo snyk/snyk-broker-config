@@ -35,7 +35,6 @@
     "eslint-config-oclif-typescript": "^3",
     "eslint-config-prettier": "^9",
     "mocha": "^10",
-    "mocha-spec-reporter-with-file-names": "^0.0.3",
     "mock-stdin": "^1.0.0",
     "nock": "^13.5.6",
     "oclif": "^4",
@@ -98,7 +97,7 @@
   "scripts": {
     "build": "shx rm -rf dist && tsc -b",
     "lint": "eslint . --ext .ts",
-    "test": "mocha --parallel --jobs 40 --forbid-only \"test/**/*.test.ts\"",
+    "test": "node test/run-test.js",
     "version": "oclif readme && git add README.md",
     "format": "prettier --write '{src,test}/**/*.{js,ts}'"
   },
