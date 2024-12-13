@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: snyk-broker-config
+  annotations:
+    github.com/project-slug: snyk/snyk-broker-config
+    github.com/team-slug: snyk/hybrid
+spec:
+  type: external-tooling
+  lifecycle: "-"
+  owner: hybrid
