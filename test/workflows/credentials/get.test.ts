@@ -6,9 +6,8 @@ import Credentials from '../../../src/commands/workflows/credentials/get'
 import {beforeStep, orgId, snykToken} from '../../test-utils/nock-utils'
 import {sendScenario} from '../../test-utils/stdin-utils'
 
-const stdin = fstdin()
-
 describe('credentials workflows', () => {
+  const stdin = fstdin()
   before(beforeStep)
 
   it('runs workflow credentials get', async () => {

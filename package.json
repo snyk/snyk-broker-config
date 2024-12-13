@@ -98,7 +98,7 @@
   "scripts": {
     "build": "shx rm -rf dist && tsc -b",
     "lint": "eslint . --ext .ts",
-    "test": "mocha --parallel --jobs 30 --forbid-only \"test/**/*.test.ts\"",
+    "test": "mocha --parallel --jobs 40 --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif readme && git add README.md",
     "format": "prettier --write '{src,test}/**/*.{js,ts}'"
   },

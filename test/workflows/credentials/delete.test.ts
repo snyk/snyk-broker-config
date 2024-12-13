@@ -5,9 +5,9 @@ import {stdin as fstdin} from 'mock-stdin'
 import Credentials from '../../../src/commands/workflows/credentials/delete'
 import {beforeStep, orgId, snykToken} from '../../test-utils/nock-utils'
 import {sendScenario} from '../../test-utils/stdin-utils'
-const stdin = fstdin()
 
 describe('deployment workflows', () => {
+  const stdin = fstdin()
   before(beforeStep)
 
   it('runs workflow deployment delete', async () => {

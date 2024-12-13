@@ -5,9 +5,9 @@ import {stdin as fstdin} from 'mock-stdin'
 import Connections from '../../../src/commands/workflows/connections/delete'
 import {beforeStep, downArrow, orgId4, snykToken} from '../../test-utils/nock-utils'
 import {sendScenario} from '../../test-utils/stdin-utils'
-const stdin = fstdin()
 
 describe('deployment workflows', () => {
+  const stdin = fstdin()
   before(beforeStep)
 
   it('runs workflow deployment delete fail due to integrations', async () => {

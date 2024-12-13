@@ -5,9 +5,9 @@ import {stdin as fstdin} from 'mock-stdin'
 import Connections from '../../../src/commands/workflows/connections/get'
 import {beforeStep, orgId2, snykToken} from '../../test-utils/nock-utils'
 import {sendScenario} from '../../test-utils/stdin-utils'
-const stdin = fstdin()
 
 describe('connections workflows', () => {
+  const stdin = fstdin()
   before(beforeStep)
 
   it('runs workflow connections list - empty', async () => {
