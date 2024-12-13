@@ -6,10 +6,10 @@ import Intro from '../../src/commands/introduction/index'
 import {Config} from '@oclif/core/config'
 import {sendScenarioWithOutAutoEnter} from '../test-utils/stdin-utils'
 
-const stdin = fstdin()
 const upArrow = '\u001b[A'
 const downArrow = '\u001b[B'
 describe('documentation', () => {
+  const stdin = fstdin()
   it('runs introduction cmd', async () => {
     // @ts-ignore
     const cfg: Config = {}

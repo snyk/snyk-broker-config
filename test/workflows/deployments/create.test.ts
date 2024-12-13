@@ -6,9 +6,8 @@ import Deployments from '../../../src/commands/workflows/deployments/create'
 import {beforeStep, orgId, snykToken} from '../../test-utils/nock-utils'
 import {sendScenario} from '../../test-utils/stdin-utils'
 
-const stdin = fstdin()
-
 describe('deployment workflows', () => {
+  const stdin = fstdin()
   before(beforeStep)
 
   it('runs workflow deployment create', async () => {
