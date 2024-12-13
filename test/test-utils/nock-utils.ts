@@ -3,6 +3,7 @@ import {ConnectionResponse} from '../../src/api/types'
 
 export const upArrow = '\u001b[A'
 export const downArrow = '\u001b[B'
+export const tab = '\u0009'
 export const appId = 'cb43d761-bd17-4b44-9b6c-e5b8ad077d33'
 export const snykToken = 'dummy'
 export const orgId = '3a7c1ab9-8914-4f39-a8c0-5752af653a88'
