@@ -61,6 +61,7 @@ jobs:
       - prodsec/security_scans:
           mode: auto
           open-source-additional-arguments: --exclude=test
+          iac-scan-path: ./src
   test:
     <<: *defaults
     resource_class: medium
@@ -101,14 +102,14 @@ workflows:
           name: Lint source code
           requires:
             - Install NPM packages
-#      - security-scans:
-#          name: Snyk Security Scans
-#          context:
-#            - nodejs-install
-#            - team-hybrid-snyk
-#          requires:
-#            - Install NPM packages
-#          <<: *filter-non-main-branches
+      - security-scans:
+          name: Snyk Security Scans
+          context:
+            - nodejs-install
+            - team-hybrid-snyk
+          requires:
+            - Install NPM packages
+          <<: *filter-non-main-branches
       - test:
           name: Run tests
           requires:
