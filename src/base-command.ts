@@ -10,6 +10,7 @@ import {getConnectionsForDeployment, createConnectionForDeployment} from './api/
 import {captureConnectionParams} from './command-helpers/connections/parameters-capture.js'
 import {getAccessibleTenants} from './api/tenants.js'
 import {validatedInput, ValidationType} from './utils/input-validation.js'
+import {validateSnykToken} from './api/snyk.js'
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<(typeof BaseCommand)['baseFlags'] & T['flags']>
 export type Args<T extends typeof Command> = Interfaces.InferredArgs<T['args']>
@@ -48,6 +49,12 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   async setupFlow(skipOrgId = false): Promise<SetupParameters> {
     const snykToken = process.env.SNYK_TOKEN ?? (await input({message: 'Enter your Snyk Token'}))
     process.env.SNYK_TOKEN = snykToken
+
+    try {
+      await validateSnykToken(process.env.SNYK_TOKEN)
+    } catch (error) {
+      this.error(`Invalid Snyk Token. ${error}`)
+    }
     if (!process.env.TENANT_ID) {
       const accessibleTenants = await getAccessibleTenants()
       if (accessibleTenants.data.length === 0) {
