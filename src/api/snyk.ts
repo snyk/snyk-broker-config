@@ -11,6 +11,7 @@ export const validateSnykToken = async (snykToken: string): Promise<void> => {
   if (!isValidUUID(snykToken)) {
     throw new Error('Invalid Format.')
   }
+  process.env.SNYK_TOKEN = snykToken
   const headers = {...commonHeaders, ...getAuthHeader()}
   const apiPath = `rest/self`
   const config = getConfig()
