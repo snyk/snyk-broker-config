@@ -98,6 +98,7 @@
     "build": "shx rm -rf dist && tsc -b",
     "lint": "eslint . --ext .ts",
     "test": "node test/run-test.js",
+    "prepack": "oclif manifest",
     "version": "oclif readme && git add README.md",
     "format": "prettier --write '{src,test}/**/*.{js,ts}'"
   },
