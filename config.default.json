@@ -1,7 +1,7 @@
 {
     "API_HOSTNAME": "https://api.snyk.io",
     "API_VERSION":"2024-02-08~experimental",
-    "API_VERSION_TENANTS": "2024-04-11~experimental",
+    "API_VERSION_TENANTS": "2024-10-14~experimental",
     "APP_INSTALL_API_VERSION": "2024-05-31",
     "MAX_RETRY": 3,
     "LOG_LEVEL": "info"
