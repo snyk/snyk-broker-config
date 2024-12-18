@@ -47,3 +47,26 @@ export const getAccessibleTenants = async () => {
     throw new Error(error)
   }
 }
+
+export const getTenantRole = async (tenantId: string) => {
+  const headers = {...commonHeaders, ...getAuthHeader()}
+  const apiPath = `rest/tenants/${tenantId}/memberships`
+  const config = getConfig()
+
+  const url = new URL(`${config.API_HOSTNAME}/${apiPath}`)
+  url.searchParams.append('role_name', 'admin')
+  url.searchParams.append('version', config.API_VERSION_TENANTS)
+
+  const req: HttpRequest = {
+    url: url.toString(),
+    headers: headers,
+    method: 'GET',
+  }
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return JSON.parse(response.body) as TenantsListingResponse
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}
