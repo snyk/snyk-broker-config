@@ -27,7 +27,7 @@ describe('deployment workflows', () => {
       {print: false},
     )
     expect(error?.message).to.contain(
-      'This tool requires tenant admin role. Please use a tenant level admin account or upgrade your account to be tenant admin.',
+      'This tool requires Tenant Admin role. Please use a Tenant level Admin account or upgrade your account to be Tenant Admin.',
     )
   })
 })
