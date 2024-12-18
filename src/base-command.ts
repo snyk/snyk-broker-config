@@ -60,7 +60,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       const accessibleTenants = await getAccessibleTenants()
       if (accessibleTenants.data.length === 0) {
         this.error(
-          'No tenant accessible with your credentials. A Tenant is required for Universal Broker. Personal organizations are not compatible.',
+          'No Tenant accessible with your credentials. A Tenant is required for Universal Broker. Personal organizations are not compatible.',
         )
       } else if (accessibleTenants.data.length === 1) {
         process.env.TENANT_ID = accessibleTenants.data[0].id
