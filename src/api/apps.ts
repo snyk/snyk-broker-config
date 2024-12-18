@@ -39,6 +39,12 @@ export const installAppIdOnOrgId = async (orgId: string): Promise<AppInstallResp
     logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
     return JSON.parse(response.body)
   } catch (error: any) {
+    if (error.includes('HTTP 404: Not Found: app not found')) {
+      throw new Error(`Unable to find the app ID.
+        For pre-prod environments, set the environment variable SNYK_BROKER_APP_ID=921020b6-b167-426e-867b-3e2856a2f56e.
+        For snykgov environments, please contact support.
+        `)
+    }
     throw new Error(error)
   }
 }
