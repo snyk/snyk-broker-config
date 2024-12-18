@@ -11,6 +11,7 @@ export const orgId2 = '3a7c1ab9-8914-4f39-a8c0-5752af653a89'
 export const orgId3 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8a'
 export const orgId4 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8b'
 export const tenantId = '00000000-0000-0000-0000-000000000000'
+export const nonAdminTenantId = '00000000-0000-0000-0000-000000000001'
 export const installId = '00000000-0000-0000-0000-000000000000'
 export const installId2 = '00000000-0000-0000-0000-000000000002'
 export const installId3 = '00000000-0000-0000-0000-000000000003'
@@ -66,6 +67,70 @@ export const tenants = {
         },
       },
       type: 'tenant',
+    },
+  ],
+}
+
+const tenantRoles = {
+  data: [
+    {
+      type: 'tenant_membership',
+      id: '00000000-0000-0000-0000-000000000000',
+      attributes: {
+        created_at: '2024-07-23T11:39:10.568336Z',
+      },
+      relationships: {
+        tenant: {
+          data: {
+            type: 'tenant',
+            id: tenantId,
+            attributes: {
+              name: 'Snyk Support',
+            },
+          },
+        },
+        user: {
+          data: {
+            type: 'user',
+            id: '00000000-0000-0000-0000-000000000000',
+            attributes: {
+              name: 'Name',
+              username: 'email@snyk.io',
+              email: 'email@snyk.io',
+              login_method: 'samlp',
+              account_type: 'user',
+              active: true,
+            },
+          },
+        },
+        role: {
+          data: {
+            type: 'tenant_role',
+            id: '00000000-0000-0000-0000-000000000000',
+            attributes: {
+              name: 'Tenant Admin',
+            },
+          },
+        },
+      },
+    },
+  ],
+  jsonapi: {},
+}
+
+export const forbiddenTenantMembersResponse = {
+  jsonapi: {
+    version: '1.0',
+  },
+  errors: [
+    {
+      status: '403',
+      detail: 'Forbidden',
+      id: '00000000-0000-0000-0000-000000000000',
+      title: 'Forbidden',
+      meta: {
+        created: '2024-12-17T13:59:39.147423838Z',
+      },
     },
   ],
 }
@@ -195,9 +260,17 @@ export const beforeStep = () => {
     .reply(() => {
       return [200, appResponse4]
     })
-    .get('/rest/tenants?version=2024-04-11~experimental')
+    .get('/rest/tenants?version=2024-10-14~experimental')
     .reply(() => {
       return [200, tenants]
+    })
+    .get(`/rest/tenants/${tenantId}/memberships?role_name=admin&version=2024-10-14~experimental`)
+    .reply(() => {
+      return [200, tenantRoles]
+    })
+    .get(`/rest/tenants/${nonAdminTenantId}/memberships?role_name=admin&version=2024-10-14~experimental`)
+    .reply(() => {
+      return [403, forbiddenTenantMembersResponse]
     })
     .get(`${urlPrefixTenantIdAndInstallId}/deployments?version=2024-02-08~experimental`)
     .reply((uri, body) => {

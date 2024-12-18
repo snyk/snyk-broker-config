@@ -8,7 +8,7 @@ import {createDeployment, DeploymentAttributes, DeploymentResponse, getDeploymen
 import {ConnectionId, ConnectionSelection, DeploymentId, InstallId, SetupParameters, TenantId} from './types.js'
 import {getConnectionsForDeployment, createConnectionForDeployment} from './api/connections.js'
 import {captureConnectionParams} from './command-helpers/connections/parameters-capture.js'
-import {getAccessibleTenants} from './api/tenants.js'
+import {getAccessibleTenants, getTenantRole} from './api/tenants.js'
 import {validatedInput, ValidationType} from './utils/input-validation.js'
 import {validateSnykToken} from './api/snyk.js'
 
@@ -52,6 +52,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
     try {
       await validateSnykToken(process.env.SNYK_TOKEN)
+      this.log(`✓ Valid Snyk Token.`)
     } catch (error) {
       this.error(`Invalid Snyk Token. ${error}`)
     }
@@ -59,11 +60,11 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       const accessibleTenants = await getAccessibleTenants()
       if (accessibleTenants.data.length === 0) {
         this.error(
-          'Not tenant accessible with your credentials. A Tenant is required for Universal Broker. Personal organizations are not compatible.',
+          'No tenant accessible with your credentials. A Tenant is required for Universal Broker. Personal organizations are not compatible.',
         )
       } else if (accessibleTenants.data.length === 1) {
         process.env.TENANT_ID = accessibleTenants.data[0].id
-        this.log(ux.colorize('yellow', `Found single accessible Tenant. Using ${process.env.TENANT_ID}.`))
+        this.log(ux.colorize('yellow', `✓ Found single accessible Tenant. Using ${process.env.TENANT_ID}.`))
       } else {
         this.log(
           ux.colorize(
@@ -76,6 +77,15 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     const tenantId =
       process.env.TENANT_ID ?? (await validatedInput({message: 'Enter your tenantID.'}, ValidationType.UUID))
     process.env.TENANT_ID = tenantId
+
+    try {
+      await getTenantRole(tenantId)
+      this.log(`✓ Tenant Admin role confirmed.`)
+    } catch (error) {
+      this.error(
+        `This tool requires tenant admin role. Please use a tenant level admin account or upgrade your account to be tenant admin.`,
+      )
+    }
 
     let orgId
     let installId
