@@ -114,6 +114,9 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         this.log(ux.colorize('purple', `- clientId: ${client_id}`))
         this.log(ux.colorize('purple', `- clientSecret: ${client_secret}`))
         this.log(ux.colorize('purple', `You will need them to run your Broker Client.`))
+        while (!(await confirm({message: 'Have you saved these credentials?'}))) {
+          this.log(ux.colorize('red', 'The client secret will never be visible again. Please save them securely.'))
+        }
       }
     }
     // await getDeployments(tenantId, installId)
