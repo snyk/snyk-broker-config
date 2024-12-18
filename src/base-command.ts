@@ -82,6 +82,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       await getTenantRole(tenantId)
       this.log(`✓ Tenant Admin role confirmed.`)
     } catch (error) {
+      this.debug(error)
       this.error(
         `This tool requires tenant admin role. Please use a tenant level admin account or upgrade your account to be tenant admin.`,
       )
