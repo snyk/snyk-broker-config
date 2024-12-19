@@ -1,6 +1,6 @@
 import {ux} from '@oclif/core'
 import {commonApiRelatedArgs} from '../../../common/args.js'
-import {input} from '@inquirer/prompts'
+import {confirm, input} from '@inquirer/prompts'
 import {BaseCommand} from '../../../base-command.js'
 import {nonSourceIntegrations} from '../../../command-helpers/connections/type-params-mapping.js'
 import {createIntegrationForConnection} from '../../../api/integrations.js'
@@ -44,6 +44,10 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
           },
           ValidationType.UUID,
         )
+      } else {
+        await confirm({
+          message: `During Universal Broker Early Access, the ${selectedConnection.type}-typed integration must first be manually Brokered via the UI. Have you manually brokered the connection?`,
+        })
       }
       const connectionIntegration = await createIntegrationForConnection(
         tenantId,
@@ -58,7 +62,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       this.log(
         ux.colorize(
           'cyan',
-          `Connection ${connectionIntegration.data.id} (type: ${selectedConnection.type}) integrated with integration ${integrationId} on Org ${orgId}.`,
+          `Connection ${selectedConnection.id} (type: ${selectedConnection.type}) integrated with integration ${connectionIntegration.data.id} on Org ${orgId}.`,
         ),
       )
       this.log(ux.colorize('red', 'Connection Integrate Workflow completed.'))
