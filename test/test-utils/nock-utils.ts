@@ -23,7 +23,7 @@ export const deploymentId4 = '00000000-0000-0000-0000-000000000004'
 export const connectionId3 = '00000000-0000-0000-0000-000000000003'
 export const connectionId4 = '00000000-0000-0000-0000-000000000004'
 export const integrationId3 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8a'
-export const integrationId4 = '00000000-0000-0000-0000-000000000004'
+export const integrationId4 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8b'
 export const clientId = '00000000-1234-0000-0000-000000000000'
 const createConnectionResponse: ConnectionResponse = {
   data: {
@@ -430,7 +430,7 @@ export const beforeStep = () => {
               required: {
                 key: 'value',
               },
-              type: 'github',
+              type: 'nexus',
               validations: [{key: 'value'}],
             },
           },
@@ -531,9 +531,22 @@ export const beforeStep = () => {
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = {
-        id: connectionId3,
+        id: integrationId3,
         integration_type: 'github',
         org_id: orgId3,
+        type: 'broker-integration',
+      }
+      return [201, response]
+    })
+    .post(
+      `${urlPrefixTenantId}/brokers/connections/${connectionId4}/orgs/${orgId4}/integration?version=2024-02-08~experimental`,
+    )
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = {
+        id: integrationId4,
+        integration_type: 'nexus',
+        org_id: orgId4,
         type: 'broker-integration',
       }
       return [201, response]

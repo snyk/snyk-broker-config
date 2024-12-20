@@ -3,7 +3,7 @@ import {expect} from 'chai'
 import {stdin as fstdin} from 'mock-stdin'
 
 import Connections from '../../../src/commands/workflows/connections/delete'
-import {beforeStep, downArrow, integrationId4, orgId4, snykToken} from '../../test-utils/nock-utils'
+import {beforeStep, connectionId4, downArrow, integrationId4, orgId4, snykToken} from '../../test-utils/nock-utils'
 import {sendScenario} from '../../test-utils/stdin-utils'
 
 describe('deployment workflows', () => {
@@ -25,8 +25,8 @@ describe('deployment workflows', () => {
     expect(error).to.be.undefined
     expect(stdout).to.contain(`Disconnecting integration ${integrationId4} in org ${orgId4}`)
     expect(stdout).to.contain(`✔ Disconnected.`)
-    expect(stdout).to.contain(`Selected Connection ID ${integrationId4}. Ready to delete Connection.`)
-    expect(stdout).to.contain(`Deleting Connection ${integrationId4}`)
+    expect(stdout).to.contain(`Selected Connection ID ${connectionId4}. Ready to delete Connection.`)
+    expect(stdout).to.contain(`Deleting Connection ${connectionId4}`)
     expect(stdout).to.contain(`Connection Deletion Workflow completed.`)
   })
 })
