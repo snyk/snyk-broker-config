@@ -108,6 +108,7 @@ export const flagConnectionMapping: TypeMapping = {
   },
   'azure-repos': {
     broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    azure_repos_host: {description: 'Azure Repos Hostname', dataType: 'hostname', prohibitedValues: []},
     azure_repos_token: {description: 'Azure Repos Token Credentials Reference', sensitive: true, prohibitedValues: []},
     azure_repos_org: {description: 'Azure Repos Org Name', prohibitedValues: []},
   },
