@@ -8,8 +8,8 @@ export interface ArtifactoryCrCredentials {
   url: string
 }
 export interface AzureReposCredentials {
-  username: string
-  password: string
+  token: string
+  url: string
 }
 export interface BitbucketServerCredentials {
   username: string
@@ -101,8 +101,8 @@ export const dummyArtifactoryCrCredentials: ArtifactoryCrCredentials = {
   url: '',
 }
 export const dummyAzureReposCredentials: AzureReposCredentials = {
-  username: '',
-  password: '',
+  token: '',
+  url: '',
 }
 export const dummyBitbucketServerCredentials: BitbucketServerCredentials = {
   username: '',
