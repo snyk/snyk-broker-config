@@ -1,9 +1,10 @@
 import {input, select, confirm} from '@inquirer/prompts'
-import {flagConnectionMapping} from './type-params-mapping.js'
+import {craConfigType1Types, flagConnectionMapping} from './type-params-mapping.js'
 import {createCredentials, getCredentialsForDeployment} from '../../api/credentials.js'
 import {CredentialsAttributes, CredentialsListResponse} from '../../api/types.js'
 import {isNotProhibitedValue, isValidHostnameWithPort, isValidUrl, isValidUUID} from '../../utils/validation.js'
 import {validatedInput, ValidationType} from '../../utils/input-validation.js'
+import {getConfig} from '../../config/config.js'
 
 export const captureConnectionParams = async (
   tenantID: string,
@@ -69,6 +70,10 @@ export const captureConnectionParams = async (
       while (!isInputValidated) {
         requiredParameters[key].input = await input({
           message: message,
+          default:
+            key === 'broker_client_url' && !craConfigType1Types.has(connectionType)
+              ? `${getConfig().API_HOSTNAME}`
+              : '',
         })
         if (requiredParameters[key].dataType) {
           switch (requiredParameters[key].dataType) {

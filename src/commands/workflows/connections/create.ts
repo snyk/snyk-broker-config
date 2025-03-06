@@ -34,9 +34,22 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
       const connectionType = await select({
         message: 'Which Connection type do you want to create?',
-        choices: connectionTypes.map((x) => {
-          return {id: x, value: x}
-        }),
+        choices: connectionTypes
+          .map((x) => {
+            return {id: x, value: x}
+          })
+          .sort((a, b) => {
+            const valueA = a.value.toLowerCase()
+            const valueB = b.value.toLowerCase()
+
+            if (valueA < valueB) {
+              return -1
+            }
+            if (valueA > valueB) {
+              return 1
+            }
+            return 0
+          }),
         pageSize: connectionTypes.length,
       })
       this.log(ux.colorize('cyan', `Let's create a ${connectionType} Connection now.\n`))

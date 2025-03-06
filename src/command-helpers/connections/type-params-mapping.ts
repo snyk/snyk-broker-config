@@ -1,7 +1,7 @@
 import {Flags} from '@oclif/core'
 import {FlagProps, FlagRelationship, Relationship} from './types.js'
 
-const craConfigType1Types = new Set([
+export const craConfigType1Types = new Set([
   'acr',
   'artifactory-cr',
   'docker-hub',
