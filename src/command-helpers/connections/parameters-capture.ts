@@ -43,7 +43,7 @@ export const captureConnectionParams = async (
       if (choice === 'CreateNew') {
         const envVarName = await validatedInput(
           {
-            message: `Env Var Name (i.e MY_GITHUB_TOKEN)`,
+            message: `Env Var Name (i.e MY_${key.toLocaleUpperCase()})`,
           },
           ValidationType.ENVVAR,
         )
