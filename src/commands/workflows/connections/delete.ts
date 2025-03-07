@@ -40,7 +40,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         ) {
           for (let i = 0; i < connectionIntegration.data.length; i++) {
             this.log(
-              `Disconnecting integration ${connectionIntegration.data[i].id} in org ${connectionIntegration.data[i].org_id}}`,
+              `Disconnecting integration ${connectionIntegration.data[i].id} in org ${connectionIntegration.data[i].org_id}`,
             )
             await deleteIntegrationsForConnection(
               tenantId,

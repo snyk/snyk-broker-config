@@ -36,25 +36,11 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       )
 
       const orgId = await validatedInput({message: 'Enter the OrgID you want to integrate.'}, ValidationType.UUID)
-      let integrationId
-      if (!nonSourceIntegrations.has(selectedConnection.type)) {
-        integrationId = await validatedInput(
-          {
-            message: `Enter the integrationID you want to integrate. Must be of type ${selectedConnection.type}`,
-          },
-          ValidationType.UUID,
-        )
-      } else {
-        await confirm({
-          message: `During Universal Broker Early Access, the ${selectedConnection.type}-typed integration must first be manually Brokered via the UI. Have you manually brokered the connection?`,
-        })
-      }
       const connectionIntegration = await createIntegrationForConnection(
         tenantId,
         selectedConnection.id,
         selectedConnection.type,
         orgId,
-        integrationId,
       )
       if (connectionIntegration.errors) {
         this.error(ux.colorize('red', JSON.stringify(connectionIntegration.errors)))
