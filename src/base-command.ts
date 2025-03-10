@@ -2,8 +2,7 @@
 import {Command, Flags, Interfaces, ux} from '@oclif/core'
 import {getConfig} from './config/config.js'
 import {input, confirm, select} from '@inquirer/prompts'
-import {isValidUUID} from './utils/validation.js'
-import {getAppInstalledOnOrgId, installAppsWorfklow} from './workflows/apps.js'
+import {getAppInstalledOnOrgId, getInstallIdsWithOrgIdForTenant, installAppsWorfklow} from './workflows/apps.js'
 import {createDeployment, DeploymentAttributes, DeploymentResponse, getDeployments} from './api/deployments.js'
 import {ConnectionId, ConnectionSelection, DeploymentId, InstallId, SetupParameters, TenantId} from './types.js'
 import {getConnectionsForDeployment, createConnectionForDeployment} from './api/connections.js'
@@ -11,9 +10,13 @@ import {captureConnectionParams} from './command-helpers/connections/parameters-
 import {getAccessibleTenants, getTenantRole} from './api/tenants.js'
 import {validatedInput, ValidationType} from './utils/input-validation.js'
 import {validateSnykToken} from './api/snyk.js'
+import {createNewOrg, getPossibleExistingBrokerAdminOrgs, validateSnykInstallId} from './api/orgs.js'
+import {getGroupsForTenant} from './api/groups.js'
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<(typeof BaseCommand)['baseFlags'] & T['flags']>
 export type Args<T extends typeof Command> = Interfaces.InferredArgs<T['args']>
+
+const ORG_NAME = 'Snyk Broker Admin'
 
 export abstract class BaseCommand<T extends typeof Command> extends Command {
   // add the --json flag
@@ -88,38 +91,12 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       )
     }
 
-    let orgId
-    let installId
+    let orgId: string
+    let installId: string
     if (process.env.INSTALL_ID) {
       installId = process.env.INSTALL_ID
-    } else if (await confirm({message: 'Have you installed the Broker App against an Org?'})) {
-      installId = await validatedInput({message: 'Enter your Broker App Install ID'}, ValidationType.UUID)
-      if (!isValidUUID(installId)) {
-        this.error(`Must be a valid UUID.`)
-      }
-      // process.env.INSTALL_ID = installId
-    } else {
-      orgId = await validatedInput(
-        {message: `Enter Org ID to install Broker App. Must be in Tenant ${tenantId}`},
-        ValidationType.UUID,
-      )
-      const appInstall = await installAppsWorfklow(orgId)
-      if (typeof appInstall === 'string') {
-        this.log(ux.colorize('purple', `Found an App already installed. Using Install ID ${appInstall}.`))
-        installId = appInstall
-      } else {
-        const {install_id, client_id, client_secret} = appInstall
-        installId = install_id
-        this.log(ux.colorize('purple', `App installed. Please store the following credentials securely:`))
-        this.log(ux.colorize('purple', `- clientId: ${client_id}`))
-        this.log(ux.colorize('purple', `- clientSecret: ${client_secret}`))
-        this.log(ux.colorize('purple', `You will need them to run your Broker Client.`))
-        while (!(await confirm({message: 'Have you saved these credentials?'}))) {
-          this.log(ux.colorize('red', 'The client secret will never be visible again. Please save them securely.'))
-        }
-      }
     }
-    // await getDeployments(tenantId, installId)
+
     this.log(
       ux.colorize(
         'yellow',
@@ -129,8 +106,132 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     if (skipOrgId) {
       orgId = 'dummy'
     }
-    const appInstalledOnOrgId = orgId ?? (await getAppInstalledOnOrgId(tenantId, installId))
-    return {installId, tenantId, appInstalledOnOrgId}
+
+    const installsWithOrgs = await getInstallIdsWithOrgIdForTenant(tenantId, ORG_NAME)
+    if (installsWithOrgs.length === 0) {
+      const installedWorkflowResponse = await this.appInstallWorkflow(tenantId)
+      installId = installedWorkflowResponse.installId
+      orgId = installedWorkflowResponse.appInstalledOnOrgId
+    } else if (installsWithOrgs.length > 1) {
+      const choices = installsWithOrgs.map((x, index) => {
+        return {
+          id: index,
+          value: x.installId,
+          description: `Install ${x.installId} installed on org ${x.installedOrgId}. ${x.comment}.`,
+        }
+      })
+      choices.push(
+        {
+          id: 998,
+          value: 'Install new app',
+          description: `Install a new app.`,
+        },
+        {
+          id: 999,
+          value: 'Enter your Install Id',
+          description: `Enter install Id and Org Id.`,
+        },
+      )
+      const selectedInstallId = await select({
+        message: 'Which existing Install ID would like to use?',
+        choices,
+      })
+      if (selectedInstallId === 'Enter your Install Id') {
+        installId = await input({message: 'Enter your Install Id.'})
+        orgId = await input({message: 'Enter your Org Id where installed.'})
+        if (!(await validateSnykInstallId(installId, orgId))) {
+          throw new Error(`Invalid install Id, not found installed in org ${orgId}.`)
+        }
+      } else if (selectedInstallId === 'Install new app') {
+        const installedWorkflowResponse = await this.appInstallWorkflow(tenantId)
+        installId = installedWorkflowResponse.installId
+        orgId = installedWorkflowResponse.appInstalledOnOrgId
+      } else {
+        installId = selectedInstallId
+        const installIndex = installsWithOrgs.findIndex((x) => x.installId === selectedInstallId)
+        orgId = installsWithOrgs[installIndex].installedOrgId
+      }
+    } else {
+      installId = installsWithOrgs[0].installId
+      orgId = installsWithOrgs[0].installedOrgId
+    }
+    return {installId, tenantId, appInstalledOnOrgId: orgId}
+  }
+
+  async appInstallWorkflow(tenantId: TenantId): Promise<SetupParameters> {
+    this.log(ux.colorize('yellow', `Installing Broker App.`))
+    let installId
+    let orgId
+    let createBrokerAdminOrg
+    let groupId
+    const groups = await getGroupsForTenant()
+    if (groups.data.length === 0) {
+      this.log(
+        ux.colorize(
+          'orange',
+          'No groups detected. Automatic install requires at least one group in tenant. Default to manual install.',
+        ),
+      )
+      throw new Error(
+        'Error installing Broker App: at least one group in your tenant is required. Please create a group and try again.',
+      )
+    } else {
+      groupId =
+        groups.data.length === 1
+          ? groups.data[0].id
+          : await select({
+              message: 'Which group do you want to create Snyk Broker Admin org in?',
+              choices: groups.data.map((x) => {
+                return {id: x.id, value: x.id, description: `${x.attributes.name}`}
+              }),
+            })
+    }
+    const existingOrgIds = await getPossibleExistingBrokerAdminOrgs({name: ORG_NAME, groupId: groupId})
+    if (existingOrgIds.length === 0) {
+      createBrokerAdminOrg = await confirm({
+        message:
+          'Create dedicated organization and install Broker app? (recommended). Press N to enter your own org Id.',
+        default: true,
+      })
+    } else {
+      this.log(ux.colorize('red', `Snyk Broker Admin org already exist in group.`))
+      throw new Error(
+        `Error installing Broker App: Snyk Broker Admin org already exists in group ${groupId}. Either choose the corresponding install in the list or delete the ${ORG_NAME} organization and try again.`,
+      )
+    }
+
+    if (createBrokerAdminOrg && groupId) {
+      const createdOrg = await createNewOrg({name: ORG_NAME, groupId})
+      orgId = createdOrg.id
+      this.log(
+        ux.colorize(
+          'yellow',
+          `Created org ${ORG_NAME} (${orgId}) in group ${groups.data.find((x) => x.id === groupId)?.attributes.name} (${groupId})`,
+        ),
+      )
+    } else {
+      orgId = await validatedInput(
+        {message: `Enter Org ID to install Broker App. Must be in Tenant ${tenantId}`},
+        ValidationType.UUID,
+      )
+    }
+
+    const appInstall = await installAppsWorfklow(orgId)
+    if (typeof appInstall === 'string') {
+      this.log(ux.colorize('purple', `Found an App already installed. Using Install ID ${appInstall}.`))
+      installId = appInstall
+    } else {
+      const {install_id, client_id, client_secret} = appInstall
+      installId = install_id
+      this.log(ux.colorize('purple', `App installed on org ${orgId}. Please store the following credentials securely:`))
+      this.log(ux.colorize('purple', `- clientId: ${client_id}`))
+      this.log(ux.colorize('purple', `- clientSecret: ${client_secret}`))
+      this.log(ux.colorize('purple', `You will need them to run your Broker Client.`))
+      while (!(await confirm({message: 'Have you saved these credentials?'}))) {
+        this.log(ux.colorize('red', 'The client secret will never be visible again. Please save them securely.'))
+      }
+    }
+    return {appInstalledOnOrgId: orgId, installId: installId, tenantId}
   }
 
   async selectDeployment(tenantId: string, installId: string, appInstalledOnOrgId: string): Promise<DeploymentId> {

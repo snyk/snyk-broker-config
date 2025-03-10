@@ -40,6 +40,27 @@ export interface DeploymentsResponse {
   errors?: any
 }
 
+export const getDeploymentsByTenant = async (tenantId: string) => {
+  const headers = {...commonHeaders, ...getAuthHeader()}
+  const apiPath = `rest/tenants/${tenantId}/brokers/deployments`
+  const config = getConfig()
+
+  const req: HttpRequest = {
+    url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
+    headers: headers,
+    method: 'GET',
+  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  if (response.statusCode && response.statusCode === 404) {
+    return {data: [], errors: [{details: '404'}]}
+  }
+  if (response.statusCode && response.statusCode > 299) {
+    throw new Error(`${response.statusCode} - ${response.statusText ?? ''}`)
+  }
+  return JSON.parse(response.body) as DeploymentsResponse
+}
+
 export const getDeployments = async (tenantId: string, installId: string) => {
   const headers = {...commonHeaders, ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments`

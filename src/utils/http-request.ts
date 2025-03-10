@@ -37,7 +37,7 @@ export const makeRequest = async (req: HttpRequest, retries = MAX_RETRY): Promis
         // The whole response has been received.
         response.on('end', () => {
           if (response.statusCode && response.statusCode > 299 && response.statusCode !== 404) {
-            const errors = (JSON.parse(data).errors as Array<any>) ?? ''
+            const errors = (JSON.parse(data).errors as Array<any>) ?? []
             reject(
               `${response.statusCode}: ${response.statusMessage}.\n\n- Url: (${req.method})${req.url}.\n\n- ${errors.map((error) => error.detail).join(';')}`,
             )

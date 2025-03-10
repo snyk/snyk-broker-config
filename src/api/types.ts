@@ -161,3 +161,90 @@ export interface IntegrationResponse {
   }
   errors?: any
 }
+
+export interface CreatedOrgV1 {
+  id: string
+  name: string
+  slug: string
+  url: string
+  created: string
+  group?: {
+    name: string
+    id: string
+  }
+}
+
+export interface CreateOrgV1 {
+  name: string
+  groupId?: string
+}
+
+export interface Orgs {
+  id: string
+  type: string
+  attributes: {
+    access_requests_enabled: boolean
+    created_at: string
+    group_id: string
+    is_personal: boolean
+    name: string
+    slug: string
+    updated_at: string
+  }
+}
+export interface OrgsListResponse {
+  data: Array<Orgs>
+}
+
+export interface OrgsInstall {
+  id: string
+  type: string
+  attributes: {
+    client_id: string
+    installed_at: string
+  }
+}
+export interface OrgsInstallsResponse {
+  data: Array<OrgsInstall>
+}
+
+export interface AppInstallsDataAttributes {
+  client_id: string
+  installed_at: string
+}
+export interface AppInstallsRelationships {
+  app: {
+    data: {
+      id: string
+      type: string
+    }
+  }
+}
+export interface AppInstallsData {
+  attributes: AppInstallsDataAttributes
+  id: string
+  type: string
+  relationships: AppInstallsRelationships
+}
+
+interface JsonApi {
+  version: string
+}
+
+type Link =
+  | string
+  | {
+      href: string
+      meta?: Record<string, any>
+    }
+
+interface Links {
+  self: Link
+  next?: Link
+}
+
+export interface AppInstallsApiResponse {
+  data: AppInstallsData[]
+  jsonapi: JsonApi
+  links: Links
+}

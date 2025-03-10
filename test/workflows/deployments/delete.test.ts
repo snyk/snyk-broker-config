@@ -3,8 +3,8 @@ import {expect} from 'chai'
 import {stdin as fstdin} from 'mock-stdin'
 
 import Deployments from '../../../src/commands/workflows/deployments/delete'
-import {beforeStep, orgId2, snykToken} from '../../test-utils/nock-utils'
-import {sendScenario} from '../../test-utils/stdin-utils'
+import {beforeStep, downArrow, snykToken} from '../../test-utils/nock-utils'
+import {sendScenarioWithOutAutoEnter} from '../../test-utils/stdin-utils'
 
 describe('deployment workflows', () => {
   const stdin = fstdin()
@@ -16,8 +16,7 @@ describe('deployment workflows', () => {
     const deleteDeployment = new Deployments([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId2, 'y'])
-
+        sendScenarioWithOutAutoEnter(stdin, [snykToken, '\n', downArrow, downArrow, '\n', 'y', '\n'])
         return deleteDeployment.run()
       },
       {print: false},

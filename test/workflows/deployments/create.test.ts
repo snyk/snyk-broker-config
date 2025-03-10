@@ -3,7 +3,7 @@ import {expect} from 'chai'
 import {stdin as fstdin} from 'mock-stdin'
 
 import Deployments from '../../../src/commands/workflows/deployments/create'
-import {beforeStep, orgId, snykToken} from '../../test-utils/nock-utils'
+import {beforeStep, snykToken} from '../../test-utils/nock-utils'
 import {sendScenario} from '../../test-utils/stdin-utils'
 
 describe('deployment workflows', () => {
@@ -16,7 +16,7 @@ describe('deployment workflows', () => {
     const createDeployment = new Deployments([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId, 'y', 'key', 'value', 'n'])
+        sendScenario(stdin, [snykToken, 'n', 'y', 'key', 'value', 'n'])
         return createDeployment.run()
       },
       {print: false},

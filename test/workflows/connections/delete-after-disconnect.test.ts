@@ -4,19 +4,35 @@ import {stdin as fstdin} from 'mock-stdin'
 
 import Connections from '../../../src/commands/workflows/connections/delete'
 import {beforeStep, connectionId4, downArrow, integrationId4, orgId4, snykToken} from '../../test-utils/nock-utils'
-import {sendScenario} from '../../test-utils/stdin-utils'
+import {sendScenarioWithOutAutoEnter} from '../../test-utils/stdin-utils'
 
 describe('deployment workflows', () => {
   const stdin = fstdin()
   before(beforeStep)
 
-  it('runs workflow deployment delete fail due to integrations', async () => {
+  it('runs workflow deployment delete after disconnecting integrations', async () => {
     // @ts-ignore
     const cfg: Config = {}
     const deleteConnection = new Connections([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId4, downArrow, 'y', 'y', 'y'])
+        sendScenarioWithOutAutoEnter(stdin, [
+          snykToken,
+          '\n',
+          downArrow,
+          downArrow,
+          downArrow,
+          downArrow,
+          '\n',
+          downArrow,
+          '\n',
+          'y',
+          '\n',
+          'y',
+          '\n',
+          'y',
+          '\n',
+        ])
 
         return deleteConnection.run()
       },
