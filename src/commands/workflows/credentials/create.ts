@@ -32,9 +32,22 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       const attributes: CredentialsAttributes[] = []
       const type = await select({
         message: 'Which credentials type do you want to create?',
-        choices: connectionTypes.map((x) => {
-          return {id: x, value: x}
-        }),
+        choices: connectionTypes
+          .map((x) => {
+            return {id: x, value: x}
+          })
+          .sort((a, b) => {
+            const valueA = a.value.toLowerCase()
+            const valueB = b.value.toLowerCase()
+
+            if (valueA < valueB) {
+              return -1
+            }
+            if (valueA > valueB) {
+              return 1
+            }
+            return 0
+          }),
         pageSize: connectionTypes.length,
       })
       const env_var_name = await validatedInput(

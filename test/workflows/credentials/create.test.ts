@@ -3,8 +3,8 @@ import {expect} from 'chai'
 import {stdin as fstdin} from 'mock-stdin'
 
 import Credentials from '../../../src/commands/workflows/credentials/create'
-import {beforeStep, downArrow, orgId, snykToken} from '../../test-utils/nock-utils'
-import {sendScenario} from '../../test-utils/stdin-utils'
+import {beforeStep, downArrow, snykToken} from '../../test-utils/nock-utils'
+import {sendScenarioWithOutAutoEnter} from '../../test-utils/stdin-utils'
 
 describe('credentials workflows', () => {
   const stdin = fstdin()
@@ -16,7 +16,19 @@ describe('credentials workflows', () => {
     const createCredentials = new Credentials([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId, downArrow, 'ARTIFACTORY_CR_CREDS_ENV_VAR', 'test env var name'])
+        sendScenarioWithOutAutoEnter(stdin, [
+          snykToken,
+          '\n',
+          '\n',
+          downArrow,
+          downArrow,
+          downArrow,
+          '\n',
+          'ARTIFACTORY_CR_CREDS_ENV_VAR',
+          '\n',
+          'test env var name',
+          '\n',
+        ])
         return createCredentials.run()
       },
       {print: false},

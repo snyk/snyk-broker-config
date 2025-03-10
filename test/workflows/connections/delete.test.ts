@@ -3,8 +3,8 @@ import {expect} from 'chai'
 import {stdin as fstdin} from 'mock-stdin'
 
 import Connections from '../../../src/commands/workflows/connections/delete'
-import {beforeStep, connectionId3, orgId3, snykToken} from '../../test-utils/nock-utils'
-import {sendScenario} from '../../test-utils/stdin-utils'
+import {beforeStep, connectionId3, downArrow, snykToken} from '../../test-utils/nock-utils'
+import {sendScenarioWithOutAutoEnter} from '../../test-utils/stdin-utils'
 
 describe('deployment workflows', () => {
   const stdin = fstdin()
@@ -16,8 +16,7 @@ describe('deployment workflows', () => {
     const deleteConnection = new Connections([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId3, 'y'])
-
+        sendScenarioWithOutAutoEnter(stdin, [snykToken, '\n', downArrow, downArrow, downArrow, '\n', 'y', '\n'])
         return deleteConnection.run()
       },
       {print: false},

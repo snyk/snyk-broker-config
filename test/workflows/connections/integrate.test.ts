@@ -3,8 +3,8 @@ import {expect} from 'chai'
 import {stdin as fstdin} from 'mock-stdin'
 
 import Connections from '../../../src/commands/workflows/connections/integrate'
-import {beforeStep, connectionId3, integrationId3, orgId3, snykToken} from '../../test-utils/nock-utils'
-import {sendScenario} from '../../test-utils/stdin-utils'
+import {beforeStep, connectionId3, downArrow, integrationId3, orgId3, snykToken} from '../../test-utils/nock-utils'
+import {sendScenarioWithOutAutoEnter} from '../../test-utils/stdin-utils'
 
 describe('deployment workflows', () => {
   const stdin = fstdin()
@@ -16,7 +16,7 @@ describe('deployment workflows', () => {
     const integrateConnection = new Connections([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId3, orgId3, integrationId3])
+        sendScenarioWithOutAutoEnter(stdin, [snykToken, '\n', downArrow, downArrow, downArrow, '\n', orgId3, '\n'])
         return integrateConnection.run()
       },
       {print: false},

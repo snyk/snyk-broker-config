@@ -230,11 +230,61 @@ export const createCredentialsResponse = {
   ],
 }
 
+const orgsResponse = {
+  data: [
+    {
+      attributes: {},
+      id: orgId,
+    },
+  ],
+}
+
 const urlPrefixTenantIdAndInstallId = `/rest/tenants/${tenantId}/brokers/installs/${installId}`
 const urlPrefixTenantIdAndInstallId2 = `/rest/tenants/${tenantId}/brokers/installs/${installId2}`
 const urlPrefixTenantIdAndInstallId3 = `/rest/tenants/${tenantId}/brokers/installs/${installId3}`
 const urlPrefixTenantIdAndInstallId4 = `/rest/tenants/${tenantId}/brokers/installs/${installId4}`
 const urlPrefixTenantId = `/rest/tenants/${tenantId}`
+
+const deployments = {
+  data: [
+    {
+      attributes: {
+        broker_app_installed_in_org_id: '00000000-0000-0000-0000-000000000000',
+        install_id: '00000000-0000-0000-0000-000000000000',
+        metadata: {},
+      },
+      id: '00000000-0000-0000-0000-000000000000',
+      type: 'broker_deployment',
+    },
+    {
+      attributes: {
+        broker_app_installed_in_org_id: '00000000-0000-0000-0000-000000000000',
+        install_id: '00000000-0000-0000-0000-000000000002',
+        metadata: {},
+      },
+      id: '00000000-0000-0000-0000-000000000002',
+      type: 'broker_deployment',
+    },
+    {
+      attributes: {
+        broker_app_installed_in_org_id: '00000000-0000-0000-0000-000000000000',
+        install_id: '00000000-0000-0000-0000-000000000003',
+        metadata: {},
+      },
+      id: '00000000-0000-0000-0000-000000000003',
+      type: 'broker_deployment',
+    },
+    {
+      attributes: {
+        broker_app_installed_in_org_id: '00000000-0000-0000-0000-000000000000',
+        install_id: installId4,
+        metadata: {},
+      },
+      id: deploymentId4,
+      type: 'broker_deployment',
+    },
+  ],
+}
 
 export const beforeStep = () => {
   const apiResponseSchema = {data: {}, links: {}}
@@ -243,6 +293,10 @@ export const beforeStep = () => {
     .get(`/rest/self?version=2024-05-31`)
     .reply(() => {
       return [200, 'OK']
+    })
+    .get(`/rest/orgs?version=2024-02-08~experimental&is_personal=false&name=Snyk%20Broker%20Admin`)
+    .reply(() => {
+      return [200, orgsResponse]
     })
     .get(`/rest/orgs/${orgId}/apps/installs?version=2024-05-31`)
     .reply(() => {
@@ -272,68 +326,34 @@ export const beforeStep = () => {
     .reply(() => {
       return [403, forbiddenTenantMembersResponse]
     })
+    .get(`/rest/tenants/${tenantId}/brokers/deployments?version=2024-02-08~experimental`)
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = deployments.data
+      return [200, response]
+    })
     .get(`${urlPrefixTenantIdAndInstallId}/deployments?version=2024-02-08~experimental`)
     .reply((uri, body) => {
       const response = apiResponseSchema
-      response.data = [
-        {
-          attributes: {
-            broker_app_installed_in_org_id: '00000000-0000-0000-0000-000000000000',
-            install_id: '00000000-0000-0000-0000-000000000000',
-            metadata: {},
-          },
-          id: '00000000-0000-0000-0000-000000000000',
-          type: 'broker_deployment',
-        },
-      ]
+      response.data = [deployments.data[0]]
       return [200, response]
     })
     .get(`${urlPrefixTenantIdAndInstallId2}/deployments?version=2024-02-08~experimental`)
     .reply((uri, body) => {
       const response = apiResponseSchema
-      response.data = [
-        {
-          attributes: {
-            broker_app_installed_in_org_id: '00000000-0000-0000-0000-000000000000',
-            install_id: '00000000-0000-0000-0000-000000000002',
-            metadata: {},
-          },
-          id: '00000000-0000-0000-0000-000000000002',
-          type: 'broker_deployment',
-        },
-      ]
+      response.data = [deployments.data[1]]
       return [200, response]
     })
     .get(`${urlPrefixTenantIdAndInstallId3}/deployments?version=2024-02-08~experimental`)
     .reply((uri, body) => {
       const response = apiResponseSchema
-      response.data = [
-        {
-          attributes: {
-            broker_app_installed_in_org_id: '00000000-0000-0000-0000-000000000000',
-            install_id: '00000000-0000-0000-0000-000000000003',
-            metadata: {},
-          },
-          id: '00000000-0000-0000-0000-000000000003',
-          type: 'broker_deployment',
-        },
-      ]
+      response.data = [deployments.data[2]]
       return [200, response]
     })
     .get(`${urlPrefixTenantIdAndInstallId4}/deployments?version=2024-02-08~experimental`)
     .reply((uri, body) => {
       const response = apiResponseSchema
-      response.data = [
-        {
-          attributes: {
-            broker_app_installed_in_org_id: '00000000-0000-0000-0000-000000000000',
-            install_id: installId4,
-            metadata: {},
-          },
-          id: deploymentId4,
-          type: 'broker_deployment',
-        },
-      ]
+      response.data = [deployments.data[3]]
       return [200, response]
     })
     .get(`${urlPrefixTenantIdAndInstallId}/deployments/${deploymentId}/connections?version=2024-02-08~experimental`)
