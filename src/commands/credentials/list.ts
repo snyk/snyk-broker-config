@@ -35,7 +35,7 @@ export default class Credentials extends BaseCommand<typeof Credentials> {
     const {args} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds(args)
     const credentials = await getCredentialsForDeployment(tenantId, installId, args.deploymentId!)
-    const credentialsList = credentials.data
+    const credentialsList = credentials.data ?? []
 
     this.log(
       ux.colorize(

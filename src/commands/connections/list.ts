@@ -35,7 +35,7 @@ export default class Connections extends BaseCommand<typeof Connections> {
     const {args} = await this.parse(Connections)
     const {tenantId, installId} = getCommonIds(args)
     const connections = await getConnectionsForDeployment(tenantId, installId, args.deploymentId!)
-    const connectionsList = connections.data
+    const connectionsList = connections.data ?? []
 
     this.log(
       ux.colorize(
