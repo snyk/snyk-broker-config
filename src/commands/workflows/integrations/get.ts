@@ -31,6 +31,9 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       // const selectedConnectionData = await getConnectionsForDeployment(tenantId, installId, deploymentId)
       const integrations = await getIntegrationsForConnection(tenantId, selectedConnection.id)
       const integrationsList = integrations.data ?? []
+      if (integrationsList.length === 0) {
+        throw new Error(`No Integrations found for connection ${selectedConnection.id} (${selectedConnection.type})`)
+      }
       this.log(printFormattedJSON(integrationsList))
       this.log(ux.colorize('red', 'Connection Integration listing Workflow completed.'))
     } catch (error: any) {
