@@ -47,8 +47,14 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   }
 
   async setupFlow(skipOrgId = false): Promise<SetupParameters> {
-    const snykToken = process.env.SNYK_TOKEN ?? (await input({message: 'Enter your Snyk Token'}))
-    process.env.SNYK_TOKEN = snykToken
+    if (!process.env.SNYK_TOKEN) {
+      process.env.SNYK_TOKEN = await input({message: 'Enter your Snyk Token'})
+
+      this.log(ux.colorize('yellow', `\nTIPS`))
+      this.log(ux.colorize('yellow', `For smoother experience, please set the Snyk Token as env variable.`))
+      this.log(ux.colorize('yellow', `Linux/Mac: export SNYK_TOKEN=${process.env.SNYK_TOKEN}`))
+      this.log(ux.colorize('yellow', `Windows: set SNYK_TOKEN=${process.env.SNYK_TOKEN}\n`))
+    }
 
     try {
       await validateSnykToken(process.env.SNYK_TOKEN)
@@ -68,12 +74,19 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       } else {
         this.log(
           ux.colorize(
+            'blueBright',
+            `Your credentials can access tenants:\n${accessibleTenants.data.map((x) => `- ${x.attributes.name}: ${x.id}`).join(',\n')}.\n`,
+          ),
+        )
+        this.log(
+          ux.colorize(
             'yellow',
-            `Your credentials can access tenants ${accessibleTenants.data.map((x) => `[${x.attributes.name}:${x.id}]`).join(',')}. Please set TENANT_ID for the tenant of your choice.`,
+            `export TENANT_ID=${process.env.TENANT_ID} (Windows: set TENANT_ID=${process.env.TENANT_ID}) to avoid inputting this for each command.\n`,
           ),
         )
       }
     }
+
     const tenantId =
       process.env.TENANT_ID ?? (await validatedInput({message: 'Enter your tenantID.'}, ValidationType.UUID))
     process.env.TENANT_ID = tenantId
@@ -105,27 +118,28 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       )
       const appInstall = await installAppsWorfklow(orgId)
       if (typeof appInstall === 'string') {
-        this.log(ux.colorize('purple', `Found an App already installed. Using Install ID ${appInstall}.`))
+        this.log(ux.colorize('blueBright', `Found an App already installed. Using Install ID ${appInstall}.`))
         installId = appInstall
       } else {
         const {install_id, client_id, client_secret} = appInstall
         installId = install_id
-        this.log(ux.colorize('purple', `App installed. Please store the following credentials securely:`))
-        this.log(ux.colorize('purple', `- clientId: ${client_id}`))
-        this.log(ux.colorize('purple', `- clientSecret: ${client_secret}`))
-        this.log(ux.colorize('purple', `You will need them to run your Broker Client.`))
+        this.log(ux.colorize('red', `\nIMPORTANT !`))
+        this.log(ux.colorize('red', `App installed. Please store the following credentials securely:`))
+        this.log(ux.colorize('red', `- clientId: ${client_id}`))
+        this.log(ux.colorize('red', `- clientSecret: ${client_secret}`))
+        this.log(ux.colorize('red', `You will need them to run your Broker Client.\n`))
         while (!(await confirm({message: 'Have you saved these credentials?'}))) {
           this.log(ux.colorize('red', 'The client secret will never be visible again. Please save them securely.'))
         }
+        this.log(ux.colorize('yellow', `\nFor smoother experience, please set the environment variable listed above.`))
+        this.log(ux.colorize('yellow', `Linux/Mac: export INSTALL_ID=${installId}`))
+        this.log(ux.colorize('yellow', `Windows: set INSTALL_ID=${installId}\n`))
+        if (!(await confirm({message: `Continue?`}))) {
+          process.exit(0)
+        }
       }
     }
-    // await getDeployments(tenantId, installId)
-    this.log(
-      ux.colorize(
-        'yellow',
-        `Helpful tip ! Set TENANT_ID, INSTALL_ID as environment values to avoid pasting the values in for every command.`,
-      ),
-    )
+
     if (skipOrgId) {
       orgId = 'dummy'
     }
@@ -138,7 +152,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     let deploymentId
     if (deployments.errors) {
       this.log(`${deployments.errors[0].detail}`)
-      this.error(`Please first create a Deployment by using the Create Workflow.`)
+      this.error(`Please create a first connection by using the "workflows connections create" command.`)
     } else if (deployments.data) {
       deploymentId =
         deployments.data.length === 1

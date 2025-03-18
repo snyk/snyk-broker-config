@@ -95,7 +95,7 @@ export default class Intro extends BaseCommand<typeof Intro> {
     A Deployment represents the running Broker client(s), either as a standalone container or a Kubernetes Deployment with multiple replicas in High Availability Mode. It represents the running code, configured with all the local environment variables required for proxy usage, private certificate authority, custom pod specs, etc.
 
     It is purposely not including any of the connection specifics which are instead defined remotely in the Snyk platform, this greatly simplifies the local configuration complexity while offering greater flexibility overall.
-    
+
     A Deployment is meant to be a set and forget component, running code which will handle Creating, Reading, Updating and Deleting Connections.
 
     The Deployment creation process requires the following parameters:
@@ -108,7 +108,7 @@ export default class Intro extends BaseCommand<typeof Intro> {
     `,
       credentials: `
     In Universal Broker, Credential references are local environment variables expected to be found in a Deployment. Snyk Broker allows you to keep any sensitive value/token local to your network, never sharing them with Snyk. These references are then used in the requests brokering to inject the relevant credentials on the way to the downstream system integrated with Snyk (i.e SCM, Jira, Artifactory, etc).
-    
+
     Credential references are linked to a Deployment, representing secret values passed into the container/deployment, either via environment variables or by secret mounting into secret files. It avoids hard coding these values in connections registered in the Snyk platform.
 
     Credential references can be shared across connections of the same type in the same Deployment. It provides flexibility in connections configuration as well as supporting specific use cases where several connections are required (i.e azure-repos integrations with numerous Azure Org names).
@@ -138,11 +138,11 @@ export default class Intro extends BaseCommand<typeof Intro> {
     }
     helpText['exit'] = {id: 'exit', value: 'exit', text: 'Goodbye.'}
 
-    this.log('\n' + ux.colorize('blue', introText))
+    this.log('\n' + ux.colorize('blueBright', introText))
     this.log(connectionsGraphModelBasic)
 
-    this.log('\n' + ux.colorize('blue', introText2))
-    this.log('\n' + ux.colorize('blue', connectionsIntegrationsIntroText))
+    this.log('\n' + ux.colorize('blueBright', introText2))
+    this.log('\n' + ux.colorize('blueBright', connectionsIntegrationsIntroText))
 
     this.log(connectionsIntegrationsModelBasic)
     this.log(ux.colorize('cyan', '______________________________'))
@@ -158,7 +158,7 @@ export default class Intro extends BaseCommand<typeof Intro> {
       })
 
       const {text} = helpText[choice]
-      this.log(ux.colorize('blue', text))
+      this.log(ux.colorize('blueBright', text))
     }
   }
 }

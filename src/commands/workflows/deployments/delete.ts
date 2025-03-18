@@ -42,7 +42,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
           message: `Are you sure you want to delete deployment ${deploymentId} ?`,
         })
       ) {
-        this.log(ux.colorize('blue', `Deleting deployment ${deploymentId}`))
+        this.log(ux.colorize('blueBright', `Deleting deployment ${deploymentId}`))
         await deleteDeployment(tenantId, installId, deploymentId)
       } else {
         this.log(ux.colorize('cyan', 'Canceling.'))
