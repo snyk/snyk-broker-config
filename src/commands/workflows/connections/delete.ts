@@ -62,7 +62,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
           message: `Are you sure you want to delete Connection ${selectedConnection.id} ?`,
         })
       ) {
-        this.log(ux.colorize('blue', `Deleting Connection ${selectedConnection.id}`))
+        this.log(ux.colorize('blueBright', `Deleting Connection ${selectedConnection.id}`))
         await deleteConnectionForDeployment(tenantId, installId, deploymentId, selectedConnection.id)
       } else {
         this.log(ux.colorize('cyan', 'Canceling.'))

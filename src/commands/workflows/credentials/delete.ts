@@ -79,7 +79,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         })
       ) {
         for (const credentialsId of credentialsIdsToDelete) {
-          this.log(ux.colorize('blue', `Deleting credentials ${credentialsId}`))
+          this.log(ux.colorize('blueBright', `Deleting credentials ${credentialsId}`))
           const credential = await getCredentialForDeployment(tenantId, installId, deploymentId, credentialsId)
           if (credential.data.relationships && credential.data.relationships.broker_connections.length > 0) {
             this.log(

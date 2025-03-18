@@ -51,7 +51,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         })
       ) {
         for (const integrationId of integrationsIdsToDisconnect) {
-          this.log(ux.colorize('blue', `Disconnecting integration ${integrationId}`))
+          this.log(ux.colorize('blueBright', `Disconnecting integration ${integrationId}`))
           await deleteIntegrationsForConnection(
             tenantId,
             selectedConnection.id,
