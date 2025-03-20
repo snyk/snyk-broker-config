@@ -38,45 +38,20 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
           `Selected Connection ID ${selectedConnection.id}. Ready to migrate integration to use this Connection.\n`,
         ),
       )
-      let orgId
-      let integrationId
-      if (!nonSourceIntegrations.has(selectedConnection.type)) {
-        orgId = await validatedInput({message: 'Enter the OrgID you want to migrate.'}, ValidationType.UUID)
-        integrationId = await validatedInput(
-          {
-            message: `Enter the integrationID you want to migrate. Must be of type ${selectedConnection.type}`,
-          },
-          ValidationType.UUID,
-        )
-      } else {
-        this.log(
-          ux.colorize(
-            'red',
-            `Integration Migration is currently not supported for this connection type ${selectedConnection.type}.`,
-          ),
-        )
-        this.log(
-          ux.colorize(
-            'red',
-            `Follow normal integration procedure (workflows connections integrate) and simply turn off your existing Broker to enable Universal Broker connection.`,
-          ),
-        )
-        return ''
-      }
+      const orgId = await validatedInput({message: 'Enter the OrgID you want to migrate.'}, ValidationType.UUID)
+
       const isMigrationConfirmed = await confirm({
-        message: `[CAUTION!] Are you sure you want to migrate integration ${integrationId ? integrationId + ' ' : ''}(type ${selectedConnection.type}) in org ${orgId}? Existing service could be impacted.`,
+        message: `[CAUTION!] Are you sure you want to migrate the integration of type ${selectedConnection.type} in org ${orgId}? Existing service could be impacted.`,
       })
       if (!isMigrationConfirmed) {
         this.log(ux.colorize('red', 'Cancelling Connection migration.'))
         return ''
       }
-      await disconnectIntegrationForOrgIdAndIntegrationId(orgId, integrationId, selectedConnection.type)
       const connectionIntegration = await createIntegrationForConnection(
         tenantId,
         selectedConnection.id,
         selectedConnection.type,
         orgId,
-        integrationId,
       )
       if (connectionIntegration.errors) {
         this.error(ux.colorize('red', JSON.stringify(connectionIntegration.errors)))
@@ -84,7 +59,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       this.log(
         ux.colorize(
           'cyan',
-          `Connection ${connectionIntegration.data.id} (type: ${selectedConnection.type}) integrated with integration ${integrationId} on Org ${orgId}.`,
+          `Connection ${connectionIntegration.data.id} (type: ${selectedConnection.type}) integrated with integration ${connectionIntegration.data.id} on Org ${orgId}.`,
         ),
       )
       this.log(ux.colorize('red', 'Connection Migrate Workflow completed.'))
