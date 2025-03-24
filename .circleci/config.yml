@@ -118,7 +118,7 @@ workflows:
           name: Release to GitHub and NPM
           context:
             - nodejs-lib-release
-            - team-broker-snyk
+            - team-hybrid-snyk
           requires:
             - Run tests
           <<: *filter-main-branch-only
