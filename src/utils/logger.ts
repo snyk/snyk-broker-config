@@ -1,4 +1,4 @@
-import bunyan from 'bunyan'
+import bunyan from '@expo/bunyan'
 import {getConfig} from '../config/config.js'
 
 const SERVICE_NAME = 'snyk-broker-config'
