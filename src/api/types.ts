@@ -161,3 +161,44 @@ export interface IntegrationResponse {
   }
   errors?: any
 }
+export interface ConnectionRelationship {
+  data: {
+    id: string
+    type: string
+  }
+}
+export interface ContextsResponseData {
+  id: string
+  type: string
+  attributes: {
+    context: Record<string, string>
+  }
+  relationships?: {
+    broker_connections: ConnectionRelationship[]
+  }
+}
+export interface ContextsResponse {
+  data: ContextsResponseData[]
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
+  errors?: any
+}
+
+export interface ContextResponse {
+  data: ContextsResponseData
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
+  errors?: any
+}
