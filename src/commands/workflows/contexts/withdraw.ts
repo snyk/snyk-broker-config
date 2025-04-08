@@ -1,17 +1,18 @@
 import {ux} from '@oclif/core'
 import {commonApiRelatedArgs} from '../../../common/args.js'
+import {confirm} from '@inquirer/prompts'
 import {BaseCommand} from '../../../base-command.js'
+
 import {getIntegrationsForConnection} from '../../../api/integrations.js'
 import * as multiSelect from 'inquirer-select-pro'
-import {applyContext} from '../../../api/contexts.js'
-
+import {withdrawContext} from '../../../api/contexts.js'
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
   static args = {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker - Apply Contexts Workflow'
+  static description = 'Universal Broker -  Withdraw Contexts Workflow'
 
   static examples = [`<%= config.bin %> <%= command.id %>`]
 
@@ -42,25 +43,34 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       if (choices.length === 0) {
         throw new Error('No integration found to apply context to.')
       }
-      const integrationsIdsToApplyContextTo = await multiSelect.select({
+      const integrationsIdsToWithdrawContextTo = await multiSelect.select({
         message: 'select',
         options: choices,
       })
       this.log(
         ux.colorize(
           'cyan',
-          `\nApplying Context ID ${selectedContext.id} on integrations ${integrationsIdsToApplyContextTo.join(',')}\n`,
+          `\nwithdrawing Context ID ${selectedContext.id} on integrations ${integrationsIdsToWithdrawContextTo.join(',')}\n`,
         ),
       )
 
       const integrationsToApplyContextTo = integrationsForConnectionId.data.filter((x) =>
-        integrationsIdsToApplyContextTo.includes(x.id),
+        integrationsIdsToWithdrawContextTo.includes(x.id),
       )
       for (const integration of integrationsToApplyContextTo) {
-        await applyContext(tenantId, installId, selectedContext.id, integration.org_id)
+        if (
+          await confirm({
+            message: `Are you sure you want to withdraw context ${selectedContext.id} from integration ${integration.id} (org ${integration.org_id}}) ?`,
+          })
+        ) {
+          this.log(ux.colorize('blueBright', `Withdrawing Context ${selectedContext.id}`))
+          await withdrawContext(tenantId, installId, selectedContext.id, integration.id)
+        } else {
+          this.log(ux.colorize('cyan', 'Canceling.'))
+        }
       }
 
-      this.log(ux.colorize('red', 'Contexts Apply Workflow completed.'))
+      this.log(ux.colorize('red', 'Contexts Withdraw Workflow completed.'))
       return JSON.stringify(this.selectContext)
     } catch (error: any) {
       if (error.name === 'ExitPromptError') {

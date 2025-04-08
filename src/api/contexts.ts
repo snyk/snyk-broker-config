@@ -111,3 +111,28 @@ export const applyContext = async (tenantId: string, installId: string, contextI
     throw new Error(error)
   }
 }
+
+export const withdrawContext = async (
+  tenantId: string,
+  installId: string,
+  contextId: string,
+  integrationId: string,
+) => {
+  const headers = {...commonHeaders, ...getAuthHeader()}
+  const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/contexts/${contextId}/integrations/${integrationId}`
+  const config = getConfig()
+
+  const req: HttpRequest = {
+    url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
+    headers: headers,
+    method: 'DELETE',
+  }
+
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return response.statusCode
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}
