@@ -20,7 +20,7 @@ describe('connections workflows', () => {
 
         return getConnection.run()
       },
-      {print: true},
+      {print: false},
     )
 
     expect(error).to.be.undefined
