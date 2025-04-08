@@ -32,15 +32,16 @@ export const connectionTypes = [
   'ecr',
 ]
 export interface TypeMapping {
+  [key: string]: TypeParams
+}
+export interface TypeParams {
   [key: string]: {
-    [key: string]: {
-      description: string
-      sensitive?: boolean
-      input?: string
-      dataType?: 'hostname' | 'url'
-      skippable?: boolean
-      prohibitedValues: string[]
-    }
+    description: string
+    sensitive?: boolean
+    input?: string
+    dataType?: 'hostname' | 'url'
+    skippable?: boolean
+    prohibitedValues: string[]
   }
 }
 
@@ -293,4 +294,8 @@ export const allConnectionsParametersFlagsFunc = (): Record<any, FlagProps> => {
     }
   }
   return flags
+}
+
+export const getParametersForConnectionType = (connectionType: string) => {
+  return flagConnectionMapping[connectionType]
 }

@@ -25,6 +25,7 @@ export const connectionId4 = '00000000-0000-0000-0000-000000000004'
 export const integrationId3 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8a'
 export const integrationId4 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8b'
 export const clientId = '00000000-1234-0000-0000-000000000000'
+export const contextId3 = '00000000-0000-0000-0000-000000000003'
 const createConnectionResponse: ConnectionResponse = {
   data: {
     id: '00000000-0000-0000-0000-000000000000',
@@ -499,6 +500,26 @@ export const beforeStep = () => {
       ]
       return [200, response]
     })
+    .get(
+      `${urlPrefixTenantId}/brokers/installs/${installId3}/deployments/${deploymentId3}/contexts?version=2024-02-08~experimental`,
+    )
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+
+      response.data = [
+        {
+          id: contextId3,
+          type: 'broker-context',
+          attributes: {
+            context: {broker_client_url: 'https://my.broker.client:8000'},
+          },
+          relationships: {
+            broker_connections: {id: connectionId3, type: 'broker_connection'},
+          },
+        },
+      ]
+      return [201, response]
+    })
     .post(
       `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000/connections?version=2024-02-08~experimental`,
     )
@@ -548,6 +569,24 @@ export const beforeStep = () => {
         integration_type: 'nexus',
         org_id: orgId4,
         type: 'broker-integration',
+      }
+      return [201, response]
+    })
+    .post(
+      `${urlPrefixTenantId}/brokers/installs/${installId3}/deployments/${deploymentId3}/contexts?version=2024-02-08~experimental`,
+    )
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+
+      response.data = {
+        id: contextId3,
+        type: 'broker-context',
+        attributes: {
+          context: {broker_client_url: 'https://my.broker.client:8000'},
+        },
+        relationships: {
+          broker_connections: {id: connectionId3, type: 'broker_connection'},
+        },
       }
       return [201, response]
     })
@@ -620,6 +659,12 @@ export const beforeStep = () => {
       `${urlPrefixTenantId}/brokers/connections/${connectionId4}/orgs/${orgId4}/integrations/${integrationId4}?version=2024-02-08~experimental`,
     )
     .reply(() => {
+      return [204]
+    })
+    .delete(
+      `${urlPrefixTenantId}/brokers/installs/${installId3}/contexts/${contextId3}?version=2024-02-08~experimental`,
+    )
+    .reply((uri, body) => {
       return [204]
     })
 }

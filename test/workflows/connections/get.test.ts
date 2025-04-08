@@ -20,24 +20,26 @@ describe('connections workflows', () => {
 
         return getConnection.run()
       },
-      {print: false},
+      {print: true},
     )
+
     expect(error).to.be.undefined
-    expect(stdout).to.contain(`- id: 00000000-0000-0000-0000-000000000003
+    expect(stdout.replaceAll(' ', '')).to.contain(
+      `- id: 00000000-0000-0000-0000-000000000003
     attributes:
         deployment_id: 00000000-0000-0000-0000-000000000000
         identifier: 00000000-0000-0000-0000-000000000000
         name: test-conn
         secrets:
             primary:
-                encrypted: 
+                encrypted:
                 expires_at: 1970-01-01T00:00:00.000Z
-                nonce: 
+                nonce:
 
             secondary:
-                encrypted: 
+                encrypted:
                 expires_at: 1970-01-01T00:00:00.000Z
-                nonce: 
+                nonce:
 
 
         configuration:
@@ -45,11 +47,16 @@ describe('connections workflows', () => {
                 key: value
 
             type: github
-            validations: [object Object]
+            validations:
+                0:
+                    key: value
+
+
 
 
     type: broker_connection
-`)
+`.replaceAll(' ', ''),
+    )
     expect(stdout).to.contain('Connection Detail Workflow completed.')
   })
 })

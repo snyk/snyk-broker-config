@@ -5,12 +5,21 @@ import {input, confirm, select} from '@inquirer/prompts'
 import {isValidUUID} from './utils/validation.js'
 import {getAppInstalledOnOrgId, installAppsWorfklow} from './workflows/apps.js'
 import {createDeployment, DeploymentAttributes, DeploymentResponse, getDeployments} from './api/deployments.js'
-import {ConnectionId, ConnectionSelection, DeploymentId, InstallId, SetupParameters, TenantId} from './types.js'
+import {
+  ConnectionId,
+  ConnectionSelection,
+  ContextSelection,
+  DeploymentId,
+  InstallId,
+  SetupParameters,
+  TenantId,
+} from './types.js'
 import {getConnectionsForDeployment, createConnectionForDeployment} from './api/connections.js'
 import {captureConnectionParams} from './command-helpers/connections/parameters-capture.js'
 import {getAccessibleTenants, getTenantRole} from './api/tenants.js'
 import {validatedInput, ValidationType} from './utils/input-validation.js'
 import {validateSnykToken} from './api/snyk.js'
+import {getContextForForDeployment} from './api/contexts.js'
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<(typeof BaseCommand)['baseFlags'] & T['flags']>
 export type Args<T extends typeof Command> = Interfaces.InferredArgs<T['args']>
@@ -275,6 +284,32 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
           })
     const selectConnectionData = existingConnections.data.find((x) => x.id === selectedConnection)
     return {id: selectConnectionData!.id, type: selectConnectionData?.attributes.configuration.type}
+  }
+
+  async selectContext(tenantID: TenantId, installId: InstallId, deploymentId: DeploymentId): Promise<ContextSelection> {
+    const existingContexts = await getContextForForDeployment(tenantID, installId, deploymentId)
+    if (existingContexts.data.length === 0) {
+      this.error('No Context found.')
+    }
+
+    const selectedContext =
+      existingContexts.data.length === 1
+        ? existingContexts.data[0].id
+        : await select({
+            message: 'Which Context do you want to select?',
+            choices: existingContexts.data.map((x) => {
+              return {
+                id: x.id,
+                value: x.id,
+                description: `id: ${x.id}, linked to connection ${x.relationships?.broker_connections[0].data.id} (${x.relationships?.broker_connections[0].data.type}) ,context: ${JSON.stringify(x.attributes.context)}}`,
+              }
+            }),
+          })
+    const selectContextData = existingContexts.data.find((x) => x.id === selectedContext)
+    if (!selectContextData) {
+      throw new Error('Error selecting context - context not found.')
+    }
+    return {id: selectContextData?.id, context: selectContextData?.attributes.context}
   }
 
   protected async catch(err: Error & {exitCode?: number}): Promise<any> {

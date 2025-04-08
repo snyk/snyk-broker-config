@@ -1,5 +1,5 @@
 import {input, select, confirm} from '@inquirer/prompts'
-import {craConfigType1Types, flagConnectionMapping} from './type-params-mapping.js'
+import {craConfigType1Types, flagConnectionMapping, TypeMapping, TypeParams} from './type-params-mapping.js'
 import {createCredentials, getCredentialsForDeployment} from '../../api/credentials.js'
 import {CredentialsAttributes, CredentialsListResponse} from '../../api/types.js'
 import {isNotProhibitedValue, isValidHostnameWithPort, isValidUrl, isValidUUID} from '../../utils/validation.js'
@@ -11,9 +11,16 @@ export const captureConnectionParams = async (
   installId: string,
   deploymentId: string,
   connectionType: string,
+  parametersToCapture?: Partial<TypeParams>,
 ): Promise<Record<string, string>> => {
-  const requiredParameters = flagConnectionMapping[connectionType]
+  const requiredParameters = parametersToCapture ?? flagConnectionMapping[connectionType]
+  if (!requiredParameters) {
+    throw new Error(`Error unable to find connection params for connection type ${connectionType}`)
+  }
   for (const [key, value] of Object.entries(requiredParameters)) {
+    if (!requiredParameters[key] || !value) {
+      throw new Error(`Error unable to find connection param ${key} for connection type ${connectionType}`)
+    }
     if (value.skippable) {
       const userWantsToEnterValue = await confirm({
         message: `The ${key} field is optional in connection type ${connectionType}. Do you want to input value (Y) or skip (N)?`,
@@ -102,6 +109,9 @@ export const captureConnectionParams = async (
   }
   const connectionParams: Record<string, string> = {}
   for (const [key, value] of Object.entries(requiredParameters)) {
+    if (!requiredParameters[key] || !value) {
+      throw new Error(`Error unable to find connection param ${key} for connection type ${connectionType}`)
+    }
     if (value.input) {
       connectionParams[key] = value.input
     }
