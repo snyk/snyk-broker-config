@@ -36,9 +36,11 @@ describe('contexts workflows', () => {
 
         relationships:
             broker_connections:
+                0:
+                    data:
 
-              - id: 00000000-0000-0000-0000-000000000003
-                type: broker_connection`.replaceAll(' ', ''),
+                      - id: 00000000-0000-0000-0000-000000000003
+                        type: broker_connection`.replaceAll(' ', ''),
     )
     expect(stdout).to.contain('Contexts List Workflow completed.')
   })

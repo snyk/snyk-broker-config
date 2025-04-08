@@ -514,7 +514,7 @@ export const beforeStep = () => {
             context: {broker_client_url: 'https://my.broker.client:8000'},
           },
           relationships: {
-            broker_connections: {id: connectionId3, type: 'broker_connection'},
+            broker_connections: [{data: {id: connectionId3, type: 'broker_connection'}}],
           },
         },
       ]

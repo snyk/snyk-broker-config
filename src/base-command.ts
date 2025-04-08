@@ -309,7 +309,14 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     if (!selectContextData) {
       throw new Error('Error selecting context - context not found.')
     }
-    return {id: selectContextData?.id, context: selectContextData?.attributes.context}
+    if (!selectContextData.relationships?.broker_connections[0].data.id) {
+      throw new Error('Error selecting context - no associated connection found.')
+    }
+    return {
+      id: selectContextData?.id,
+      context: selectContextData?.attributes.context,
+      connectionId: selectContextData.relationships?.broker_connections[0].data.id,
+    }
   }
 
   protected async catch(err: Error & {exitCode?: number}): Promise<any> {
