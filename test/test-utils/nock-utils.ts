@@ -468,6 +468,19 @@ export const beforeStep = () => {
 
       return [200, response]
     })
+    .get(`${urlPrefixTenantIdAndInstallId4}/deployments/${deploymentId4}/credentials?version=2024-02-08~experimental`)
+    .reply((uri, body) => {
+      const createCredentialsNockResponse = {
+        ...createCredentialsResponse,
+      }
+
+      createCredentialsNockResponse.data[0].attributes.comment = 'comment'
+      createCredentialsNockResponse.data[0].attributes.environment_variable_name = 'TEST_ENV_VAR'
+      createCredentialsNockResponse.data[0].attributes.type = 'github'
+      createCredentialsNockResponse.data[0].attributes.deployment_id = deploymentId4
+
+      return [200, createCredentialsNockResponse]
+    })
     .post(`${urlPrefixTenantIdAndInstallId}/deployments?version=2024-02-08~experimental`)
     .reply((uri, body) => {
       const response = apiResponseSchema
@@ -620,6 +633,17 @@ export const beforeStep = () => {
       }
       updateNockResponse.data.attributes = JSON.parse(body.toString()).data.attributes
       updateNockResponse.data.id = '00000000-0000-0000-0000-000000000000'
+      return [200, updateNockResponse]
+    })
+    .patch(
+      `${urlPrefixTenantIdAndInstallId4}/deployments/${deploymentId4}/connections/${connectionId3}?version=2024-02-08~experimental`,
+    )
+    .reply((uri, body) => {
+      const updateNockResponse = {
+        ...updateConnectionResponse,
+      }
+      updateNockResponse.data.attributes = JSON.parse(body.toString()).data.attributes
+      updateNockResponse.data.id = '00000000-0000-0000-0000-000000000003'
       return [200, updateNockResponse]
     })
 
