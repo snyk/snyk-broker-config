@@ -265,6 +265,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     installId: InstallId,
     deploymentId: DeploymentId,
   ): Promise<ConnectionSelection> {
+    // Return type is now ConnectionResponseData via ConnectionSelection
     const existingConnections = await getConnectionsForDeployment(tenantID, installId, deploymentId)
     if (existingConnections.data.length === 0) {
       this.error('No Connection found.')
@@ -282,8 +283,16 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
               }
             }),
           })
-    const selectConnectionData = existingConnections.data.find((x) => x.id === selectedConnection)
-    return {id: selectConnectionData!.id, type: selectConnectionData?.attributes.configuration.type}
+    const selectedConnectionData = existingConnections.data.find((x) => x.id === selectedConnection)
+    if (!selectedConnectionData) {
+      // This should ideally not happen if the select prompt worked correctly
+      throw new Error(`Selected connection with ID ${selectedConnection} not found in the fetched list.`)
+    }
+    return {
+      id: selectedConnectionData.id,
+      name: selectedConnectionData.attributes.name,
+      type: selectedConnectionData.attributes.configuration.type,
+    }
   }
 
   async selectContext(tenantID: TenantId, installId: InstallId, deploymentId: DeploymentId): Promise<ContextSelection> {
