@@ -19,7 +19,7 @@ import {captureConnectionParams} from './command-helpers/connections/parameters-
 import {getAccessibleTenants, getTenantRole} from './api/tenants.js'
 import {validatedInput, ValidationType} from './utils/input-validation.js'
 import {validateSnykToken} from './api/snyk.js'
-import {getContextForForDeployment} from './api/contexts.js'
+import {getContextsForForDeployment} from './api/contexts.js'
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<(typeof BaseCommand)['baseFlags'] & T['flags']>
 export type Args<T extends typeof Command> = Interfaces.InferredArgs<T['args']>
@@ -287,7 +287,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   }
 
   async selectContext(tenantID: TenantId, installId: InstallId, deploymentId: DeploymentId): Promise<ContextSelection> {
-    const existingContexts = await getContextForForDeployment(tenantID, installId, deploymentId)
+    const existingContexts = await getContextsForForDeployment(tenantID, installId, deploymentId)
     if (existingContexts.data.length === 0) {
       this.error('No Context found.')
     }

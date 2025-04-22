@@ -167,6 +167,13 @@ export interface ConnectionRelationship {
     type: string
   }
 }
+export interface AppliedIntegrationsRelationship {
+  data: {
+    id: string
+    org_id: string
+    type: string
+  }
+}
 export interface ContextsResponseData {
   id: string
   type: string
@@ -175,6 +182,7 @@ export interface ContextsResponseData {
   }
   relationships?: {
     broker_connections: ConnectionRelationship[]
+    applied_integrations: AppliedIntegrationsRelationship[]
   }
 }
 export interface ContextsResponse {

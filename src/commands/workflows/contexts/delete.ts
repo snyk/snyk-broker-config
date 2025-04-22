@@ -2,9 +2,7 @@ import {ux} from '@oclif/core'
 import {commonApiRelatedArgs} from '../../../common/args.js'
 import {confirm} from '@inquirer/prompts'
 import {BaseCommand} from '../../../base-command.js'
-import {deleteConnectionForDeployment} from '../../../api/connections.js'
-import {deleteIntegrationsForConnection, getIntegrationsForConnection} from '../../../api/integrations.js'
-import {deleteContextById, getContextForForDeployment} from '../../../api/contexts.js'
+import {deleteContextById} from '../../../api/contexts.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true

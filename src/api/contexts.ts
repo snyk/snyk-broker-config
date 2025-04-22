@@ -7,7 +7,7 @@ import {ApplyContextResponse, ContextResponse, ContextsResponse} from './types.j
 
 const logger = createLogger('snyk-broker-config')
 
-export const getContextForForDeployment = async (tenantId: string, installId: string, deploymentId: string) => {
+export const getContextsForForDeployment = async (tenantId: string, installId: string, deploymentId: string) => {
   const headers = {...commonHeaders, ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/contexts`
   const config = getConfig()
