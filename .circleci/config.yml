@@ -81,6 +81,7 @@ jobs:
       - run:
           name: Release to GitHub and NPM
           command: |
+            npm install --save-exact --save-dev pkg@5.8.1
             npx semantic-release
 
 workflows:
