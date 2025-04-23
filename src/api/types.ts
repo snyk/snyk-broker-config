@@ -202,3 +202,24 @@ export interface ContextResponse {
   }
   errors?: any
 }
+
+export interface ApplyContextResponseData {
+  id: string
+  type: ['broker_context']
+  relationships: {
+    integrations_relationships: [id: string, type: ['broker_integration'], org_id: string, integration_type: string]
+  }
+}
+
+export interface ApplyContextResponse {
+  data: ApplyContextResponseData
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
+  errors?: any
+}

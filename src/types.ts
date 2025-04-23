@@ -12,4 +12,5 @@ export type ConnectionSelection = {id: ConnectionId; type: string; name: string}
 export interface ContextSelection {
   id: string
   context: Record<string, string>
+  connectionId: string
 }

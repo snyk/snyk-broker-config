@@ -3,7 +3,7 @@ import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
 import {createLogger} from '../utils/logger.js'
-import {ContextResponse, ContextsResponse} from './types.js'
+import {ApplyContextResponse, ContextResponse, ContextsResponse} from './types.js'
 
 const logger = createLogger('snyk-broker-config')
 
@@ -79,4 +79,60 @@ export const deleteContextById = async (tenantId: string, installId: string, con
     throw new Error(`Deleting context ${contextId}. Response code ${response.statusCode ?? 'none'}.`)
   }
   return response.statusCode
+}
+
+export const applyContext = async (tenantId: string, installId: string, contextId: string, orgId: string) => {
+  const headers = {...commonHeaders, ...getAuthHeader()}
+  const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/contexts/${contextId}/integration`
+  const config = getConfig()
+
+  const body = {
+    data: {
+      id: contextId,
+      type: 'broker-integration',
+      attributes: {
+        org_id: orgId,
+      },
+    },
+  }
+
+  const req: HttpRequest = {
+    url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
+    headers: headers,
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  }
+
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return JSON.parse(response.body) as ApplyContextResponse
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}
+
+export const withdrawContext = async (
+  tenantId: string,
+  installId: string,
+  contextId: string,
+  integrationId: string,
+) => {
+  const headers = {...commonHeaders, ...getAuthHeader()}
+  const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/contexts/${contextId}/integrations/${integrationId}`
+  const config = getConfig()
+
+  const req: HttpRequest = {
+    url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
+    headers: headers,
+    method: 'DELETE',
+  }
+
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return response.statusCode
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }

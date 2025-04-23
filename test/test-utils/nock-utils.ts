@@ -26,6 +26,7 @@ export const integrationId3 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8a'
 export const integrationId4 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8b'
 export const clientId = '00000000-1234-0000-0000-000000000000'
 export const contextId3 = '00000000-0000-0000-0000-000000000003'
+export const contextId4 = '00000000-0000-0000-0000-000000000004'
 const createConnectionResponse: ConnectionResponse = {
   data: {
     id: '00000000-0000-0000-0000-000000000000',
@@ -527,7 +528,27 @@ export const beforeStep = () => {
             context: {broker_client_url: 'https://my.broker.client:8000'},
           },
           relationships: {
-            broker_connections: {id: connectionId3, type: 'broker_connection'},
+            broker_connections: [{data: {id: connectionId3, type: 'broker_connection'}}],
+          },
+        },
+      ]
+      return [201, response]
+    })
+    .get(
+      `${urlPrefixTenantId}/brokers/installs/${installId4}/deployments/${deploymentId4}/contexts?version=2024-02-08~experimental`,
+    )
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+
+      response.data = [
+        {
+          id: contextId4,
+          type: 'broker-context',
+          attributes: {
+            context: {broker_client_url: 'https://my.broker.client:8000'},
+          },
+          relationships: {
+            broker_connections: [{data: {id: connectionId4, type: 'broker_connection'}}],
           },
         },
       ]
@@ -643,6 +664,26 @@ export const beforeStep = () => {
       }
       return [200, response]
     })
+
+    .patch(`${urlPrefixTenantIdAndInstallId4}/contexts/${contextId4}/integration?version=2024-02-08~experimental`)
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = {
+        id: contextId4,
+        type: 'broker_context',
+        relationships: {
+          integrations_relationships: [
+            {
+              id: integrationId4,
+              integration_type: 'nexus',
+              org_id: orgId4,
+              type: 'broker-integration',
+            },
+          ],
+        },
+      }
+      return [200, response]
+    })
     .delete(
       `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000/connections/00000000-0000-0000-0000-000000000000?version=2024-02-08~experimental`,
     )
@@ -687,6 +728,12 @@ export const beforeStep = () => {
     })
     .delete(
       `${urlPrefixTenantId}/brokers/installs/${installId3}/contexts/${contextId3}?version=2024-02-08~experimental`,
+    )
+    .reply((uri, body) => {
+      return [204]
+    })
+    .delete(
+      `${urlPrefixTenantId}/brokers/installs/${installId4}/contexts/${contextId4}/integrations/${integrationId4}?version=2024-02-08~experimental`,
     )
     .reply((uri, body) => {
       return [204]
