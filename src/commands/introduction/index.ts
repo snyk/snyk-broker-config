@@ -107,11 +107,11 @@ export default class Intro extends BaseCommand<typeof Intro> {
     The "snyk-broker-config workflows connection create" command will walk you through those steps.
     `,
       credentials: `
-    In Universal Broker, Credential references are local environment variables expected to be found in a Deployment. Snyk Broker allows you to keep any sensitive value/token local to your network, never sharing them with Snyk. These references are then used in the requests brokering to inject the relevant credentials on the way to the downstream system integrated with Snyk (i.e SCM, Jira, Artifactory, etc).
+    In Universal Broker, Credential references are local environment variables expected to be found in a Deployment. Snyk Broker allows you to keep any sensitive value/token local to your network, never sharing them with Snyk. These references are then used in the requests brokering to inject the relevant credentials on the way to the downstream system integrated with Snyk (e.g SCM, Jira, Artifactory, etc).
 
     Credential references are linked to a Deployment, representing secret values passed into the container/deployment, either via environment variables or by secret mounting into secret files. It avoids hard coding these values in connections registered in the Snyk platform.
 
-    Credential references can be shared across connections of the same type in the same Deployment. It provides flexibility in connections configuration as well as supporting specific use cases where several connections are required (i.e azure-repos integrations with numerous Azure Org names).
+    Credential references can be shared across connections of the same type in the same Deployment. It provides flexibility in connections configuration as well as supporting specific use cases where several connections are required (e.g azure-repos integrations with numerous Azure Org names).
 
     Further improvements will bring the ability to share multiple credential references for a single parameter based on other factors.
 

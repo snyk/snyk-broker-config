@@ -1,8 +1,8 @@
 import {ux} from '@oclif/core'
 import {commonApiRelatedArgs} from '../../../common/args.js'
-import {confirm, input} from '@inquirer/prompts'
 import {BaseCommand} from '../../../base-command.js'
 import {printFormattedJSON} from '../../../utils/display.js'
+import {getContextsForForDeployment} from '../../../api/contexts.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -10,7 +10,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker - Create Deployment Workflow'
+  static description = 'Universal Broker - List Contexts Workflow'
 
   static examples = [`<%= config.bin %> <%= command.id %>`]
 
@@ -22,22 +22,16 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
       this.log(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
-      const metadata: Record<string, string> = {}
-      while (
-        await confirm({
-          message: `Do you want to add one more metadata entry (key/value pair, e.g my cluster region/us-east-1)?`,
-        })
-      ) {
-        const key = await input({message: 'Enter metadata key.'})
-        const value = await input({message: 'Enter metadata value.'})
-        metadata[key] = value
+      const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
+      this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
+
+      const contextData = await getContextsForForDeployment(tenantId, installId, deploymentId)
+      if (contextData.data.length === 0) {
+        this.error('No context found.')
       }
-
-      const newDeployment = await this.createNewDeployment(tenantId, installId, appInstalledOnOrgId, metadata)
-
-      this.log(ux.colorize('cyan', `Created Deployment ${newDeployment.data.id}.\n`))
-      this.log(printFormattedJSON(newDeployment.data))
-      this.log(ux.colorize('red', 'Deployment Create Workflow completed.'))
+      this.log(printFormattedJSON(contextData.data))
+      this.log(ux.colorize('red', 'Contexts List Workflow completed.'))
+      return JSON.stringify(contextData.data)
     } catch (error: any) {
       if (error.name === 'ExitPromptError') {
         this.log(ux.colorize('red', 'Goodbye.'))

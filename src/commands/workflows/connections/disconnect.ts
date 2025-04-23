@@ -36,7 +36,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       )
       const integrationsForConnectionId = await getIntegrationsForConnection(tenantId, selectedConnection.id)
       const choices = integrationsForConnectionId.data.map((x) => {
-        return {name: `[Type: ${x.integration_type}] in ${x.org_id} (integr ${x.id})`, value: x.id}
+        return {name: `[Type: ${x.integration_type}] in org ${x.org_id} (integration ${x.id})`, value: x.id}
       })
       if (choices.length === 0) {
         throw new Error('No integration found to disconnect.')

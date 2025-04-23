@@ -32,15 +32,16 @@ export const connectionTypes = [
   'ecr',
 ]
 export interface TypeMapping {
+  [key: string]: TypeParams
+}
+export interface TypeParams {
   [key: string]: {
-    [key: string]: {
-      description: string
-      sensitive?: boolean
-      input?: string
-      dataType?: 'hostname' | 'url'
-      skippable?: boolean
-      prohibitedValues: string[]
-    }
+    description: string
+    sensitive?: boolean
+    input?: string
+    dataType?: 'hostname' | 'url'
+    skippable?: boolean
+    prohibitedValues: string[]
   }
 }
 
@@ -53,7 +54,7 @@ export const flagConnectionMapping: TypeMapping = {
       prohibitedValues: [],
     },
     checkmarx_password: {
-      description: 'Checkmarx Password Credentials Reference (leave empty if not using Checkmarx)',
+      description: 'Checkmarx Password Credentials Reference UUID (leave empty if not using Checkmarx)',
       sensitive: true,
       skippable: true,
       prohibitedValues: [],
@@ -78,7 +79,7 @@ export const flagConnectionMapping: TypeMapping = {
   },
   artifactory: {
     artifactory_url: {
-      description: 'Artifactory URL (Credentials Reference as it may contain sensitive values)',
+      description: 'Artifactory URL (Credentials Reference UUID as it may contain sensitive values)',
       sensitive: true,
       prohibitedValues: [],
     },
@@ -87,7 +88,7 @@ export const flagConnectionMapping: TypeMapping = {
     jira_hostname: {description: 'Jira Hostname', dataType: 'hostname', prohibitedValues: []},
     jira_username: {description: 'Jira Username (leave empty if using PAT)', skippable: true, prohibitedValues: []},
     jira_password: {
-      description: 'Jira Password Credentials Reference (leave empty if using PAT)',
+      description: 'Jira Password Credentials Reference UUID (leave empty if using PAT)',
       sensitive: true,
       skippable: true,
       prohibitedValues: [],
@@ -101,19 +102,31 @@ export const flagConnectionMapping: TypeMapping = {
   },
   nexus: {
     base_nexus_url: {
-      description: 'Nexus URL (Credentials Reference as it may contain sensitive values)',
+      description: 'Nexus URL (Credentials Reference UUID as it may contain sensitive values)',
       sensitive: true,
       prohibitedValues: [],
     },
   },
   'azure-repos': {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'API URL (recommended) or Broker Client Url',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     azure_repos_host: {description: 'Azure Repos Hostname', dataType: 'hostname', prohibitedValues: []},
-    azure_repos_token: {description: 'Azure Repos Token Credentials Reference', sensitive: true, prohibitedValues: []},
+    azure_repos_token: {
+      description: 'Azure Repos Token Credentials Reference UUID',
+      sensitive: true,
+      prohibitedValues: [],
+    },
     azure_repos_org: {description: 'Azure Repos Org Name', prohibitedValues: []},
   },
   'bitbucket-server': {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'API URL (recommended) or Broker Client Url',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     bitbucket: {description: 'Bitbucket Hostname', dataType: 'hostname', prohibitedValues: []},
     bitbucket_username: {
       description: 'Bitbucket Username (leave empty if using PAT)',
@@ -121,29 +134,41 @@ export const flagConnectionMapping: TypeMapping = {
       prohibitedValues: [],
     },
     bitbucket_password: {
-      description: 'Bitbucket Password Credentials Reference (leave empty if using PAT)',
+      description: 'Bitbucket Password Credentials Reference UUID (leave empty if using PAT)',
       sensitive: true,
       skippable: true,
       prohibitedValues: [],
     },
     bitbucket_pat: {
-      description: 'Bitbucket Pat Credentials Reference (leave empty if using user/pass)',
+      description: 'Bitbucket Pat Credentials Reference UUID (leave empty if using user/pass)',
       sensitive: true,
       skippable: true,
       prohibitedValues: [],
     },
   },
   github: {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
-    github_token: {description: 'Github Token Credentials Reference', sensitive: true, prohibitedValues: []},
+    broker_client_url: {
+      description: 'API URL (recommended) or Broker Client Url',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
+    github_token: {description: 'Github Token Credentials Reference UUID', sensitive: true, prohibitedValues: []},
   },
   'github-enterprise': {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'API URL (recommended) or Broker Client Url',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     github: {description: 'GHE Hostname', dataType: 'hostname', prohibitedValues: ['github.com']},
-    github_token: {description: 'Github Token Credentials Reference', sensitive: true, prohibitedValues: []},
+    github_token: {description: 'Github Token Credentials Reference UUID', sensitive: true, prohibitedValues: []},
   },
   'github-server-app': {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'API URL (recommended) or Broker Client Url',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     github: {description: 'Github Url', dataType: 'hostname', prohibitedValues: []},
     github_api: {description: 'Github Api Url', dataType: 'hostname', prohibitedValues: []},
     github_app_client_id: {description: 'Github App Client ID Credentials Refs', sensitive: true, prohibitedValues: []},
@@ -152,7 +177,11 @@ export const flagConnectionMapping: TypeMapping = {
     github_app_private_pem_path: {description: 'Github Private Pem cert path', prohibitedValues: []},
   },
   'github-cloud-app': {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'API URL (recommended) or Broker Client Url',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     github: {description: 'Github Url', dataType: 'hostname', prohibitedValues: []},
     github_api: {description: 'Github Api Url', dataType: 'hostname', prohibitedValues: []},
     github_app_client_id: {description: 'Github App Client ID Credentials Refs', sensitive: true, prohibitedValues: []},
@@ -161,39 +190,63 @@ export const flagConnectionMapping: TypeMapping = {
     github_app_private_pem_path: {description: 'Github Private Pem cert path', prohibitedValues: []},
   },
   gitlab: {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'API URL (recommended) or Broker Client Url',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     gitlab: {description: 'Gitlab Hostname', dataType: 'hostname', prohibitedValues: []},
-    gitlab_token: {description: 'Gitlab Token Credentials Reference', sensitive: true, prohibitedValues: []},
+    gitlab_token: {description: 'Gitlab Token Credentials Reference UUID', sensitive: true, prohibitedValues: []},
   },
   acr: {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'Broker Client Url (Must be the url of your broker client)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     cr_agent_url: {description: 'CR Agent Url', dataType: 'url', prohibitedValues: []},
     cr_base: {description: 'CR Base Url', dataType: 'hostname', prohibitedValues: []},
     cr_username: {description: 'CR Username', prohibitedValues: []},
-    cr_password: {description: 'CR Password Credentials Reference', sensitive: true, prohibitedValues: []},
+    cr_password: {description: 'CR Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
   },
   'artifactory-cr': {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'Broker Client Url (Must be the url of your broker client)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     cr_agent_url: {description: 'CR Agent Url', dataType: 'url', prohibitedValues: []},
     cr_base: {description: 'CR Base Url', dataType: 'hostname', prohibitedValues: []},
     cr_username: {description: 'CR Username', prohibitedValues: []},
-    cr_password: {description: 'CR Password Credentials Reference', sensitive: true, prohibitedValues: []},
+    cr_password: {description: 'CR Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
   },
   'docker-hub': {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'Broker Client Url (Must be the url of your broker client)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     cr_agent_url: {description: 'CR Agent Url', dataType: 'url', prohibitedValues: []},
     cr_base: {description: 'CR Base Url', dataType: 'hostname', prohibitedValues: []},
     cr_username: {description: 'CR Username', prohibitedValues: []},
-    cr_password: {description: 'CR Password Credentials Reference', sensitive: true, prohibitedValues: []},
+    cr_password: {description: 'CR Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
   },
   'digitalocean-cr': {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'Broker Client Url (Must be the url of your broker client)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     cr_agent_url: {description: 'CR Agent Url', dataType: 'url', prohibitedValues: []},
     cr_base: {description: 'CR Base Url', dataType: 'hostname', prohibitedValues: []},
-    cr_token: {description: 'CR Token Credentials Reference', sensitive: true, prohibitedValues: []},
+    cr_token: {description: 'CR Token Credentials Reference UUID', sensitive: true, prohibitedValues: []},
   },
   ecr: {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'Broker Client Url (Must be the url of your broker client)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     cr_agent_url: {description: 'CR Agent Url', dataType: 'url', prohibitedValues: []},
     cr_base: {description: 'CR Base Url', dataType: 'hostname', prohibitedValues: []},
     cr_role_arn: {description: 'CR Role Arn', prohibitedValues: []},
@@ -201,53 +254,81 @@ export const flagConnectionMapping: TypeMapping = {
     cr_external_id: {description: 'CR External ID', prohibitedValues: []},
   },
   gcr: {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'Broker Client Url (Must be the url of your broker client)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     cr_agent_url: {description: 'CR Agent Url', dataType: 'url', prohibitedValues: []},
     cr_base: {description: 'CR Base Url', dataType: 'hostname', prohibitedValues: []},
     cr_username: {description: 'CR Username', prohibitedValues: []},
-    cr_password: {description: 'CR Password Credentials Reference', sensitive: true, prohibitedValues: []},
+    cr_password: {description: 'CR Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
   },
   'github-cr': {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'Broker Client Url (Must be the url of your broker client)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     cr_agent_url: {description: 'CR Agent Url', dataType: 'url', prohibitedValues: []},
     cr_base: {description: 'CR Base Url', dataType: 'hostname', prohibitedValues: []},
     cr_username: {description: 'CR Username', prohibitedValues: []},
-    cr_password: {description: 'CR Password Credentials Reference', sensitive: true, prohibitedValues: []},
+    cr_password: {description: 'CR Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
   },
   'gitlab-cr': {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'Broker Client Url (Must be the url of your broker client)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     cr_agent_url: {description: 'CR Agent Url', dataType: 'url', prohibitedValues: []},
     cr_base: {description: 'CR Base Url', dataType: 'hostname', prohibitedValues: []},
     cr_username: {description: 'CR Username', prohibitedValues: []},
-    cr_password: {description: 'CR Password Credentials Reference', sensitive: true, prohibitedValues: []},
+    cr_password: {description: 'CR Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
   },
   'google-artifact-cr': {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'Broker Client Url (Must be the url of your broker client)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     cr_agent_url: {description: 'CR Agent Url', dataType: 'url', prohibitedValues: []},
     cr_base: {description: 'CR Base Url', dataType: 'hostname', prohibitedValues: []},
     cr_username: {description: 'CR Username', prohibitedValues: []},
-    cr_password: {description: 'CR Password Credentials Reference', sensitive: true, prohibitedValues: []},
+    cr_password: {description: 'CR Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
   },
   'harbor-cr': {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'Broker Client Url (Must be the url of your broker client)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     cr_agent_url: {description: 'CR Agent Url', dataType: 'url', prohibitedValues: []},
     cr_base: {description: 'CR Base Url', dataType: 'hostname', prohibitedValues: []},
     cr_username: {description: 'CR Username', prohibitedValues: []},
-    cr_password: {description: 'CR Password Credentials Reference', sensitive: true, prohibitedValues: []},
+    cr_password: {description: 'CR Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
   },
   'nexus-cr': {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'Broker Client Url (Must be the url of your broker client)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     cr_agent_url: {description: 'CR Agent Url', dataType: 'url', prohibitedValues: []},
     cr_base: {description: 'CR Base Url', dataType: 'hostname', prohibitedValues: []},
     cr_username: {description: 'CR Username', prohibitedValues: []},
-    cr_password: {description: 'CR Password Credentials Reference', sensitive: true, prohibitedValues: []},
+    cr_password: {description: 'CR Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
   },
   'quay-cr': {
-    broker_client_url: {description: 'Broker Client Url', dataType: 'url', prohibitedValues: []},
+    broker_client_url: {
+      description: 'Broker Client Url (Must be the url of your broker client)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
     cr_agent_url: {description: 'CR Agent Url', dataType: 'url', prohibitedValues: []},
     cr_base: {description: 'CR Base Url', dataType: 'hostname', prohibitedValues: []},
     cr_username: {description: 'CR Username', prohibitedValues: []},
-    cr_password: {description: 'CR Password Credentials Reference', sensitive: true, prohibitedValues: []},
+    cr_password: {description: 'CR Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
   },
 }
 
@@ -289,4 +370,8 @@ export const allConnectionsParametersFlagsFunc = (): Record<any, FlagProps> => {
     }
   }
   return flags
+}
+
+export const getParametersForConnectionType = (connectionType: string) => {
+  return flagConnectionMapping[connectionType]
 }

@@ -161,3 +161,73 @@ export interface IntegrationResponse {
   }
   errors?: any
 }
+export interface ConnectionRelationship {
+  data: {
+    id: string
+    type: string
+  }
+}
+export interface AppliedIntegrationsRelationship {
+  data: {
+    id: string
+    org_id: string
+    type: string
+  }
+}
+export interface ContextsResponseData {
+  id: string
+  type: string
+  attributes: {
+    context: Record<string, string>
+  }
+  relationships?: {
+    broker_connections: ConnectionRelationship[]
+    applied_integrations: AppliedIntegrationsRelationship[]
+  }
+}
+export interface ContextsResponse {
+  data: ContextsResponseData[]
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
+  errors?: any
+}
+
+export interface ContextResponse {
+  data: ContextsResponseData
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
+  errors?: any
+}
+
+export interface ApplyContextResponseData {
+  id: string
+  type: ['broker_context']
+  relationships: {
+    integrations_relationships: [id: string, type: ['broker_integration'], org_id: string, integration_type: string]
+  }
+}
+
+export interface ApplyContextResponse {
+  data: ApplyContextResponseData
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
+  errors?: any
+}

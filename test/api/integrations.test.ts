@@ -22,7 +22,7 @@ describe('Integrations Api calls', () => {
           {
             org_id: '00000000-0000-0000-0000-000000000000',
             id: '00000000-0000-0000-0000-000000000000',
-            type: 'broker-integrations',
+            type: 'broker_integration',
             integration_type: 'github',
           },
         ]
@@ -44,7 +44,7 @@ describe('Integrations Api calls', () => {
           {
             org_id: orgId,
             id: '00000000-0000-0000-0000-000000000000',
-            type: 'broker-integrations',
+            type: 'broker_integration',
             integration_type: bodyData.type,
           },
         ]
@@ -67,7 +67,7 @@ describe('Integrations Api calls', () => {
       {
         org_id: '00000000-0000-0000-0000-000000000000',
         id: '00000000-0000-0000-0000-000000000000',
-        type: 'broker-integrations',
+        type: 'broker_integration',
         integration_type: 'github',
       },
     ]
@@ -90,7 +90,7 @@ describe('Integrations Api calls', () => {
       {
         org_id: '00000000-0000-0000-0000-000000000000',
         id: '00000000-0000-0000-0000-000000000000',
-        type: 'broker-integrations',
+        type: 'broker_integration',
         integration_type: 'gitlab',
       },
     ]

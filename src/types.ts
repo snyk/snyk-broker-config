@@ -8,4 +8,9 @@ export type TenantId = string
 export type InstallId = string
 export type DeploymentId = string
 export type ConnectionId = string
-export type ConnectionSelection = {id: ConnectionId; type: string}
+export type ConnectionSelection = {id: ConnectionId; type: string; name: string}
+export interface ContextSelection {
+  id: string
+  context: Record<string, string>
+  connectionId: string
+}

@@ -12,7 +12,7 @@ export function printFormattedJSON(objectReceived: any, indent: number = 2): str
   }
 
   for (const key in obj) {
-    if (typeof obj[key] === 'object' && !Array.isArray(obj[key]) && obj[key] !== null) {
+    if (typeof obj[key] === 'object' && obj[key] !== null) {
       stringOutput += `${indentation}${key === 'id' ? `-` : ' '} ${ux.colorize('yellow', key)}:\n`
       stringOutput += `${printFormattedJSON(obj[key], indent + 4)}\n`
     } else {

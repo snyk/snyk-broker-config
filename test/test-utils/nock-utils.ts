@@ -25,6 +25,8 @@ export const connectionId4 = '00000000-0000-0000-0000-000000000004'
 export const integrationId3 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8a'
 export const integrationId4 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8b'
 export const clientId = '00000000-1234-0000-0000-000000000000'
+export const contextId3 = '00000000-0000-0000-0000-000000000003'
+export const contextId4 = '00000000-0000-0000-0000-000000000004'
 const createConnectionResponse: ConnectionResponse = {
   data: {
     id: '00000000-0000-0000-0000-000000000000',
@@ -466,6 +468,19 @@ export const beforeStep = () => {
 
       return [200, response]
     })
+    .get(`${urlPrefixTenantIdAndInstallId4}/deployments/${deploymentId4}/credentials?version=2024-02-08~experimental`)
+    .reply((uri, body) => {
+      const createCredentialsNockResponse = {
+        ...createCredentialsResponse,
+      }
+
+      createCredentialsNockResponse.data[0].attributes.comment = 'comment'
+      createCredentialsNockResponse.data[0].attributes.environment_variable_name = 'TEST_ENV_VAR'
+      createCredentialsNockResponse.data[0].attributes.type = 'github'
+      createCredentialsNockResponse.data[0].attributes.deployment_id = deploymentId4
+
+      return [200, createCredentialsNockResponse]
+    })
     .post(`${urlPrefixTenantIdAndInstallId}/deployments?version=2024-02-08~experimental`)
     .reply((uri, body) => {
       const response = apiResponseSchema
@@ -498,6 +513,46 @@ export const beforeStep = () => {
         },
       ]
       return [200, response]
+    })
+    .get(
+      `${urlPrefixTenantId}/brokers/installs/${installId3}/deployments/${deploymentId3}/contexts?version=2024-02-08~experimental`,
+    )
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+
+      response.data = [
+        {
+          id: contextId3,
+          type: 'broker-context',
+          attributes: {
+            context: {broker_client_url: 'https://my.broker.client:8000'},
+          },
+          relationships: {
+            broker_connections: [{data: {id: connectionId3, type: 'broker_connection'}}],
+          },
+        },
+      ]
+      return [201, response]
+    })
+    .get(
+      `${urlPrefixTenantId}/brokers/installs/${installId4}/deployments/${deploymentId4}/contexts?version=2024-02-08~experimental`,
+    )
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+
+      response.data = [
+        {
+          id: contextId4,
+          type: 'broker-context',
+          attributes: {
+            context: {broker_client_url: 'https://my.broker.client:8000'},
+          },
+          relationships: {
+            broker_connections: [{data: {id: connectionId4, type: 'broker_connection'}}],
+          },
+        },
+      ]
+      return [201, response]
     })
     .post(
       `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000/connections?version=2024-02-08~experimental`,
@@ -534,7 +589,7 @@ export const beforeStep = () => {
         id: integrationId3,
         integration_type: 'github',
         org_id: orgId3,
-        type: 'broker-integration',
+        type: 'broker_integration',
       }
       return [201, response]
     })
@@ -547,7 +602,25 @@ export const beforeStep = () => {
         id: integrationId4,
         integration_type: 'nexus',
         org_id: orgId4,
-        type: 'broker-integration',
+        type: 'broker_integration',
+      }
+      return [201, response]
+    })
+    .post(
+      `${urlPrefixTenantId}/brokers/installs/${installId3}/deployments/${deploymentId3}/contexts?version=2024-02-08~experimental`,
+    )
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+
+      response.data = {
+        id: contextId3,
+        type: 'broker-context',
+        attributes: {
+          context: {broker_client_url: 'https://my.broker.client:8000'},
+        },
+        relationships: {
+          broker_connections: {id: connectionId3, type: 'broker_connection'},
+        },
       }
       return [201, response]
     })
@@ -560,6 +633,17 @@ export const beforeStep = () => {
       }
       updateNockResponse.data.attributes = JSON.parse(body.toString()).data.attributes
       updateNockResponse.data.id = '00000000-0000-0000-0000-000000000000'
+      return [200, updateNockResponse]
+    })
+    .patch(
+      `${urlPrefixTenantIdAndInstallId4}/deployments/${deploymentId4}/connections/${connectionId3}?version=2024-02-08~experimental`,
+    )
+    .reply((uri, body) => {
+      const updateNockResponse = {
+        ...updateConnectionResponse,
+      }
+      updateNockResponse.data.attributes = JSON.parse(body.toString()).data.attributes
+      updateNockResponse.data.id = '00000000-0000-0000-0000-000000000003'
       return [200, updateNockResponse]
     })
 
@@ -577,6 +661,26 @@ export const beforeStep = () => {
         attributes: attributes,
         id: '00000000-0000-0000-0000-000000000000',
         type: 'broker_deployment',
+      }
+      return [200, response]
+    })
+
+    .patch(`${urlPrefixTenantIdAndInstallId4}/contexts/${contextId4}/integration?version=2024-02-08~experimental`)
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = {
+        id: contextId4,
+        type: 'broker_context',
+        relationships: {
+          integrations_relationships: [
+            {
+              id: integrationId4,
+              integration_type: 'nexus',
+              org_id: orgId4,
+              type: 'broker_integration',
+            },
+          ],
+        },
       }
       return [200, response]
     })
@@ -620,6 +724,18 @@ export const beforeStep = () => {
       `${urlPrefixTenantId}/brokers/connections/${connectionId4}/orgs/${orgId4}/integrations/${integrationId4}?version=2024-02-08~experimental`,
     )
     .reply(() => {
+      return [204]
+    })
+    .delete(
+      `${urlPrefixTenantId}/brokers/installs/${installId3}/contexts/${contextId3}?version=2024-02-08~experimental`,
+    )
+    .reply((uri, body) => {
+      return [204]
+    })
+    .delete(
+      `${urlPrefixTenantId}/brokers/installs/${installId4}/contexts/${contextId4}/integrations/${integrationId4}?version=2024-02-08~experimental`,
+    )
+    .reply((uri, body) => {
       return [204]
     })
 }
