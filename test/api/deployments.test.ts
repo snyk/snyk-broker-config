@@ -15,7 +15,7 @@ describe('Deployments Api calls', () => {
     nock('https://api.snyk.io')
       .persist()
       .get(
-        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments?version=2024-02-08~experimental',
+        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments?version=2024-10-15',
       )
       .reply((uri, body) => {
         const response = apiResponseSchema
@@ -33,7 +33,7 @@ describe('Deployments Api calls', () => {
         return [200, response]
       })
       .post(
-        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments?version=2024-02-08~experimental',
+        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments?version=2024-10-15',
       )
       .reply((uri, body) => {
         const response = apiResponseSchema
@@ -49,7 +49,7 @@ describe('Deployments Api calls', () => {
         return [200, response]
       })
       .patch(
-        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments/00000000-0000-0000-0000-000000000000?version=2024-02-08~experimental',
+        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments/00000000-0000-0000-0000-000000000000?version=2024-10-15',
       )
       .reply((uri, body) => {
         const response = apiResponseSchema
@@ -66,7 +66,7 @@ describe('Deployments Api calls', () => {
         return [200, response]
       })
       .delete(
-        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments/00000000-0000-0000-0000-000000000000?version=2024-02-08~experimental',
+        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments/00000000-0000-0000-0000-000000000000?version=2024-10-15',
       )
       .reply(() => {
         return [204]

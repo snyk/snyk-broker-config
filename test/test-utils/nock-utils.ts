@@ -274,7 +274,7 @@ export const beforeStep = () => {
     .reply(() => {
       return [403, forbiddenTenantMembersResponse]
     })
-    .get(`${urlPrefixTenantIdAndInstallId}/deployments?version=2024-02-08~experimental`)
+    .get(`${urlPrefixTenantIdAndInstallId}/deployments?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = [
@@ -290,7 +290,7 @@ export const beforeStep = () => {
       ]
       return [200, response]
     })
-    .get(`${urlPrefixTenantIdAndInstallId2}/deployments?version=2024-02-08~experimental`)
+    .get(`${urlPrefixTenantIdAndInstallId2}/deployments?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = [
@@ -306,7 +306,7 @@ export const beforeStep = () => {
       ]
       return [200, response]
     })
-    .get(`${urlPrefixTenantIdAndInstallId3}/deployments?version=2024-02-08~experimental`)
+    .get(`${urlPrefixTenantIdAndInstallId3}/deployments?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = [
@@ -322,7 +322,7 @@ export const beforeStep = () => {
       ]
       return [200, response]
     })
-    .get(`${urlPrefixTenantIdAndInstallId4}/deployments?version=2024-02-08~experimental`)
+    .get(`${urlPrefixTenantIdAndInstallId4}/deployments?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = [
@@ -338,13 +338,13 @@ export const beforeStep = () => {
       ]
       return [200, response]
     })
-    .get(`${urlPrefixTenantIdAndInstallId}/deployments/${deploymentId}/connections?version=2024-02-08~experimental`)
+    .get(`${urlPrefixTenantIdAndInstallId}/deployments/${deploymentId}/connections?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = []
       return [200, response]
     })
-    .get(`${urlPrefixTenantIdAndInstallId3}/deployments/${deploymentId3}/connections?version=2024-02-08~experimental`)
+    .get(`${urlPrefixTenantIdAndInstallId3}/deployments/${deploymentId3}/connections?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = [
@@ -379,7 +379,7 @@ export const beforeStep = () => {
       ]
       return [200, response]
     })
-    .get(`${urlPrefixTenantIdAndInstallId4}/deployments/${deploymentId4}/connections?version=2024-02-08~experimental`)
+    .get(`${urlPrefixTenantIdAndInstallId4}/deployments/${deploymentId4}/connections?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = [
@@ -442,13 +442,13 @@ export const beforeStep = () => {
       ]
       return [200, response]
     })
-    .get(`${urlPrefixTenantIdAndInstallId2}/deployments/${deploymentId2}/connections?version=2024-02-08~experimental`)
+    .get(`${urlPrefixTenantIdAndInstallId2}/deployments/${deploymentId2}/connections?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = []
       return [200, response]
     })
-    .get(`${urlPrefixTenantIdAndInstallId}/deployments/${deploymentId}/credentials?version=2024-02-08~experimental`)
+    .get(`${urlPrefixTenantIdAndInstallId}/deployments/${deploymentId}/credentials?version=2024-10-15`)
     .reply((uri, body) => {
       const createCredentialsNockResponse = {
         ...createCredentialsResponse,
@@ -461,14 +461,14 @@ export const beforeStep = () => {
 
       return [200, createCredentialsNockResponse]
     })
-    .get(`${urlPrefixTenantIdAndInstallId2}/deployments/${deploymentId2}/credentials?version=2024-02-08~experimental`)
+    .get(`${urlPrefixTenantIdAndInstallId2}/deployments/${deploymentId2}/credentials?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = []
 
       return [200, response]
     })
-    .get(`${urlPrefixTenantIdAndInstallId4}/deployments/${deploymentId4}/credentials?version=2024-02-08~experimental`)
+    .get(`${urlPrefixTenantIdAndInstallId4}/deployments/${deploymentId4}/credentials?version=2024-10-15`)
     .reply((uri, body) => {
       const createCredentialsNockResponse = {
         ...createCredentialsResponse,
@@ -481,7 +481,7 @@ export const beforeStep = () => {
 
       return [200, createCredentialsNockResponse]
     })
-    .post(`${urlPrefixTenantIdAndInstallId}/deployments?version=2024-02-08~experimental`)
+    .post(`${urlPrefixTenantIdAndInstallId}/deployments?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = {
@@ -495,13 +495,13 @@ export const beforeStep = () => {
       }
       return [200, response]
     })
-    .get(`${urlPrefixTenantId}/brokers/connections/${connectionId3}/integrations?version=2024-02-08~experimental`)
+    .get(`${urlPrefixTenantId}/brokers/connections/${connectionId3}/integrations?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = []
       return [200, response]
     })
-    .get(`${urlPrefixTenantId}/brokers/connections/${connectionId4}/integrations?version=2024-02-08~experimental`)
+    .get(`${urlPrefixTenantId}/brokers/connections/${connectionId4}/integrations?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = [
@@ -514,9 +514,7 @@ export const beforeStep = () => {
       ]
       return [200, response]
     })
-    .get(
-      `${urlPrefixTenantId}/brokers/installs/${installId3}/deployments/${deploymentId3}/contexts?version=2024-02-08~experimental`,
-    )
+    .get(`${urlPrefixTenantId}/brokers/installs/${installId3}/deployments/${deploymentId3}/contexts?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
 
@@ -534,9 +532,7 @@ export const beforeStep = () => {
       ]
       return [201, response]
     })
-    .get(
-      `${urlPrefixTenantId}/brokers/installs/${installId4}/deployments/${deploymentId4}/contexts?version=2024-02-08~experimental`,
-    )
+    .get(`${urlPrefixTenantId}/brokers/installs/${installId4}/deployments/${deploymentId4}/contexts?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
 
@@ -555,7 +551,7 @@ export const beforeStep = () => {
       return [201, response]
     })
     .post(
-      `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000/connections?version=2024-02-08~experimental`,
+      `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000/connections?version=2024-10-15`,
     )
     .reply((uri, body) => {
       const createNockResponse = {
@@ -566,7 +562,7 @@ export const beforeStep = () => {
       return [200, createNockResponse]
     })
     .post(
-      `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000/credentials?version=2024-02-08~experimental`,
+      `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000/credentials?version=2024-10-15`,
     )
     .reply((uri, body) => {
       const createCredentialsNockResponse = {
@@ -580,9 +576,7 @@ export const beforeStep = () => {
       createCredentialsNockResponse.data[0].attributes.deployment_id = '00000000-0000-0000-0000-000000000000'
       return [200, JSON.stringify(createCredentialsNockResponse)]
     })
-    .post(
-      `${urlPrefixTenantId}/brokers/connections/${connectionId3}/orgs/${orgId3}/integration?version=2024-02-08~experimental`,
-    )
+    .post(`${urlPrefixTenantId}/brokers/connections/${connectionId3}/orgs/${orgId3}/integration?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = {
@@ -593,9 +587,7 @@ export const beforeStep = () => {
       }
       return [201, response]
     })
-    .post(
-      `${urlPrefixTenantId}/brokers/connections/${connectionId4}/orgs/${orgId4}/integration?version=2024-02-08~experimental`,
-    )
+    .post(`${urlPrefixTenantId}/brokers/connections/${connectionId4}/orgs/${orgId4}/integration?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = {
@@ -607,7 +599,7 @@ export const beforeStep = () => {
       return [201, response]
     })
     .post(
-      `${urlPrefixTenantId}/brokers/installs/${installId3}/deployments/${deploymentId3}/contexts?version=2024-02-08~experimental`,
+      `${urlPrefixTenantId}/brokers/installs/${installId3}/deployments/${deploymentId3}/contexts?version=2024-10-15`,
     )
     .reply((uri, body) => {
       const response = apiResponseSchema
@@ -625,7 +617,7 @@ export const beforeStep = () => {
       return [201, response]
     })
     .patch(
-      `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000/connections/00000000-0000-0000-0000-000000000000?version=2024-02-08~experimental`,
+      `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000/connections/00000000-0000-0000-0000-000000000000?version=2024-10-15`,
     )
     .reply((uri, body) => {
       const updateNockResponse = {
@@ -636,7 +628,7 @@ export const beforeStep = () => {
       return [200, updateNockResponse]
     })
     .patch(
-      `${urlPrefixTenantIdAndInstallId4}/deployments/${deploymentId4}/connections/${connectionId3}?version=2024-02-08~experimental`,
+      `${urlPrefixTenantIdAndInstallId4}/deployments/${deploymentId4}/connections/${connectionId3}?version=2024-10-15`,
     )
     .reply((uri, body) => {
       const updateNockResponse = {
@@ -647,9 +639,7 @@ export const beforeStep = () => {
       return [200, updateNockResponse]
     })
 
-    .patch(
-      `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000?version=2024-02-08~experimental`,
-    )
+    .patch(`${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       const attributes = {
@@ -665,7 +655,7 @@ export const beforeStep = () => {
       return [200, response]
     })
 
-    .patch(`${urlPrefixTenantIdAndInstallId4}/contexts/${contextId4}/integration?version=2024-02-08~experimental`)
+    .patch(`${urlPrefixTenantIdAndInstallId4}/contexts/${contextId4}/integration?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
       response.data = {
@@ -685,55 +675,49 @@ export const beforeStep = () => {
       return [200, response]
     })
     .delete(
-      `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000/connections/00000000-0000-0000-0000-000000000000?version=2024-02-08~experimental`,
+      `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000/connections/00000000-0000-0000-0000-000000000000?version=2024-10-15`,
+    )
+    .reply(() => {
+      return [204]
+    })
+    .delete(`${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000?version=2024-10-15`)
+    .reply(() => {
+      return [204]
+    })
+    .delete(`${urlPrefixTenantIdAndInstallId2}/deployments/00000000-0000-0000-0000-000000000002?version=2024-10-15`)
+    .reply(() => {
+      return [204]
+    })
+    .delete(
+      `${urlPrefixTenantIdAndInstallId3}/deployments/${deploymentId3}/connections/${connectionId3}?version=2024-10-15`,
     )
     .reply(() => {
       return [204]
     })
     .delete(
-      `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000?version=2024-02-08~experimental`,
+      `${urlPrefixTenantIdAndInstallId4}/deployments/${deploymentId4}/connections/${connectionId3}?version=2024-10-15`,
     )
     .reply(() => {
       return [204]
     })
     .delete(
-      `${urlPrefixTenantIdAndInstallId2}/deployments/00000000-0000-0000-0000-000000000002?version=2024-02-08~experimental`,
+      `${urlPrefixTenantIdAndInstallId4}/deployments/${deploymentId4}/connections/${connectionId4}?version=2024-10-15`,
     )
     .reply(() => {
       return [204]
     })
     .delete(
-      `${urlPrefixTenantIdAndInstallId3}/deployments/${deploymentId3}/connections/${connectionId3}?version=2024-02-08~experimental`,
+      `${urlPrefixTenantId}/brokers/connections/${connectionId4}/orgs/${orgId4}/integrations/${integrationId4}?version=2024-10-15`,
     )
     .reply(() => {
       return [204]
     })
-    .delete(
-      `${urlPrefixTenantIdAndInstallId4}/deployments/${deploymentId4}/connections/${connectionId3}?version=2024-02-08~experimental`,
-    )
-    .reply(() => {
-      return [204]
-    })
-    .delete(
-      `${urlPrefixTenantIdAndInstallId4}/deployments/${deploymentId4}/connections/${connectionId4}?version=2024-02-08~experimental`,
-    )
-    .reply(() => {
-      return [204]
-    })
-    .delete(
-      `${urlPrefixTenantId}/brokers/connections/${connectionId4}/orgs/${orgId4}/integrations/${integrationId4}?version=2024-02-08~experimental`,
-    )
-    .reply(() => {
-      return [204]
-    })
-    .delete(
-      `${urlPrefixTenantId}/brokers/installs/${installId3}/contexts/${contextId3}?version=2024-02-08~experimental`,
-    )
+    .delete(`${urlPrefixTenantId}/brokers/installs/${installId3}/contexts/${contextId3}?version=2024-10-15`)
     .reply((uri, body) => {
       return [204]
     })
     .delete(
-      `${urlPrefixTenantId}/brokers/installs/${installId4}/contexts/${contextId4}/integrations/${integrationId4}?version=2024-02-08~experimental`,
+      `${urlPrefixTenantId}/brokers/installs/${installId4}/contexts/${contextId4}/integrations/${integrationId4}?version=2024-10-15`,
     )
     .reply((uri, body) => {
       return [204]
