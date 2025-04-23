@@ -34,7 +34,7 @@ describe('connection update workflow', () => {
         ])
         return updateConnection.run()
       },
-      {print: true}, // Keep print false for cleaner test output
+      {print: false}, // Keep print false for cleaner test output
     )
     // TODO: Update assertions based on the expected output of the update command
     expect(stdout).to.contain('Connection Update Workflow completed.') // Update expected output message

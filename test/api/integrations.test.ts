@@ -14,7 +14,7 @@ describe('Integrations Api calls', () => {
     nock('https://api.snyk.io')
       .persist()
       .get(
-        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/connections/00000000-0000-0000-0000-000000000000/integrations?version=2024-02-08~experimental',
+        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/connections/00000000-0000-0000-0000-000000000000/integrations?version=2024-10-15',
       )
       .reply((uri, body) => {
         const response = apiResponseSchema
@@ -29,7 +29,7 @@ describe('Integrations Api calls', () => {
         return [200, response]
       })
       .post(
-        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/connections/00000000-0000-0000-0000-000000000000/orgs/00000000-0000-0000-0000-000000000000/integration?version=2024-02-08~experimental',
+        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/connections/00000000-0000-0000-0000-000000000000/orgs/00000000-0000-0000-0000-000000000000/integration?version=2024-10-15',
       )
       .reply((uri, body) => {
         const orgId = uri
@@ -37,7 +37,7 @@ describe('Integrations Api calls', () => {
             '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/connections/00000000-0000-0000-0000-000000000000/orgs/',
             '',
           )
-          .replace('/integration?version=2024-02-08~experimental', '')
+          .replace('/integration?version=2024-10-15', '')
         const bodyData = JSON.parse(body.toString()).data
         const response = apiResponseSchema
         response.data = [
@@ -55,7 +55,7 @@ describe('Integrations Api calls', () => {
         return [200, {}]
       })
       .delete(
-        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/connections/00000000-0000-0000-0000-000000000000/orgs/00000000-0000-0000-0000-000000000000/integrations/00000000-0000-0000-0000-000000000000?version=2024-02-08~experimental',
+        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/connections/00000000-0000-0000-0000-000000000000/orgs/00000000-0000-0000-0000-000000000000/integrations/00000000-0000-0000-0000-000000000000?version=2024-10-15',
       )
       .reply(() => {
         return [204]
