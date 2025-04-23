@@ -2,8 +2,6 @@ import {ux} from '@oclif/core'
 import {commonApiRelatedArgs} from '../../../common/args.js'
 import {BaseCommand} from '../../../base-command.js'
 import {printFormattedJSON} from '../../../utils/display.js'
-import {getConnectionsForDeployment} from '../../../api/connections.js'
-import {getContextForForDeployment} from '../../../api/contexts.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true

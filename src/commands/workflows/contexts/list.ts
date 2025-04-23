@@ -2,8 +2,7 @@ import {ux} from '@oclif/core'
 import {commonApiRelatedArgs} from '../../../common/args.js'
 import {BaseCommand} from '../../../base-command.js'
 import {printFormattedJSON} from '../../../utils/display.js'
-import {getConnectionsForDeployment} from '../../../api/connections.js'
-import {getContextForForDeployment} from '../../../api/contexts.js'
+import {getContextsForForDeployment} from '../../../api/contexts.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -26,7 +25,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
       this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
 
-      const contextData = await getContextForForDeployment(tenantId, installId, deploymentId)
+      const contextData = await getContextsForForDeployment(tenantId, installId, deploymentId)
       if (contextData.data.length === 0) {
         this.error('No context found.')
       }
