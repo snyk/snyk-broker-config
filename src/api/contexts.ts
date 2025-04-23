@@ -89,7 +89,7 @@ export const applyContext = async (tenantId: string, installId: string, contextI
   const body = {
     data: {
       id: contextId,
-      type: 'broker-integration',
+      type: 'broker_integration',
       attributes: {
         org_id: orgId,
       },

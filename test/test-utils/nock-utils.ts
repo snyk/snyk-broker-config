@@ -589,7 +589,7 @@ export const beforeStep = () => {
         id: integrationId3,
         integration_type: 'github',
         org_id: orgId3,
-        type: 'broker-integration',
+        type: 'broker_integration',
       }
       return [201, response]
     })
@@ -602,7 +602,7 @@ export const beforeStep = () => {
         id: integrationId4,
         integration_type: 'nexus',
         org_id: orgId4,
-        type: 'broker-integration',
+        type: 'broker_integration',
       }
       return [201, response]
     })
@@ -677,7 +677,7 @@ export const beforeStep = () => {
               id: integrationId4,
               integration_type: 'nexus',
               org_id: orgId4,
-              type: 'broker-integration',
+              type: 'broker_integration',
             },
           ],
         },
