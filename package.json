@@ -102,18 +102,5 @@
     "version": "oclif readme && git add README.md",
     "format": "prettier --write '{src,test}/**/*.{js,ts}'"
   },
-  "types": "dist/index.d.ts",
-  "pkg": {
-    "scripts": [
-      "dist/index.js"
-    ],
-    "assets": [
-      
-    ],
-    "targets": [
-      "node18-linux-x64",
-      "node18-linux-arm64"
-    ],
-    "outputPath": "binary-releases"
-  }
+  "types": "dist/index.d.ts"
 }
