@@ -1,5 +1,7 @@
 import http from 'node:http'
 import https from 'node:https'
+import {getProxyForUrl} from 'proxy-from-env'
+import {bootstrap} from 'global-agent'
 
 export interface HttpRequest {
   url: string
@@ -16,8 +18,24 @@ export interface HttpResponse {
 }
 const MAX_RETRY = 3
 
+if (process.env.HTTP_PROXY || process.env.http_proxy) {
+  process.env.HTTP_PROXY = process.env.HTTP_PROXY || process.env.http_proxy
+}
+if (process.env.HTTPS_PROXY || process.env.https_proxy) {
+  process.env.HTTPS_PROXY = process.env.HTTPS_PROXY || process.env.https_proxy
+}
+if (process.env.NP_PROXY || process.env.no_proxy) {
+  process.env.NO_PROXY = process.env.NO_PROXY || process.env.no_proxy
+}
+
 export const makeRequest = async (req: HttpRequest, retries = MAX_RETRY): Promise<HttpResponse> => {
   const localRequest = req
+  const proxyUri = getProxyForUrl(localRequest.url)
+  if (proxyUri) {
+    bootstrap({
+      environmentVariableNamespace: '',
+    })
+  }
 
   const httpClient = localRequest.url.startsWith('https') ? https : http
   const options: http.RequestOptions = {
