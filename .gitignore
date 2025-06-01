@@ -1,14 +1,41 @@
-*-debug.log
-*-error.log
-**/.DS_Store
-/.idea
-/dist
-/tmp
-/node_modules
+#################################
+# Compiled source               #
+#################################
+dist/
+
+#################################
+# Node.js, NPM and oclif files  #
+#################################
+coverage/
+node_modules/
+reports/
+*.tsbuildinfo
+.eslintcache
+.nyc_output
 oclif.manifest.json
 
-tsconfig.tsbuildinfo
+#################################
+# IDE generated files           #
+#################################
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
 
-yarn.lock
-pnpm-lock.yaml
+#################################
+# Logs and temp files           #
+#################################
+/tmp
+*.log
+*.tmp
+*~
 
+#################################
+# OS generated files            #
+#################################
+Thumbs.db
+.directory
+.DS_Store

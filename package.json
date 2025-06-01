@@ -95,7 +95,13 @@
         "description": "Interactive workflows for Deployments, Credentials, Connections and Integrations management"
       }
     },
-    "theme": "theme.json"
+    "theme": "theme.json",
+    "macos": {
+      "identifier": "io.snyk.snyk-broker-config.cli"
+    },
+    "windows": {
+      "name": "Snyk Broker Config CLI"
+    }
   },
   "repository": "snyk/snyk-broker-config",
   "scripts": {
@@ -103,6 +109,9 @@
     "lint": "eslint . --ext .ts",
     "test": "node test/run-test.js",
     "prepack": "oclif manifest",
+    "pack:linux": "oclif pack deb",
+    "pack:macos": "oclif pack macos",
+    "pack:win": "oclif pack win",
     "version": "oclif readme && git add README.md",
     "format": "prettier --write '{src,test}/**/*.{js,ts}'"
   },
