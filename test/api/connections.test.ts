@@ -2,10 +2,11 @@ import {
   createConnectionForDeployment,
   updateConnectionForDeployment,
   deleteConnectionForDeployment,
+  getBulkMigrationOrgs,
 } from '../../src/api/connections'
 import {expect} from 'chai'
 import nock from 'nock'
-import {ConnectionResponse} from '../../src/api/types'
+import {ConnectionResponse, GetOrgsForBulkMigrationResponse, OrgResource} from '../../src/api/types' // Added imports
 
 describe('Connections Api calls', () => {
   const createResponse: ConnectionResponse = {
@@ -28,6 +29,14 @@ describe('Connections Api calls', () => {
     jsonapi: {
       version: 'dummy',
     },
+    links: {},
+  }
+  const bulkMigrationMockResponse: GetOrgsForBulkMigrationResponse = {
+    data: [
+      {id: 'org-uuid-for-bulk-1', type: 'org_id'},
+      {id: 'org-uuid-for-bulk-2', type: 'org_id'},
+    ],
+    jsonapi: {version: 'dummy'},
     links: {},
   }
   before(() => {
@@ -62,6 +71,10 @@ describe('Connections Api calls', () => {
       .reply(() => {
         return [204]
       })
+      .get(
+        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments/00000000-0000-0000-0000-000000000000/connections/00000000-0000-0000-0000-000000000000/bulk_migration?version=2024-10-15',
+      )
+      .reply(200, bulkMigrationMockResponse)
   })
   it('createConnectionForDeployment', async () => {
     const createConnectionResponse = await createConnectionForDeployment(
@@ -116,5 +129,15 @@ describe('Connections Api calls', () => {
       '00000000-0000-0000-0000-000000000000',
     )
     expect(responseCode).to.equal(204)
+  })
+
+  it('getBulkMigrationOrgs', async () => {
+    const response = await getBulkMigrationOrgs(
+      '00000000-0000-0000-0000-000000000000', // tenantId
+      '00000000-0000-0000-0000-000000000000', // installId
+      '00000000-0000-0000-0000-000000000000', // deploymentId
+      '00000000-0000-0000-0000-000000000000', // connectionId
+    )
+    expect(response).to.deep.equal(bulkMigrationMockResponse)
   })
 })
