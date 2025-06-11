@@ -161,6 +161,23 @@ export interface IntegrationResponse {
   }
   errors?: any
 }
+
+export interface OrgResource {
+  id: string
+  type: 'org_id'
+}
+
+export interface GetOrgsForBulkMigrationResponse {
+  data: OrgResource[]
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
+}
 export interface ConnectionRelationship {
   data: {
     id: string
