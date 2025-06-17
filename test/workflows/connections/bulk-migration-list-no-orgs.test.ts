@@ -5,15 +5,22 @@ import nock from 'nock'
 import { Config } from '@oclif/core'
 
 import BulkMigrationListCommand from '../../../src/commands/workflows/bulk-migration/list.js'
-import { beforeStep, tenantId, installId, deploymentId, connectionId4, snykToken } from '../../test-utils/nock-utils.js'
+import {
+  beforeStep,
+  tenantId,
+  snykToken,
+  installId5,
+  deploymentId5,
+  connectionId5
+} from '../../test-utils/nock-utils.js'
 import { sendScenario } from '../../test-utils/stdin-utils.js'
 
 describe('connections bulk-migration list workflow - no orgs', () => {
   const stdin = fstdin()
   const testTenantId = tenantId
-  const testInstallId = installId
-  const testDeploymentId = deploymentId
-  const testConnectionId = connectionId4
+  const testInstallId = installId5
+  const testDeploymentId = deploymentId5
+  const testConnectionId = connectionId5
 
   before(() => {
     beforeStep()
