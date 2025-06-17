@@ -778,10 +778,4 @@ export const beforeStep = () => {
       response.data = [{ attributes: { broker_app_installed_in_org_id: orgId5, install_id: installId5, metadata: {} }, id: deploymentId5, type: 'broker_deployment' }]
       return [200, response]
     })
-    .get(`${urlPrefixTenantIdAndInstallId5}/deployments/${deploymentId5}/connections?version=2024-10-15`)
-    .reply(200, { data: [], links: {} }) // No connections for successful delete
-    .get(`${urlPrefixTenantIdAndInstallId5}/deployments/${deploymentId5}/credentials?version=2024-10-15`)
-    .reply(200, { data: [], links: {} }) // No credentials for successful delete
-    .delete(`${urlPrefixTenantIdAndInstallId5}/deployments/${deploymentId5}?version=2024-10-15`)
-    .reply(204) // Successful delete of deployment
 }
