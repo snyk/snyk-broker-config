@@ -1,5 +1,5 @@
 import nock from 'nock'
-import {ConnectionResponse} from '../../src/api/types'
+import {ConnectionResponse, GetOrgsForBulkMigrationResponse} from '../../src/api/types'
 
 export const upArrow = '\u001b[A'
 export const downArrow = '\u001b[B'
@@ -238,6 +238,21 @@ const urlPrefixTenantIdAndInstallId3 = `/rest/tenants/${tenantId}/brokers/instal
 const urlPrefixTenantIdAndInstallId4 = `/rest/tenants/${tenantId}/brokers/installs/${installId4}`
 const urlPrefixTenantId = `/rest/tenants/${tenantId}`
 
+const mockBulkMigrationApiResponseEmpty: GetOrgsForBulkMigrationResponse = {
+  data: [],
+  jsonapi: { version: '1.0' },
+  links: {},
+}
+
+const mockBulkMigrationApiResponseWithOrgs: GetOrgsForBulkMigrationResponse = {
+  data: [
+    { id: 'org-uuid-returned-1', type: 'org_id' },
+    { id: 'org-uuid-returned-2', type: 'org_id' },
+  ],
+  jsonapi: { version: '1.0' },
+  links: {},
+}
+
 export const beforeStep = () => {
   const apiResponseSchema = {data: {}, links: {}}
   nock('https://api.snyk.io')
@@ -341,7 +356,19 @@ export const beforeStep = () => {
     .get(`${urlPrefixTenantIdAndInstallId}/deployments/${deploymentId}/connections?version=2024-10-15`)
     .reply((uri, body) => {
       const response = apiResponseSchema
-      response.data = []
+      response.data = [
+        {
+          attributes: {
+            deployment_id: deploymentId,
+            identifier: 'dummy-identifier-for-conn4',
+            name: 'test-conn-for-bulk-migration-no-orgs',
+            secrets: { /* ... dummy secrets ... */ },
+            configuration: { type: 'generic', required: {}, validations: [] },
+          },
+          id: connectionId4,
+          type: 'broker_connection',
+        },
+      ]
       return [200, response]
     })
     .get(`${urlPrefixTenantIdAndInstallId3}/deployments/${deploymentId3}/connections?version=2024-10-15`)
@@ -722,4 +749,8 @@ export const beforeStep = () => {
     .reply((uri, body) => {
       return [204]
     })
+    .get(`/rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/connections/${connectionId4}/bulk_migration?version=2024-10-15`)
+    .reply(200, mockBulkMigrationApiResponseEmpty)
+    .get(`/rest/tenants/${tenantId}/brokers/installs/${installId3}/deployments/${deploymentId3}/connections/${connectionId3}/bulk_migration?version=2024-10-15`)
+    .reply(200, mockBulkMigrationApiResponseWithOrgs)
 }
