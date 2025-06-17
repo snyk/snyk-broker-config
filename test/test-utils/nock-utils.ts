@@ -1,5 +1,5 @@
 import nock from 'nock'
-import {ConnectionResponse, GetOrgsForBulkMigrationResponse} from '../../src/api/types'
+import {ConnectionResponse, GetOrgsForBulkMigrationResponse, applyBulkMigrationResponse} from '../../src/api/types'
 
 export const upArrow = '\u001b[A'
 export const downArrow = '\u001b[B'
@@ -36,6 +36,14 @@ export const orgId6 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8d'
 export const installId6 = '00000000-0000-0000-0000-000000000006'
 export const deploymentId6 = '00000000-0000-0000-0000-000000000006'
 export const connectionId6 = '00000000-0000-0000-0000-000000000006'
+export const orgId7 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8e'
+export const installId7 = '00000000-0000-0000-0000-000000000007'
+export const deploymentId7 = '00000000-0000-0000-0000-000000000007'
+export const connectionId7 = '00000000-0000-0000-0000-000000000007'
+export const orgId8 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8f'
+export const installId8 = '00000000-0000-0000-0000-000000000008'
+export const deploymentId8 = '00000000-0000-0000-0000-000000000008'
+export const connectionId8 = '00000000-0000-0000-0000-000000000008'
 
 const createConnectionResponse: ConnectionResponse = {
   data: {
@@ -270,6 +278,48 @@ export const appResponse6 = {
   ],
 }
 
+export const appResponse7 = {
+  data: [
+    {
+      id: installId7,
+      type: 'app_install',
+      attributes: {
+        client_id: clientId,
+        installed_at: '2024-07-17T18:51:02Z',
+      },
+      relationships: {
+        app: {
+          data: {
+            id: appId,
+            type: 'app',
+          },
+        },
+      },
+    },
+  ],
+}
+
+export const appResponse8 = {
+  data: [
+    {
+      id: installId8,
+      type: 'app_install',
+      attributes: {
+        client_id: clientId,
+        installed_at: '2024-07-17T18:51:02Z',
+      },
+      relationships: {
+        app: {
+          data: {
+            id: appId,
+            type: 'app',
+          },
+        },
+      },
+    },
+  ],
+}
+
 export const createCredentialsResponse = {
   data: [
     {
@@ -285,18 +335,18 @@ export const createCredentialsResponse = {
 }
 
 const selfResponse = {
-    data: {
-      id: userId,
-      type: 'user',
-      attributes: {
-        avatar_url: '',
-        default_org_context: '',
-        email: '',
-        name: '',
-        username: '',
-      },
+  data: {
+    id: userId,
+    type: 'user',
+    attributes: {
+      avatar_url: '',
+      default_org_context: '',
+      email: '',
+      name: '',
+      username: '',
     },
-  }
+  },
+}
 
 const urlPrefixTenantIdAndInstallId = `/rest/tenants/${tenantId}/brokers/installs/${installId}`
 const urlPrefixTenantIdAndInstallId2 = `/rest/tenants/${tenantId}/brokers/installs/${installId2}`
@@ -304,6 +354,8 @@ const urlPrefixTenantIdAndInstallId3 = `/rest/tenants/${tenantId}/brokers/instal
 const urlPrefixTenantIdAndInstallId4 = `/rest/tenants/${tenantId}/brokers/installs/${installId4}`
 const urlPrefixTenantIdAndInstallId5 = `/rest/tenants/${tenantId}/brokers/installs/${installId5}`
 const urlPrefixTenantIdAndInstallId6 = `/rest/tenants/${tenantId}/brokers/installs/${installId6}`
+const urlPrefixTenantIdAndInstallId7 = `/rest/tenants/${tenantId}/brokers/installs/${installId7}`
+const urlPrefixTenantIdAndInstallId8 = `/rest/tenants/${tenantId}/brokers/installs/${installId8}`
 const urlPrefixTenantId = `/rest/tenants/${tenantId}`
 
 const mockBulkMigrationApiResponseEmpty: GetOrgsForBulkMigrationResponse = {
@@ -319,6 +371,18 @@ const mockBulkMigrationApiResponseWithOrgs: GetOrgsForBulkMigrationResponse = {
   ],
   jsonapi: {version: '1.0'},
   links: {},
+}
+
+const mockBulkMigrationApplySuccessResponse: applyBulkMigrationResponse = {
+  data: {
+    id: 'migration-uuid-789',
+    type: 'broker_migration',
+    attributes: {
+      status: 'pending',
+    },
+  },
+  jsonapi: {version: '1.0'},
+  links: {self: `/self/link/migration-789`},
 }
 
 export const beforeStep = () => {
@@ -353,6 +417,14 @@ export const beforeStep = () => {
     .reply(() => {
       return [200, appResponse6]
     })
+    .get(`/rest/orgs/${orgId7}/apps/installs?version=2024-05-31`)
+    .reply(() => {
+      return [200, appResponse7]
+    })
+    .get(`/rest/orgs/${orgId8}/apps/installs?version=2024-05-31`)
+    .reply(() => {
+      return [200, appResponse8]
+    })
     .get('/rest/tenants?version=2024-10-14~experimental')
     .reply(() => {
       return [200, tenants]
@@ -361,7 +433,9 @@ export const beforeStep = () => {
     .reply(() => {
       return [200, tenantMemberships]
     })
-    .get(`/rest/tenants/${nonAdminTenantId}/memberships?role_name=admin&user_id=${userId}&version=2024-10-14~experimental`)
+    .get(
+      `/rest/tenants/${nonAdminTenantId}/memberships?role_name=admin&user_id=${userId}&version=2024-10-14~experimental`,
+    )
     .reply(() => {
       return [200, forbiddenTenantMembersResponse]
     })
@@ -424,6 +498,38 @@ export const beforeStep = () => {
             metadata: {},
           },
           id: deploymentId4,
+          type: 'broker_deployment',
+        },
+      ]
+      return [200, response]
+    })
+    .get(`${urlPrefixTenantIdAndInstallId7}/deployments?version=2024-10-15`)
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = [
+        {
+          attributes: {
+            broker_app_installed_in_org_id: orgId7,
+            install_id: installId7,
+            metadata: {},
+          },
+          id: deploymentId7,
+          type: 'broker_deployment',
+        },
+      ]
+      return [200, response]
+    })
+    .get(`${urlPrefixTenantIdAndInstallId8}/deployments?version=2024-10-15`)
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = [
+        {
+          attributes: {
+            broker_app_installed_in_org_id: orgId8,
+            install_id: installId8,
+            metadata: {},
+          },
+          id: deploymentId8,
           type: 'broker_deployment',
         },
       ]
@@ -528,6 +634,42 @@ export const beforeStep = () => {
             },
           },
           id: connectionId4,
+          type: 'broker_connection',
+        },
+      ]
+      return [200, response]
+    })
+    .get(`${urlPrefixTenantIdAndInstallId7}/deployments/${deploymentId7}/connections?version=2024-10-15`)
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = [
+        {
+          attributes: {
+            deployment_id: deploymentId7,
+            identifier: 'conn7-id',
+            name: 'conn7-name',
+            secrets: {},
+            configuration: {type: 'generic'},
+          },
+          id: connectionId7,
+          type: 'broker_connection',
+        },
+      ]
+      return [200, response]
+    })
+    .get(`${urlPrefixTenantIdAndInstallId8}/deployments/${deploymentId8}/connections?version=2024-10-15`)
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = [
+        {
+          attributes: {
+            deployment_id: deploymentId8,
+            identifier: 'conn8-id',
+            name: 'conn8-name',
+            secrets: {},
+            configuration: {type: 'generic'},
+          },
+          id: connectionId8,
           type: 'broker_connection',
         },
       ]
@@ -894,4 +1036,22 @@ export const beforeStep = () => {
       `/rest/tenants/${tenantId}/brokers/installs/${installId6}/deployments/${deploymentId6}/connections/${connectionId6}/bulk_migration?version=2024-10-15`,
     )
     .reply(200, mockBulkMigrationApiResponseEmpty)
+    .post(
+      `/rest/tenants/${tenantId}/brokers/installs/${installId7}/deployments/${deploymentId7}/connections/${connectionId7}/bulk_migration?version=2024-10-15`,
+      JSON.stringify({data: {type: 'broker_migration'}}),
+    )
+    .reply(201, mockBulkMigrationApplySuccessResponse)
+    .post(
+      `/rest/tenants/${tenantId}/brokers/installs/${installId8}/deployments/${deploymentId8}/connections/${connectionId8}/bulk_migration?version=2024-10-15`,
+    )
+    .reply(500, {
+      errors: [
+        {
+          id: 'error-uuid-for-bulk-migration-apply-test',
+          status: '500',
+          title: 'Internal Server Error For Test',
+          detail: 'Something went terribly wrong during apply for test.',
+        },
+      ],
+    })
 }
