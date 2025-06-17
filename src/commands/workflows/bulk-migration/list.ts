@@ -12,39 +12,29 @@ import {BaseCommand} from '../../../base-command.js'
 import { OrgResource } from '../../../api/types.js'
 
 export default class BulkMigrationList extends BaseCommand<typeof BulkMigrationList> {
-  public static enableJsonFlag = true
   static args = {
-    ...commonUniversalBrokerArgs(),
-    ...commonUniversalBrokerDeploymentId(true),
-    ...commonUniversalBrokerConnectionId(true),
     ...commonApiRelatedArgs,
   }
 
-  static description = 'List organizations eligible for bulk migration for a specific connection.'
+  static description = 'Universal Broker Bulk-Migration - List operation'
 
   static examples = [
-    `# With TENANT_ID and INSTALL_ID exported as environment variables:`,
-    `$ <%= config.bin %> <%= command.id %> DEPLOYMENT_ID CONNECTION_ID`,
-    `\n# With TENANT_ID and INSTALL_ID provided as arguments:`,
-    `$ <%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID CONNECTION_ID`,
+    `$ <%= config.bin %> <%= command.id %>`,
+    `# The command will then prompt for Tenant, Install, Deployment, and Connection selection.`,
   ]
 
   async run(): Promise<string> {
-    this.log('\\n' + ux.colorize('red', BulkMigrationList.description))
-    const {args} = await this.parse(BulkMigrationList)
-    const ids = getCommonIds(args)
-    const tenantId = ids.tenantId
-    const installId = ids.installId
+    this.log('\n' + ux.colorize('red', BulkMigrationList.description))
 
-    if (!tenantId) {
-      this.error('Tenant ID must be provided either as an argument or as a TENANT_ID environment variable.', {exit: 1})
-    }
-    if (!installId) {
-      this.error('Install ID must be provided either as an argument or as an INSTALL_ID environment variable.', {exit: 1})
-    }
+    const {tenantId, installId, appInstalledOnOrgId} = await this.setupFlow()
+    this.log(ux.colorize('cyan', `\nUsing Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
-    const deploymentId = args.deploymentId!
-    const connectionId = args.connectionId!
+    const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
+    this.log(ux.colorize('cyan', `Using Deployment ID ${deploymentId}.\n`))
+
+    const selectedConnection = await this.selectConnection(tenantId, installId, deploymentId)
+    const connectionId = selectedConnection.id
+    this.log(ux.colorize('cyan', `Using Connection ID ${connectionId} (${selectedConnection.name}).\n`))
 
     this.log(
       ux.colorize(
