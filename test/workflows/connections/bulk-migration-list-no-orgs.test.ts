@@ -9,18 +9,18 @@ import {
   beforeStep,
   tenantId,
   snykToken,
-  installId5,
-  deploymentId5,
-  connectionId5
+  installId6,
+  deploymentId6,
+  connectionId6
 } from '../../test-utils/nock-utils.js'
 import { sendScenario } from '../../test-utils/stdin-utils.js'
 
 describe('connections bulk-migration list workflow - no orgs', () => {
   const stdin = fstdin()
   const testTenantId = tenantId
-  const testInstallId = installId5
-  const testDeploymentId = deploymentId5
-  const testConnectionId = connectionId5
+  const testInstallId = installId6
+  const testDeploymentId = deploymentId6
+  const testConnectionId = connectionId6
 
   before(() => {
     beforeStep()
