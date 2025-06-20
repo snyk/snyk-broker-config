@@ -9,7 +9,7 @@ import {
 } from '../../../common/args.js'
 import {getBulkMigrationOrgs} from '../../../api/connections.js'
 import {BaseCommand} from '../../../base-command.js'
-import { OrgResource } from '../../../api/types.js'
+import {OrgResource} from '../../../api/types.js'
 
 export default class BulkMigrationList extends BaseCommand<typeof BulkMigrationList> {
   static args = {
@@ -43,12 +43,7 @@ export default class BulkMigrationList extends BaseCommand<typeof BulkMigrationL
       ),
     )
 
-    const orgsListResponse = await getBulkMigrationOrgs(
-      tenantId,
-      installId,
-      deploymentId,
-      connectionId,
-    )
+    const orgsListResponse = await getBulkMigrationOrgs(tenantId, installId, deploymentId, connectionId)
 
     const orgsList: OrgResource[] = orgsListResponse.data
 
