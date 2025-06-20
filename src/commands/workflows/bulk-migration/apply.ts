@@ -1,8 +1,6 @@
 import {ux} from '@oclif/core'
 import {printFormattedJSON} from '../../../utils/display.js'
-import {
-  commonApiRelatedArgs,
-} from '../../../common/args.js'
+import {commonApiRelatedArgs} from '../../../common/args.js'
 import {applyBulkMigration} from '../../../api/connections.js'
 import {BaseCommand} from '../../../base-command.js'
 import {applyBulkMigrationResponse} from '../../../api/types.js'

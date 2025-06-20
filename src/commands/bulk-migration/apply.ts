@@ -20,7 +20,8 @@ export default class BulkMigrationApply extends BaseCommand<typeof BulkMigration
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Initiate bulk migration for integrations from legacy to universal broker for a specific connection.'
+  static description =
+    'Initiate bulk migration for integrations from legacy to universal broker for a specific connection.'
 
   static examples = [
     `# With TENANT_ID and INSTALL_ID exported as environment variables:`,
@@ -56,7 +57,8 @@ export default class BulkMigrationApply extends BaseCommand<typeof BulkMigration
     )
 
     try {
-      const bulkMigrationResponse: applyBulkMigrationResponse = await applyBulkMigration( // Renamed
+      const bulkMigrationResponse: applyBulkMigrationResponse = await applyBulkMigration(
+        // Renamed
         tenantId,
         installId,
         deploymentId,

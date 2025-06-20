@@ -7,7 +7,7 @@ import {
   ConnectionResponse,
   ConnectionsResponse,
   GetOrgsForBulkMigrationResponse,
-  applyBulkMigrationResponse
+  applyBulkMigrationResponse,
 } from './types.js'
 
 const logger = createLogger('snyk-broker-config')
