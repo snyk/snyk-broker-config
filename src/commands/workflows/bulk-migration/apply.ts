@@ -3,9 +3,9 @@ import {printFormattedJSON} from '../../../utils/display.js'
 import {
   commonApiRelatedArgs,
 } from '../../../common/args.js'
-import {createBulkMigration} from '../../../api/connections.js'
+import {applyBulkMigration} from '../../../api/connections.js'
 import {BaseCommand} from '../../../base-command.js'
-import {CreateBulkMigrationResponse} from '../../../api/types.js'
+import {applyBulkMigrationResponse} from '../../../api/types.js'
 
 export default class BulkMigrationApply extends BaseCommand<typeof BulkMigrationApply> {
   static args = {
@@ -41,7 +41,7 @@ export default class BulkMigrationApply extends BaseCommand<typeof BulkMigration
     )
 
     try {
-      const bulkMigrationResponse: CreateBulkMigrationResponse = await createBulkMigration(
+      const bulkMigrationResponse: applyBulkMigrationResponse = await applyBulkMigration(
         tenantId,
         installId,
         deploymentId,

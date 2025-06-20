@@ -259,7 +259,7 @@ export interface BulkMigrationCreateResponseData {
   attributes: BulkMigrationCreateResponseDataAttributes
 }
 
-export interface CreateBulkMigrationResponse {
+export interface applyBulkMigrationResponse {
   data: BulkMigrationCreateResponseData
   jsonapi: {
     version: string

@@ -7,7 +7,7 @@ import {
   ConnectionResponse,
   ConnectionsResponse,
   GetOrgsForBulkMigrationResponse,
-  CreateBulkMigrationResponse
+  applyBulkMigrationResponse
 } from './types.js'
 
 const logger = createLogger('snyk-broker-config')
@@ -31,12 +31,12 @@ export const getConnectionsForDeployment = async (tenantId: string, installId: s
   }
 }
 
-export const createBulkMigration = async (
+export const applyBulkMigration = async (
   tenantId: string,
   installId: string,
   deploymentId: string,
   connectionId: string,
-): Promise<CreateBulkMigrationResponse> => {
+): Promise<applyBulkMigrationResponse> => {
   const headers = {...commonHeaders, ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/connections/${connectionId}/bulk_migration`
   const config = getConfig()
