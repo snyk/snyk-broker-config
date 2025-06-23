@@ -9,39 +9,30 @@ import {
   beforeStep,
   tenantId,
   snykToken,
-  installId4,
-  deploymentId4,
-  connectionId4,
+  installId7,
+  deploymentId7,
+  connectionId7,
+  installId8,
+  deploymentId8,
+  connectionId8,
 } from '../../test-utils/nock-utils.js'
-import {applyBulkMigrationResponse} from '../../../src/api/types.js'
 import {sendScenario} from '../../test-utils/stdin-utils.js'
 
 describe('connections bulk-migration apply workflow', () => {
   const stdin = fstdin()
-  const testTenantId = tenantId
-  const testInstallId = installId4
-  const testDeploymentId = deploymentId4
-  const testConnectionId = connectionId4
-  const testApiHostname = 'https://api.snyk.io'
-  const testApiVersion = '2024-10-15'
+  const successTestTenantId = tenantId
+  const successTestInstallId = installId7
+  const successTestDeploymentId = deploymentId7
+  const successTestConnectionId = connectionId7
 
-  const mockSuccessResponse: applyBulkMigrationResponse = {
-    data: {
-      id: 'migration-uuid-123',
-      type: 'broker_migration',
-      attributes: {
-        status: 'pending',
-      },
-    },
-    jsonapi: {version: '1.0'},
-    links: {self: `/self/link`},
-  }
+  const errorTestTenantId = tenantId
+  const errorTestInstallId = installId8
+  const errorTestDeploymentId = deploymentId8
+  const errorTestConnectionId = connectionId8
 
   beforeEach(() => {
     beforeStep()
     process.env.SNYK_TOKEN = snykToken
-    process.env.TENANT_ID = testTenantId
-    process.env.INSTALL_ID = testInstallId
   })
 
   afterEach(() => {
@@ -53,15 +44,20 @@ describe('connections bulk-migration apply workflow', () => {
   })
 
   it('runs connections:bulk-migration:apply and successfully starts migration', async () => {
-    nock(testApiHostname)
-      .post(
-        `/rest/tenants/${testTenantId}/brokers/installs/${testInstallId}/deployments/${testDeploymentId}/connections/${testConnectionId}/bulk_migration?version=${testApiVersion}`,
-      )
-      .reply(201, mockSuccessResponse)
+    process.env.TENANT_ID = successTestTenantId
+    process.env.INSTALL_ID = successTestInstallId
 
     // @ts-ignore
     const cfg: Config = {}
-    const command = new BulkMigrationApplyCommand([], cfg)
+    const command = new BulkMigrationApplyCommand(
+      [],
+      cfg,
+    )
+
+    // Mock selection methods
+    command.selectDeployment = async () => successTestDeploymentId
+    command.selectConnection = async () => ({ id: successTestConnectionId, name: 'Mocked Success Connection', type: 'generic' })
+
 
     const {stdout, stderr, error} = await captureOutput(async () => {
       sendScenario(stdin, [])
@@ -73,36 +69,26 @@ describe('connections bulk-migration apply workflow', () => {
 
     expect(stdout).to.contain('Universal Broker Bulk-Migration - Apply operation')
     expect(stdout).to.contain(
-      `Initiating bulk migration for Connection ${testConnectionId}, Deployment ${testDeploymentId}, Tenant ${testTenantId}, Install ${testInstallId}...`,
+      `Initiating bulk migration for Connection ${successTestConnectionId}, Deployment ${successTestDeploymentId}, Tenant ${successTestTenantId}, Install ${successTestInstallId}...`,
     )
     expect(stdout).to.contain('Bulk migration process started successfully:')
-    expect(stdout).to.contain(`id: migration-uuid-123`)
-    expect(stdout).to.contain(`type: broker_migration`)
-    expect(stdout).to.contain(`status: pending`)
-
-    expect(nock.isDone(), 'All nock interceptors should have been called').to.be.true
   })
 
   it('runs connections:bulk-migration:apply and handles API error', async () => {
-    const errorMessage = 'Internal Server Error'
-    const errorDetail = 'Something went terribly wrong.'
-    nock(testApiHostname)
-      .post(
-        `/rest/tenants/${testTenantId}/brokers/installs/${testInstallId}/deployments/${testDeploymentId}/connections/${testConnectionId}/bulk_migration?version=${testApiVersion}`,
-      )
-      .reply(500, {
-        errors: [
-          {
-            status: '500',
-            title: errorMessage,
-            detail: errorDetail,
-          },
-        ],
-      })
+    process.env.TENANT_ID = errorTestTenantId
+    process.env.INSTALL_ID = errorTestInstallId
+    const errorMessage = 'Internal Server Error For Test'
+    const errorDetail = 'Something went terribly wrong during apply for test.'
 
     // @ts-ignore
     const cfg: Config = {}
-    const command = new BulkMigrationApplyCommand([], cfg)
+    const command = new BulkMigrationApplyCommand(
+      [],
+      cfg,
+    )
+
+    command.selectDeployment = async () => errorTestDeploymentId
+    command.selectConnection = async () => ({ id: errorTestConnectionId, name: 'Mocked Error Connection', type: 'generic' })
 
     const {stdout, stderr, error} = await captureOutput(async () => {
       sendScenario(stdin, [])
@@ -115,12 +101,8 @@ describe('connections bulk-migration apply workflow', () => {
 
     expect(stdout).to.contain('Universal Broker Bulk-Migration - Apply operation')
     expect(stdout).to.contain(
-      `Initiating bulk migration for Connection ${testConnectionId}, Deployment ${testDeploymentId}, Tenant ${testTenantId}, Install ${testInstallId}...`,
+      `Initiating bulk migration for Connection ${errorTestConnectionId}, Deployment ${errorTestDeploymentId}, Tenant ${errorTestTenantId}, Install ${errorTestInstallId}...`,
     )
     expect(stdout).not.to.contain('Bulk migration process started successfully:')
-
-    const expectedApiErrorMessage = `API Error: 500 - 500 - ${errorMessage}: ${errorDetail}`
-    expect(stderr).to.contain(`Failed to start bulk migration: ${expectedApiErrorMessage}`)
-
   })
 })

@@ -56,7 +56,7 @@ export const applyBulkMigration = async (
   try {
     const response = await makeRequest(req)
     logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return response.body
+    return JSON.parse(response.body) as applyBulkMigrationResponse
   } catch (error: any) {
     throw new Error(error)
   }
