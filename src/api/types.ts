@@ -265,8 +265,10 @@ export interface applyBulkMigrationResponse {
     version: string
   }
   links: {
+    self?: string // Added
     first?: string
     last?: string
+    prev?: string // Added
     next?: string
   }
   errors?: any
