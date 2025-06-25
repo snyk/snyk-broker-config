@@ -1,5 +1,5 @@
 import nock from 'nock'
-import {ConnectionResponse} from '../../src/api/types'
+import {ConnectionResponse, GetOrgsForBulkMigrationResponse} from '../../src/api/types'
 
 export const upArrow = '\u001b[A'
 export const downArrow = '\u001b[B'
@@ -27,6 +27,15 @@ export const integrationId4 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8b'
 export const clientId = '00000000-1234-0000-0000-000000000000'
 export const contextId3 = '00000000-0000-0000-0000-000000000003'
 export const contextId4 = '00000000-0000-0000-0000-000000000004'
+export const orgId5 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8c'
+export const installId5 = '00000000-0000-0000-0000-000000000005'
+export const deploymentId5 = '00000000-0000-0000-0000-000000000005'
+export const connectionId5 = '00000000-0000-0000-0000-000000000005'
+export const orgId6 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8d'
+export const installId6 = '00000000-0000-0000-0000-000000000006'
+export const deploymentId6 = '00000000-0000-0000-0000-000000000006'
+export const connectionId6 = '00000000-0000-0000-0000-000000000006'
+
 const createConnectionResponse: ConnectionResponse = {
   data: {
     id: '00000000-0000-0000-0000-000000000000',
@@ -218,6 +227,48 @@ export const appResponse4 = {
   ],
 }
 
+export const appResponse5 = {
+  data: [
+    {
+      id: installId5,
+      type: 'app_install',
+      attributes: {
+        client_id: clientId,
+        installed_at: '2024-07-17T18:51:02Z',
+      },
+      relationships: {
+        app: {
+          data: {
+            id: appId,
+            type: 'app',
+          },
+        },
+      },
+    },
+  ],
+}
+
+export const appResponse6 = {
+  data: [
+    {
+      id: installId6,
+      type: 'app_install',
+      attributes: {
+        client_id: clientId,
+        installed_at: '2024-07-17T18:51:02Z',
+      },
+      relationships: {
+        app: {
+          data: {
+            id: appId,
+            type: 'app',
+          },
+        },
+      },
+    },
+  ],
+}
+
 export const createCredentialsResponse = {
   data: [
     {
@@ -236,7 +287,24 @@ const urlPrefixTenantIdAndInstallId = `/rest/tenants/${tenantId}/brokers/install
 const urlPrefixTenantIdAndInstallId2 = `/rest/tenants/${tenantId}/brokers/installs/${installId2}`
 const urlPrefixTenantIdAndInstallId3 = `/rest/tenants/${tenantId}/brokers/installs/${installId3}`
 const urlPrefixTenantIdAndInstallId4 = `/rest/tenants/${tenantId}/brokers/installs/${installId4}`
+const urlPrefixTenantIdAndInstallId5 = `/rest/tenants/${tenantId}/brokers/installs/${installId5}`
+const urlPrefixTenantIdAndInstallId6 = `/rest/tenants/${tenantId}/brokers/installs/${installId6}`
 const urlPrefixTenantId = `/rest/tenants/${tenantId}`
+
+const mockBulkMigrationApiResponseEmpty: GetOrgsForBulkMigrationResponse = {
+  data: [],
+  jsonapi: {version: '1.0'},
+  links: {},
+}
+
+const mockBulkMigrationApiResponseWithOrgs: GetOrgsForBulkMigrationResponse = {
+  data: [
+    {id: 'org-uuid-returned-1', type: 'broker_organization'},
+    {id: 'org-uuid-returned-2', type: 'broker_organization'},
+  ],
+  jsonapi: {version: '1.0'},
+  links: {},
+}
 
 export const beforeStep = () => {
   const apiResponseSchema = {data: {}, links: {}}
@@ -261,6 +329,14 @@ export const beforeStep = () => {
     .get(`/rest/orgs/${orgId4}/apps/installs?version=2024-05-31`)
     .reply(() => {
       return [200, appResponse4]
+    })
+    .get(`/rest/orgs/${orgId5}/apps/installs?version=2024-05-31`)
+    .reply(() => {
+      return [200, appResponse5]
+    })
+    .get(`/rest/orgs/${orgId6}/apps/installs?version=2024-05-31`)
+    .reply(() => {
+      return [200, appResponse6]
     })
     .get('/rest/tenants?version=2024-10-14~experimental')
     .reply(() => {
@@ -722,4 +798,85 @@ export const beforeStep = () => {
     .reply((uri, body) => {
       return [204]
     })
+    .get(
+      `/rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/connections/${connectionId4}/bulk_migration?version=2024-10-15`,
+    )
+    .reply(200, mockBulkMigrationApiResponseEmpty)
+    .get(
+      `/rest/tenants/${tenantId}/brokers/installs/${installId3}/deployments/${deploymentId3}/connections/${connectionId3}/bulk_migration?version=2024-10-15`,
+    )
+    .reply(200, mockBulkMigrationApiResponseWithOrgs)
+    .get(`${urlPrefixTenantIdAndInstallId5}/deployments?version=2024-10-15`)
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = [
+        {
+          attributes: {broker_app_installed_in_org_id: orgId5, install_id: installId5, metadata: {}},
+          id: deploymentId5,
+          type: 'broker_deployment',
+        },
+      ]
+      return [200, response]
+    })
+    .get(`${urlPrefixTenantIdAndInstallId5}/deployments/${deploymentId5}/connections?version=2024-10-15`)
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = [
+        {
+          attributes: {
+            deployment_id: deploymentId5,
+            identifier: 'conn5-id',
+            name: 'conn5-name',
+            secrets: {},
+            configuration: {type: 'generic'},
+          },
+          id: connectionId5,
+          type: 'broker_connection',
+        },
+      ]
+      return [200, response]
+    })
+    .get(`${urlPrefixTenantIdAndInstallId5}/deployments/${deploymentId5}/credentials?version=2024-10-15`)
+    .reply(200, {data: [], links: {}})
+    .delete(`${urlPrefixTenantIdAndInstallId5}/deployments/${deploymentId5}?version=2024-10-15`)
+    .reply(204)
+
+    .get(
+      `/rest/tenants/${tenantId}/brokers/installs/${installId5}/deployments/${deploymentId5}/connections/${connectionId5}/bulk_migration?version=2024-10-15`,
+    )
+    .reply(200, mockBulkMigrationApiResponseWithOrgs)
+    .get(`${urlPrefixTenantIdAndInstallId6}/deployments?version=2024-10-15`)
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = [
+        {
+          attributes: {broker_app_installed_in_org_id: orgId6, install_id: installId6, metadata: {}},
+          id: deploymentId6,
+          type: 'broker_deployment',
+        },
+      ]
+      return [200, response]
+    })
+    .get(`${urlPrefixTenantIdAndInstallId6}/deployments/${deploymentId6}/connections?version=2024-10-15`)
+    .reply((uri, body) => {
+      const response = apiResponseSchema
+      response.data = [
+        {
+          attributes: {
+            deployment_id: deploymentId6,
+            identifier: 'conn6-id',
+            name: 'conn6-name',
+            secrets: {},
+            configuration: {type: 'generic'},
+          },
+          id: connectionId6,
+          type: 'broker_connection',
+        },
+      ]
+      return [200, response]
+    })
+    .get(
+      `/rest/tenants/${tenantId}/brokers/installs/${installId6}/deployments/${deploymentId6}/connections/${connectionId6}/bulk_migration?version=2024-10-15`,
+    )
+    .reply(200, mockBulkMigrationApiResponseEmpty)
 }
