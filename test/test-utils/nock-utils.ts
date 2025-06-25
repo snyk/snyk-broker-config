@@ -299,8 +299,8 @@ const mockBulkMigrationApiResponseEmpty: GetOrgsForBulkMigrationResponse = {
 
 const mockBulkMigrationApiResponseWithOrgs: GetOrgsForBulkMigrationResponse = {
   data: [
-    {id: 'org-uuid-returned-1', type: 'org_id'},
-    {id: 'org-uuid-returned-2', type: 'org_id'},
+    {id: 'org-uuid-returned-1', type: 'broker_organization'},
+    {id: 'org-uuid-returned-2', type: 'broker_organization'},
   ],
   jsonapi: {version: '1.0'},
   links: {},
