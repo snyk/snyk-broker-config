@@ -28,6 +28,56 @@ jobs:
       - run:
           name: Build package
           command: npm run build
+  build-macos:
+    macos:
+      xcode: 16.4.0
+    resource_class: macos.m1.medium.gen1
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Build macOS .pkg installers
+          command: |
+            npm run build
+            npm run prepack
+            npm run pack:macos
+      - store_artifacts:
+          path: dist/macos/
+  build-win:
+    macos:
+      xcode: 16.4.0
+    resource_class: macos.m1.medium.gen1
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Build Windows installers
+          command: |
+            brew install nsis
+            brew install p7zip
+            npm run build
+            npm run prepack
+            npm run pack:win
+      - store_artifacts:
+          path: dist/win32/
+  build-linux:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Build Linux tarballs
+          command: |
+            sudo apt-get update
+            sudo apt-get install --assume-yes apt-utils
+            npm run build
+            npm run prepack
+            npm run pack:linux
+      - store_artifacts:
+          path: dist/deb/
   install-npm-packages:
     <<: *defaults
     environment:
@@ -114,11 +164,28 @@ workflows:
           name: Run tests
           requires:
             - Install NPM packages
+      - build-linux:
+          name: Build Linux tarballs
+          requires:
+            - Run tests
+          <<: *filter-main-branch-only
+      - build-macos:
+          name: Build macOS installer
+          requires:
+            - Run tests
+          <<: *filter-main-branch-only
+      - build-win:
+          name: Build Windows installer
+          requires:
+            - Run tests
+          <<: *filter-main-branch-only
       - release:
           name: Release to GitHub and NPM
           context:
             - nodejs-lib-release
             - team-hybrid-snyk
           requires:
-            - Run tests
+            - Build Linux tarballs
+            - Build macOS installer
+            - Build Windows installer
           <<: *filter-main-branch-only

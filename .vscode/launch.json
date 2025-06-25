@@ -17,6 +17,21 @@
       "runtimeArgs": ["--loader", "ts-node/esm", "--no-warnings=ExperimentalWarning"],
       "program": "${workspaceFolder}/bin/dev.js",
       "args": ["hello", "world"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Mocha Current File",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "mocha",
+        "--require",
+        "ts-node/register",
+        "${file}"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "internalConsoleOptions": "neverOpen"
     }
   ]
 }

@@ -14,5 +14,23 @@ export default {
     ],
     '@semantic-release/npm',
   ],
-  publish: ['@semantic-release/npm', '@semantic-release/github'],
+  publish: [
+    '@semantic-release/npm',
+    [
+      '@semantic-release/github',
+      {
+        assets: [
+          {
+            path: 'dist/deb/*.deb',
+          },
+          {
+            path: 'dist/macos/*.pkg',
+          },
+          {
+            path: 'dist/win32/*.exe',
+          },
+        ],
+      },
+    ],
+  ],
 }
