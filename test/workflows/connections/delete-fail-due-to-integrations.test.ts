@@ -23,7 +23,7 @@ describe('deployment workflows', () => {
       {print: false},
     )
     expect(error?.message).to.contain(
-      `Please disconnect Connection integration(s) first (connection disconnect workflow). Connection is used by Org  ${orgId4}.`,
+      `Please disconnect Connection integration(s) first (connection disconnect workflow). Connection is used by Org ${orgId4}.`,
     )
   })
 })

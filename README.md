@@ -1152,7 +1152,7 @@ _See code: [src/commands/workflows/connections/create.ts](https://github.com/sny
 
 ## `snyk-broker-config workflows connections delete [APIURL] [APIVERSION]`
 
-Universal Broker -  Delete Connection Workflow
+Universal Broker - Delete Connection Workflow
 
 ```
 USAGE
@@ -1169,7 +1169,7 @@ GLOBAL FLAGS
                         <options: debug|warn|error|info|trace>
 
 DESCRIPTION
-  Universal Broker -  Delete Connection Workflow
+  Universal Broker - Delete Connection Workflow
 
 EXAMPLES
   $ snyk-broker-config workflows connections delete
@@ -1179,7 +1179,7 @@ _See code: [src/commands/workflows/connections/delete.ts](https://github.com/sny
 
 ## `snyk-broker-config workflows connections disconnect [APIURL] [APIVERSION]`
 
-Universal Broker -  Connection Disconnect Integration(s) Workflow
+Universal Broker - Connection Disconnect Integration(s) Workflow
 
 ```
 USAGE
@@ -1196,7 +1196,7 @@ GLOBAL FLAGS
                         <options: debug|warn|error|info|trace>
 
 DESCRIPTION
-  Universal Broker -  Connection Disconnect Integration(s) Workflow
+  Universal Broker - Connection Disconnect Integration(s) Workflow
 
 EXAMPLES
   $ snyk-broker-config workflows connections disconnect
@@ -1607,7 +1607,7 @@ GLOBAL FLAGS
                         <options: debug|warn|error|info|trace>
 
 DESCRIPTION
-  Universal Broker -  Delete Deployment workflow
+  Universal Broker - Delete Deployment workflow
 
 EXAMPLES
   $ snyk-broker-config workflows deployments delete

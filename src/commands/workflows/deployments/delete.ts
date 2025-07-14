@@ -13,7 +13,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker -  Delete Deployment workflow'
+  static description = 'Universal Broker - Delete Deployment workflow'
 
   static examples = [`<%= config.bin %> <%= command.id %>`]
 
