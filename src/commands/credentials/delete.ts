@@ -23,7 +23,7 @@ export default class Credentials extends BaseCommand<typeof Credentials> {
   static description = 'Universal Broker Deployment Credentials - Delete operation'
 
   static examples = [
-    `[with exported TENANT_ID,INSTALL_ID]`,
+    `[with exported TENANT_ID, INSTALL_ID]`,
     `<%= config.bin %> <%= command.id %> DEPLOYMENT_ID -c CREDENTIALS_ID`,
     `[inline TENANT_ID,INSTALL_ID]`,
     `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID -c CREDENTIALS_ID`,

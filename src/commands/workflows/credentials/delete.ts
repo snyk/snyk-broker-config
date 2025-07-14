@@ -33,7 +33,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
   static description = 'Universal Broker - Credentials Deletion Workflow'
 
   static examples = [
-    `[with exported TENANT_ID,INSTALL_ID]`,
+    `[with exported TENANT_ID, INSTALL_ID]`,
     `<%= config.bin %> <%= command.id %>`,
     `[inline TENANT_ID,INSTALL_ID]`,
     `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID`,

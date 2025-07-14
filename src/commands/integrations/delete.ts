@@ -21,7 +21,7 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
   static description = 'Universal Broker Connections Integrations - Delete operation'
 
   static examples = [
-    `[with exported TENANT_ID,INSTALL_ID]`,
+    `[with exported TENANT_ID, INSTALL_ID]`,
     `<%= config.bin %> <%= command.id %> CONNECTION_ID ORG_ID INTEGRATION_ID`,
     `[inline TENANT_ID,INSTALL_ID]`,
     `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID CONNECTION_ID ORG_ID INTEGRATION_ID`,
