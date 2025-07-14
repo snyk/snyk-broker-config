@@ -25,7 +25,7 @@ export default class Credentials extends BaseCommand<typeof Credentials> {
   static description = 'Universal Broker Credentials - Create operation'
 
   static examples = [
-    `[with exported TENANT_ID,INSTALL_ID]`,
+    `[with exported TENANT_ID, INSTALL_ID]`,
     `<%= config.bin %> <%= command.id %> DEPLOYMENT_ID --comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github`,
     `[inline TENANT_ID,INSTALL_ID]`,
     `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID --comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github`,

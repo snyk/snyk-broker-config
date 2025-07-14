@@ -209,7 +209,7 @@ DESCRIPTION
   Universal Broker Connections - Create operation
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config connections create DEPLOYMENT_ID --type github
 
@@ -244,7 +244,7 @@ DESCRIPTION
   Universal Broker Connections - Delete operation
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config connections delete DEPLOYMENT_ID CONNECTION_ID
 
@@ -278,7 +278,7 @@ DESCRIPTION
   Universal Broker Connections - List operation
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config connections list DEPLOYMENT_ID
 
@@ -359,7 +359,7 @@ DESCRIPTION
   Universal Broker Connections - Update operation
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config connections update DEPLOYMENT_ID CONNECTION_ID --type github
 
@@ -399,7 +399,7 @@ DESCRIPTION
   Universal Broker Credentials - Create operation
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config credentials create DEPLOYMENT_ID --comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github
 
@@ -436,7 +436,7 @@ DESCRIPTION
   Universal Broker Deployment Credentials - Delete operation
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config credentials delete DEPLOYMENT_ID -c CREDENTIALS_ID
 
@@ -470,7 +470,7 @@ DESCRIPTION
   Universal Broker Deployments - List operation
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config credentials list DEPLOYMENT_ID
 
@@ -511,7 +511,7 @@ DESCRIPTION
   Universal Broker Credentials - Update operation
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config credentials update DEPLOYMENT_ID --credentialsId CREDENTIALID--comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github
 
@@ -550,7 +550,7 @@ DESCRIPTION
   Universal Broker Deployments - Create operation
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config deployments create APP_INSTALLED_ORG_ID --data mykey=myvalue,mykey2=myvalue2
 
@@ -582,7 +582,7 @@ DESCRIPTION
   Universal Broker Deployments - Delete operation
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config deployments delete DEPLOYMENT_ID
 
@@ -615,7 +615,7 @@ DESCRIPTION
   Universal Broker Deployments - List operation
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config deployments list
 
@@ -652,7 +652,7 @@ DESCRIPTION
   Universal Broker Deployments - Update operation
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config deployments update DEPLOYMENT_ID --data mykey=myvalue,mykey2=myvalue2
 
@@ -709,7 +709,7 @@ DESCRIPTION
   Universal Broker Connections Integrations - Create operation
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config integrations create CONNECTION_ID ORG_ID INTEGRATION_ID
 
@@ -745,7 +745,7 @@ DESCRIPTION
   Universal Broker Connections Integrations - Delete operation
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config integrations delete CONNECTION_ID ORG_ID INTEGRATION_ID
 
@@ -779,7 +779,7 @@ DESCRIPTION
   Universal Broker Connections Integrations - List operation
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config integrations list CONNECTION_ID
 
@@ -1523,7 +1523,7 @@ DESCRIPTION
   Universal Broker -  Credentials Deletion Workflow
 
 EXAMPLES
-  [with exported TENANT_ID,INSTALL_ID]
+  [with exported TENANT_ID, INSTALL_ID]
 
   $ snyk-broker-config workflows credentials delete
 

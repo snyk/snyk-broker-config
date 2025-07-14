@@ -18,7 +18,7 @@ export default class Deployments extends BaseCommand<typeof Deployments> {
   static description = 'Universal Broker Deployments - Update operation'
 
   static examples = [
-    `[with exported TENANT_ID,INSTALL_ID]`,
+    `[with exported TENANT_ID, INSTALL_ID]`,
     `<%= config.bin %> <%= command.id %> DEPLOYMENT_ID --data mykey=myvalue,mykey2=myvalue2`,
     `[inline TENANT_ID,INSTALL_ID]`,
     `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID --data mykey=myvalue,mykey2=myvalue2`,
