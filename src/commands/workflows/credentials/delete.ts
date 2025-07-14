@@ -30,7 +30,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker -  Credentials Deletion Workflow'
+  static description = 'Universal Broker - Credentials Deletion Workflow'
 
   static examples = [
     `[with exported TENANT_ID,INSTALL_ID]`,
