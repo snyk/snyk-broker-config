@@ -12,18 +12,22 @@ export const captureConnectionParams = async (
   deploymentId: string,
   connectionType: string,
   parametersToCapture?: Partial<TypeParams>,
+  existingConnectionValues?: Record<string, string>,
 ): Promise<Record<string, string>> => {
   const requiredParameters = parametersToCapture ?? flagConnectionMapping[connectionType]
   if (!requiredParameters) {
     throw new Error(`Error unable to find connection params for connection type ${connectionType}`)
   }
+
+  const existingValues = existingConnectionValues ?? {}
+
   for (const [key, value] of Object.entries(requiredParameters)) {
     if (!requiredParameters[key] || !value) {
       throw new Error(`Error unable to find connection param ${key} for connection type ${connectionType}`)
     }
     if (value.skippable) {
       const userWantsToEnterValue = await confirm({
-        message: `The ${key} field is optional in connection type ${connectionType}. Do you want to input value (Y) or skip (N)?`,
+        message: `The ${key} field is optional in connection type ${connectionType}. Do you want to input value (y) or skip (n)?`,
       })
       if (!userWantsToEnterValue) {
         continue
@@ -43,8 +47,12 @@ export const captureConnectionParams = async (
         })
       choices.push({id: 'new', value: 'CreateNew', description: 'Create a new Credential Reference'})
 
+      const currentValueMessage = existingValues[key]
+        ? ` (current: ${existingValues[key]})`
+        : ''
+
       const choice = await select({
-        message: `${key} (Sensitive): ${choices.length > 1 ? 'Which Credential Reference do you want to use? Or create New?' : 'No existing Credential Reference for this Connection type.'}`,
+        message: `${key} (Sensitive)${currentValueMessage}: ${choices.length > 1 ? 'Which Credential Reference do you want to use? Or create New?' : 'No existing Credential Reference for this Connection type.'}`,
         choices: choices,
         pageSize: existingCredentialsByTypeAndDeployment.data.length + 1,
       })
@@ -74,13 +82,21 @@ export const captureConnectionParams = async (
       if (requiredParameters[key].dataType) {
         message += `Must be ${requiredParameters[key].dataType}${requiredParameters[key].prohibitedValues.length > 0 ? ', excluding ' + requiredParameters[key].prohibitedValues.join(',') : ''}.`
       }
+
+      // Set default value if it exists
+      let defaultValue = ''
+      if (existingValues[key]) {
+        // Use existing value from the connection as default
+        defaultValue = existingValues[key]
+      } else if (key === 'broker_client_url' && !craConfigType1Types.has(connectionType)) {
+        // Keep the existing broker_client_url logic for backward compatibility
+        defaultValue = `${getConfig().API_HOSTNAME}`
+      }
+
       while (!isInputValidated) {
         requiredParameters[key].input = await input({
           message: message,
-          default:
-            key === 'broker_client_url' && !craConfigType1Types.has(connectionType)
-              ? `${getConfig().API_HOSTNAME}`
-              : '',
+          default: defaultValue,
         })
         if (requiredParameters[key].dataType) {
           switch (requiredParameters[key].dataType) {

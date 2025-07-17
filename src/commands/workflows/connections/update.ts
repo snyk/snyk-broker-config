@@ -47,11 +47,17 @@ export default class WorkflowsConnectionsUpdate extends BaseCommand<typeof Workf
       })
 
       this.log(ux.colorize('blue', `Capturing parameters for connection type ${selectedConnection.type}...`))
+
+      const currentConnection = selectedConnectionData.data.find((x) => x.id === selectedConnection.id)
+      const currentConfigurationValues = currentConnection?.attributes?.configuration?.required || {}
+
       const updatedParameters = await captureConnectionParams(
         tenantId,
         installId,
         deploymentId,
         connectionType, // Use the extracted type
+        undefined,
+        currentConfigurationValues,
       )
 
       this.log(ux.colorize('blueBright', `Updating Connection ${selectedConnection.id}`))
