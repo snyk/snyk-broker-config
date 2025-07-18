@@ -182,7 +182,7 @@ FLAGS
                                              Checkmarx)
       --checkmarx_username=<value>           Checkmarx Username (leave empty if not using Checkmarx)
       --cr_agent_url=<value>                 Container Registry Agent Url
-      --cr_base=<value>                      Container Registry Base Url
+      --cr_base=<value>                      Container Registry Base Url (The hostname of your CR) 
       --cr_external_id=<value>               Container Registry External ID
       --cr_password=<value>                  Container Registry Password Credentials Reference UUID
       --cr_region=<value>                    Container Registry Region
