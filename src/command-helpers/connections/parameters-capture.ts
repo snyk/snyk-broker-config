@@ -47,9 +47,7 @@ export const captureConnectionParams = async (
         })
       choices.push({id: 'new', value: 'CreateNew', description: 'Create a new Credential Reference'})
 
-      const currentValueMessage = existingValues[key]
-        ? ` (current: ${existingValues[key]})`
-        : ''
+      const currentValueMessage = existingValues[key] ? ` (current: ${existingValues[key]})` : ''
 
       const choice = await select({
         message: `${key} (Sensitive)${currentValueMessage}: ${choices.length > 1 ? 'Which Credential Reference do you want to use? Or create New?' : 'No existing Credential Reference for this Connection type.'}`,
