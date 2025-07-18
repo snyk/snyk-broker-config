@@ -59,7 +59,6 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         deploymentId,
         selectedConnection.type,
         selectObjectMembersByKeys(allowedParameters, selectedParametersToOverride),
-        undefined,
       )
 
       const createdContext = await createContextForConnection(
