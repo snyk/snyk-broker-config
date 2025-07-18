@@ -160,7 +160,7 @@ USAGE
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
-  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIURL        [default: https://api.dev.snyk.io] API URL
   APIVERSION    [default: 2024-02-08~experimental] API Version
 
 FLAGS
@@ -176,21 +176,21 @@ FLAGS
       --bitbucket_password=<value>           Bitbucket Password Credentials Reference UUID (leave empty if using PAT)
       --bitbucket_pat=<value>                Bitbucket Pat Credentials Reference UUID (leave empty if using user/pass)
       --bitbucket_username=<value>           Bitbucket Username (leave empty if using PAT)
-      --broker_client_url=<value>            Broker Client Url
+      --broker_client_url=<value>            Broker Client URL
       --checkmarx=<value>                    Checkmarx Hostname (leave empty if not using Checkmarx)
       --checkmarx_password=<value>           Checkmarx Password Credentials Reference UUID (leave empty if not using
                                              Checkmarx)
       --checkmarx_username=<value>           Checkmarx Username (leave empty if not using Checkmarx)
-      --cr_agent_url=<value>                 Container Registry Agent Url
-      --cr_base=<value>                      Container Registry Base Url (The hostname of your CR) 
+      --cr_agent_url=<value>                 Container Registry Agent URL
+      --cr_base=<value>                      Container Registry Base URL (The hostname of your CR) 
       --cr_external_id=<value>               Container Registry External ID
       --cr_password=<value>                  Container Registry Password Credentials Reference UUID
       --cr_region=<value>                    Container Registry Region
       --cr_role_arn=<value>                  Container Registry Role Arn
       --cr_token=<value>                     Container Registry Token Credentials Reference UUID
       --cr_username=<value>                  Container Registry Username
-      --github=<value>                       Github Url
-      --github_api=<value>                   Github Api Url
+      --github=<value>                       Github URL
+      --github_api=<value>                   Github Api URL
       --github_app_client_id=<value>         Github App Client ID Credentials Refs
       --github_app_id=<value>                Github App ID
       --github_app_installation_id=<value>   Github App Installation ID
@@ -232,7 +232,7 @@ USAGE
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
   CONNECTIONID  Connection ID
-  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIURL        [default: https://api.dev.snyk.io] API URL
   APIVERSION    [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -266,7 +266,7 @@ USAGE
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
-  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIURL        [default: https://api.dev.snyk.io] API URL
   APIVERSION    [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -310,7 +310,7 @@ USAGE
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
   CONNECTIONID  Connection ID
-  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIURL        [default: https://api.dev.snyk.io] API URL
   APIVERSION    [default: 2024-02-08~experimental] API Version
 
 FLAGS
@@ -326,21 +326,21 @@ FLAGS
       --bitbucket_password=<value>           Bitbucket Password Credentials Reference UUID (leave empty if using PAT)
       --bitbucket_pat=<value>                Bitbucket Pat Credentials Reference UUID (leave empty if using user/pass)
       --bitbucket_username=<value>           Bitbucket Username (leave empty if using PAT)
-      --broker_client_url=<value>            Broker Client Url
+      --broker_client_url=<value>            Broker Client URL
       --checkmarx=<value>                    Checkmarx Hostname (leave empty if not using Checkmarx)
       --checkmarx_password=<value>           Checkmarx Password Credentials Reference UUID (leave empty if not using
                                              Checkmarx)
       --checkmarx_username=<value>           Checkmarx Username (leave empty if not using Checkmarx)
-      --cr_agent_url=<value>                 CR Agent Url
-      --cr_base=<value>                      CR Base Url
+      --cr_agent_url=<value>                 CR Agent URL
+      --cr_base=<value>                      CR Base URL
       --cr_external_id=<value>               CR External ID
       --cr_password=<value>                  CR Password Credentials Reference UUID
       --cr_region=<value>                    CR Region
       --cr_role_arn=<value>                  CR Role Arn
       --cr_token=<value>                     CR Token Credentials Reference UUID
       --cr_username=<value>                  CR Username
-      --github=<value>                       Github Url
-      --github_api=<value>                   Github Api Url
+      --github=<value>                       Github URL
+      --github_api=<value>                   Github Api URL
       --github_app_client_id=<value>         Github App Client ID Credentials Refs
       --github_app_id=<value>                Github App ID
       --github_app_installation_id=<value>   Github App Installation ID
@@ -381,7 +381,7 @@ USAGE
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
-  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIURL        [default: https://api.dev.snyk.io] API URL
   APIVERSION    [default: 2024-02-08~experimental] API Version
 
 FLAGS
@@ -421,7 +421,7 @@ USAGE
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
-  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIURL        [default: https://api.dev.snyk.io] API URL
   APIVERSION    [default: 2024-02-08~experimental] API Version
 
 FLAGS
@@ -458,7 +458,7 @@ USAGE
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
-  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIURL        [default: https://api.dev.snyk.io] API URL
   APIVERSION    [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -492,7 +492,7 @@ USAGE
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
-  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIURL        [default: https://api.dev.snyk.io] API URL
   APIVERSION    [default: 2024-02-08~experimental] API Version
 
 FLAGS
@@ -533,7 +533,7 @@ USAGE
 
 ARGUMENTS
   APPINSTALLEDINORGID  Broker App Installed in Org ID
-  APIURL               [default: https://api.dev.snyk.io] API Url
+  APIURL               [default: https://api.dev.snyk.io] API URL
   APIVERSION           [default: 2024-02-08~experimental] API Version
 
 FLAGS
@@ -603,7 +603,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -697,7 +697,7 @@ ARGUMENTS
   ORGID          Org ID
   INTEGRATIONID  Integration ID
   TYPE           type
-  APIURL         [default: https://api.dev.snyk.io] API Url
+  APIURL         [default: https://api.dev.snyk.io] API URL
   APIVERSION     [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -733,7 +733,7 @@ ARGUMENTS
   CONNECTIONID   Connection ID
   ORGID          Org ID
   INTEGRATIONID  Integration ID
-  APIURL         [default: https://api.dev.snyk.io] API Url
+  APIURL         [default: https://api.dev.snyk.io] API URL
   APIVERSION     [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -767,7 +767,7 @@ USAGE
 
 ARGUMENTS
   CONNECTIONID  Connection ID
-  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIURL        [default: https://api.dev.snyk.io] API URL
   APIVERSION    [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1133,7 +1133,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1160,7 +1160,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1187,7 +1187,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1214,7 +1214,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1241,7 +1241,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1268,7 +1268,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1295,7 +1295,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1322,7 +1322,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1349,7 +1349,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1376,7 +1376,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1403,7 +1403,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1430,7 +1430,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1457,7 +1457,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1484,7 +1484,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1511,7 +1511,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1544,7 +1544,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1571,7 +1571,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1598,7 +1598,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1625,7 +1625,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1652,7 +1652,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
@@ -1679,7 +1679,7 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIURL      [default: https://api.dev.snyk.io] API URL
   APIVERSION  [default: 2024-02-08~experimental] API Version
 
 GLOBAL FLAGS
