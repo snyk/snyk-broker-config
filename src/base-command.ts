@@ -253,8 +253,6 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       installId,
       deploymentId,
       connectionType,
-      undefined,
-      undefined,
     )
     const newConnection = await createConnectionForDeployment(
       tenantID,
