@@ -248,7 +248,14 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         message: 'Name is already in use. Please enter a unique human friendly name for your Connection.',
       })
     }
-    const params = await captureConnectionParams(tenantID, installId, deploymentId, connectionType, undefined, undefined)
+    const params = await captureConnectionParams(
+      tenantID,
+      installId,
+      deploymentId,
+      connectionType,
+      undefined,
+      undefined,
+    )
     const newConnection = await createConnectionForDeployment(
       tenantID,
       installId,

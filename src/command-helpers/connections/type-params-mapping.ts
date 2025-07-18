@@ -204,10 +204,22 @@ export const flagConnectionMapping: TypeMapping = {
       dataType: 'url',
       prohibitedValues: [],
     },
-    cr_agent_url: {description: 'Container Registry Agent URL (Must be the URL of your container registry agent)', dataType: 'url', prohibitedValues: []},
-    cr_base: {description: 'Container Registry Base URL (The hostname of your CR)', dataType: 'hostname', prohibitedValues: []},
+    cr_agent_url: {
+      description: 'Container Registry Agent URL (Must be the URL of your container registry agent)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
+    cr_base: {
+      description: 'Container Registry Base URL (The hostname of your CR)',
+      dataType: 'hostname',
+      prohibitedValues: [],
+    },
     cr_username: {description: 'Container Registry Username', prohibitedValues: []},
-    cr_password: {description: 'Container Registry Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
+    cr_password: {
+      description: 'Container Registry Password Credentials Reference UUID',
+      sensitive: true,
+      prohibitedValues: [],
+    },
   },
   'artifactory-cr': {
     broker_client_url: {
@@ -215,10 +227,22 @@ export const flagConnectionMapping: TypeMapping = {
       dataType: 'url',
       prohibitedValues: [],
     },
-    cr_agent_url: {description: 'Container Registry Agent URL (Must be the URL of your container registry agent)', dataType: 'url', prohibitedValues: []},
-    cr_base: {description: 'Container Registry Base URL (The hostname of your CR)', dataType: 'hostname', prohibitedValues: []},
+    cr_agent_url: {
+      description: 'Container Registry Agent URL (Must be the URL of your container registry agent)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
+    cr_base: {
+      description: 'Container Registry Base URL (The hostname of your CR)',
+      dataType: 'hostname',
+      prohibitedValues: [],
+    },
     cr_username: {description: 'Container Registry Username', prohibitedValues: []},
-    cr_password: {description: 'Container Registry Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
+    cr_password: {
+      description: 'Container Registry Password Credentials Reference UUID',
+      sensitive: true,
+      prohibitedValues: [],
+    },
   },
   'docker-hub': {
     broker_client_url: {
@@ -226,10 +250,22 @@ export const flagConnectionMapping: TypeMapping = {
       dataType: 'url',
       prohibitedValues: [],
     },
-    cr_agent_url: {description: 'Container Registry Agent URL (Must be the URL of your container registry agent)', dataType: 'url', prohibitedValues: []},
-    cr_base: {description: 'Container Registry Base URL (The hostname of your CR)', dataType: 'hostname', prohibitedValues: []},
+    cr_agent_url: {
+      description: 'Container Registry Agent URL (Must be the URL of your container registry agent)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
+    cr_base: {
+      description: 'Container Registry Base URL (The hostname of your CR)',
+      dataType: 'hostname',
+      prohibitedValues: [],
+    },
     cr_username: {description: 'Container Registry Username', prohibitedValues: []},
-    cr_password: {description: 'Container Registry Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
+    cr_password: {
+      description: 'Container Registry Password Credentials Reference UUID',
+      sensitive: true,
+      prohibitedValues: [],
+    },
   },
   'digitalocean-cr': {
     broker_client_url: {
@@ -237,9 +273,21 @@ export const flagConnectionMapping: TypeMapping = {
       dataType: 'url',
       prohibitedValues: [],
     },
-    cr_agent_url: {description: 'Container Registry Agent URL (Must be the URL of your container registry agent)', dataType: 'url', prohibitedValues: []},
-    cr_base: {description: 'Container Registry Base URL (The hostname of your CR)', dataType: 'hostname', prohibitedValues: []},
-    cr_token: {description: 'Container Registry Token Credentials Reference UUID', sensitive: true, prohibitedValues: []},
+    cr_agent_url: {
+      description: 'Container Registry Agent URL (Must be the URL of your container registry agent)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
+    cr_base: {
+      description: 'Container Registry Base URL (The hostname of your CR)',
+      dataType: 'hostname',
+      prohibitedValues: [],
+    },
+    cr_token: {
+      description: 'Container Registry Token Credentials Reference UUID',
+      sensitive: true,
+      prohibitedValues: [],
+    },
   },
   ecr: {
     broker_client_url: {
@@ -247,8 +295,16 @@ export const flagConnectionMapping: TypeMapping = {
       dataType: 'url',
       prohibitedValues: [],
     },
-    cr_agent_url: {description: 'Container Registry Agent URL (Must be the URL of your container registry agent)', dataType: 'url', prohibitedValues: []},
-    cr_base: {description: 'Container Registry Base URL (The hostname of your CR)', dataType: 'hostname', prohibitedValues: []},
+    cr_agent_url: {
+      description: 'Container Registry Agent URL (Must be the URL of your container registry agent)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
+    cr_base: {
+      description: 'Container Registry Base URL (The hostname of your CR)',
+      dataType: 'hostname',
+      prohibitedValues: [],
+    },
     cr_role_arn: {description: 'Container Registry Role Arn', prohibitedValues: []},
     cr_region: {description: 'Container Registry Region', prohibitedValues: []},
     cr_external_id: {description: 'Container Registry External ID', prohibitedValues: []},
@@ -259,10 +315,22 @@ export const flagConnectionMapping: TypeMapping = {
       dataType: 'url',
       prohibitedValues: [],
     },
-    cr_agent_url: {description: 'Container Registry Agent URL (Must be the URL of your container registry agent)', dataType: 'url', prohibitedValues: []},
-    cr_base: {description: 'Container Registry Base URL (The hostname of your CR)', dataType: 'hostname', prohibitedValues: []},
+    cr_agent_url: {
+      description: 'Container Registry Agent URL (Must be the URL of your container registry agent)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
+    cr_base: {
+      description: 'Container Registry Base URL (The hostname of your CR)',
+      dataType: 'hostname',
+      prohibitedValues: [],
+    },
     cr_username: {description: 'Container Registry Username', prohibitedValues: []},
-    cr_password: {description: 'Container Registry Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
+    cr_password: {
+      description: 'Container Registry Password Credentials Reference UUID',
+      sensitive: true,
+      prohibitedValues: [],
+    },
   },
   'github-cr': {
     broker_client_url: {
@@ -270,10 +338,22 @@ export const flagConnectionMapping: TypeMapping = {
       dataType: 'url',
       prohibitedValues: [],
     },
-      cr_agent_url: {description: 'Container Registry Agent URL (Must be the URL of your container registry agent)', dataType: 'url', prohibitedValues: []},
-    cr_base: {description: 'Container Registry Base URL (The hostname of your CR)', dataType: 'hostname', prohibitedValues: []},
+    cr_agent_url: {
+      description: 'Container Registry Agent URL (Must be the URL of your container registry agent)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
+    cr_base: {
+      description: 'Container Registry Base URL (The hostname of your CR)',
+      dataType: 'hostname',
+      prohibitedValues: [],
+    },
     cr_username: {description: 'Container Registry Username', prohibitedValues: []},
-    cr_password: {description: 'Container Registry Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
+    cr_password: {
+      description: 'Container Registry Password Credentials Reference UUID',
+      sensitive: true,
+      prohibitedValues: [],
+    },
   },
   'gitlab-cr': {
     broker_client_url: {
@@ -281,10 +361,22 @@ export const flagConnectionMapping: TypeMapping = {
       dataType: 'url',
       prohibitedValues: [],
     },
-    cr_agent_url: {description: 'Container Registry Agent URL (Must be the URL of your container registry agent)', dataType: 'url', prohibitedValues: []},
-    cr_base: {description: 'Container Registry Base URL (The hostname of your CR)', dataType: 'hostname', prohibitedValues: []},
+    cr_agent_url: {
+      description: 'Container Registry Agent URL (Must be the URL of your container registry agent)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
+    cr_base: {
+      description: 'Container Registry Base URL (The hostname of your CR)',
+      dataType: 'hostname',
+      prohibitedValues: [],
+    },
     cr_username: {description: 'Container Registry Username', prohibitedValues: []},
-    cr_password: {description: 'Container Registry Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
+    cr_password: {
+      description: 'Container Registry Password Credentials Reference UUID',
+      sensitive: true,
+      prohibitedValues: [],
+    },
   },
   'google-artifact-cr': {
     broker_client_url: {
@@ -292,10 +384,22 @@ export const flagConnectionMapping: TypeMapping = {
       dataType: 'url',
       prohibitedValues: [],
     },
-    cr_agent_url: {description: 'Container Registry Agent URL (Must be the URL of your container registry agent)', dataType: 'url', prohibitedValues: []},
-    cr_base: {description: 'Container Registry Base URL (The hostname of your CR)', dataType: 'hostname', prohibitedValues: []},
+    cr_agent_url: {
+      description: 'Container Registry Agent URL (Must be the URL of your container registry agent)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
+    cr_base: {
+      description: 'Container Registry Base URL (The hostname of your CR)',
+      dataType: 'hostname',
+      prohibitedValues: [],
+    },
     cr_username: {description: 'Container Registry Username', prohibitedValues: []},
-    cr_password: {description: 'Container Registry Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
+    cr_password: {
+      description: 'Container Registry Password Credentials Reference UUID',
+      sensitive: true,
+      prohibitedValues: [],
+    },
   },
   'harbor-cr': {
     broker_client_url: {
@@ -303,10 +407,22 @@ export const flagConnectionMapping: TypeMapping = {
       dataType: 'url',
       prohibitedValues: [],
     },
-    cr_agent_url: {description: 'Container Registry Agent URL (Must be the URL of your container registry agent)', dataType: 'url', prohibitedValues: []},
-    cr_base: {description: 'Container Registry Base URL (The hostname of your CR)', dataType: 'hostname', prohibitedValues: []},
+    cr_agent_url: {
+      description: 'Container Registry Agent URL (Must be the URL of your container registry agent)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
+    cr_base: {
+      description: 'Container Registry Base URL (The hostname of your CR)',
+      dataType: 'hostname',
+      prohibitedValues: [],
+    },
     cr_username: {description: 'Container Registry Username', prohibitedValues: []},
-    cr_password: {description: 'Container Registry Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
+    cr_password: {
+      description: 'Container Registry Password Credentials Reference UUID',
+      sensitive: true,
+      prohibitedValues: [],
+    },
   },
   'nexus-cr': {
     broker_client_url: {
@@ -314,10 +430,22 @@ export const flagConnectionMapping: TypeMapping = {
       dataType: 'url',
       prohibitedValues: [],
     },
-    cr_agent_url: {description: 'Container Registry Agent URL (Must be the URL of your container registry agent)', dataType: 'url', prohibitedValues: []},
-    cr_base: {description: 'Container Registry Base URL (The hostname of your CR)', dataType: 'hostname', prohibitedValues: []},
+    cr_agent_url: {
+      description: 'Container Registry Agent URL (Must be the URL of your container registry agent)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
+    cr_base: {
+      description: 'Container Registry Base URL (The hostname of your CR)',
+      dataType: 'hostname',
+      prohibitedValues: [],
+    },
     cr_username: {description: 'Container Registry Username', prohibitedValues: []},
-    cr_password: {description: 'Container Registry Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
+    cr_password: {
+      description: 'Container Registry Password Credentials Reference UUID',
+      sensitive: true,
+      prohibitedValues: [],
+    },
   },
   'quay-cr': {
     broker_client_url: {
@@ -325,10 +453,22 @@ export const flagConnectionMapping: TypeMapping = {
       dataType: 'url',
       prohibitedValues: [],
     },
-    cr_agent_url: {description: 'Container Registry Agent URL (Must be the URL of your container registry agent)', dataType: 'url', prohibitedValues: []},
-    cr_base: {description: 'Container Registry Base URL (The hostname of your CR)', dataType: 'hostname', prohibitedValues: []},
+    cr_agent_url: {
+      description: 'Container Registry Agent URL (Must be the URL of your container registry agent)',
+      dataType: 'url',
+      prohibitedValues: [],
+    },
+    cr_base: {
+      description: 'Container Registry Base URL (The hostname of your CR)',
+      dataType: 'hostname',
+      prohibitedValues: [],
+    },
     cr_username: {description: 'Container Registry Username', prohibitedValues: []},
-    cr_password: {description: 'Container Registry Password Credentials Reference UUID', sensitive: true, prohibitedValues: []},
+    cr_password: {
+      description: 'Container Registry Password Credentials Reference UUID',
+      sensitive: true,
+      prohibitedValues: [],
+    },
   },
 }
 

@@ -29,7 +29,11 @@ export const commonUniversalBrokerArgs = (): CommonUniversalBrokerArgs => {
 }
 
 export const commonUniversalBrokerNewDeploymentArgs = {
-  appInstalledInOrgId: Args.string({description: 'Org ID where the Broker App is installed', required: true, default: ''}),
+  appInstalledInOrgId: Args.string({
+    description: 'Org ID where the Broker App is installed',
+    required: true,
+    default: '',
+  }),
 }
 
 export const commonUniversalBrokerDeploymentId = (required = false) => {
