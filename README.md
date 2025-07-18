@@ -181,14 +181,14 @@ FLAGS
       --checkmarx_password=<value>           Checkmarx Password Credentials Reference UUID (leave empty if not using
                                              Checkmarx)
       --checkmarx_username=<value>           Checkmarx Username (leave empty if not using Checkmarx)
-      --cr_agent_url=<value>                 CR Agent Url
-      --cr_base=<value>                      CR Base Url
-      --cr_external_id=<value>               CR External ID
-      --cr_password=<value>                  CR Password Credentials Reference UUID
-      --cr_region=<value>                    CR Region
-      --cr_role_arn=<value>                  CR Role Arn
-      --cr_token=<value>                     CR Token Credentials Reference UUID
-      --cr_username=<value>                  CR Username
+      --cr_agent_url=<value>                 Container Registry Agent Url
+      --cr_base=<value>                      Container Registry Base Url
+      --cr_external_id=<value>               Container Registry External ID
+      --cr_password=<value>                  Container Registry Password Credentials Reference UUID
+      --cr_region=<value>                    Container Registry Region
+      --cr_role_arn=<value>                  Container Registry Role Arn
+      --cr_token=<value>                     Container Registry Token Credentials Reference UUID
+      --cr_username=<value>                  Container Registry Username
       --github=<value>                       Github Url
       --github_api=<value>                   Github Api Url
       --github_app_client_id=<value>         Github App Client ID Credentials Refs
