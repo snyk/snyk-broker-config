@@ -52,7 +52,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
           this.log(`✔ Disconnected.`)
         } else {
           this.error(
-            `Please disconnect Connection integration(s) first (connection disconnect workflow). Connection is used by Org ${connectionIntegration.data.length > 1 ? 's' : ''} ${connectionIntegration.data.map((x) => x.org_id).join(',')}.`,
+            `Please disconnect Connection integration(s) first (connection disconnect workflow). Connection is used by Org${connectionIntegration.data.length > 1 ? 's' : ''} ${connectionIntegration.data.map((x) => x.org_id).join(',')}.`,
           )
         }
       }
