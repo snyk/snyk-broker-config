@@ -51,7 +51,7 @@ describe('connections bulk-migration list workflow - with orgs', () => {
     )
     expect(stdout).to.contain('Organizations available for bulk migration:')
     expect(stdout).to.match(/id: org-uuid-returned-1/)
-    expect(stdout).to.match(/type: org_id/)
+    expect(stdout).to.match(/type: broker_organization/)
     expect(stdout).to.match(/id: org-uuid-returned-2/)
     expect(stdout).to.contain(`Total organizations found: 2`)
   })

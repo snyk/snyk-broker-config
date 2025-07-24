@@ -164,7 +164,7 @@ export interface IntegrationResponse {
 
 export interface OrgResource {
   id: string
-  type: 'org_id'
+  type: 'broker_organization'
 }
 
 export interface GetOrgsForBulkMigrationResponse {

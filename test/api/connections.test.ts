@@ -6,7 +6,7 @@ import {
 } from '../../src/api/connections'
 import {expect} from 'chai'
 import nock from 'nock'
-import {ConnectionResponse, GetOrgsForBulkMigrationResponse, OrgResource} from '../../src/api/types' // Added imports
+import {ConnectionResponse, GetOrgsForBulkMigrationResponse, OrgResource} from '../../src/api/types'
 
 describe('Connections Api calls', () => {
   const createResponse: ConnectionResponse = {
@@ -33,8 +33,8 @@ describe('Connections Api calls', () => {
   }
   const bulkMigrationMockResponse: GetOrgsForBulkMigrationResponse = {
     data: [
-      {id: 'org-uuid-for-bulk-1', type: 'org_id'},
-      {id: 'org-uuid-for-bulk-2', type: 'org_id'},
+      {id: 'org-uuid-for-bulk-1', type: 'broker_organization'},
+      {id: 'org-uuid-for-bulk-2', type: 'broker_organization'},
     ],
     jsonapi: {version: 'dummy'},
     links: {},
