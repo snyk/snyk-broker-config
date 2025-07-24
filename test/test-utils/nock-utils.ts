@@ -1021,7 +1021,7 @@ export const beforeStep = () => {
     .reply(200, mockBulkMigrationApiResponseEmpty)
     .post(
       `/rest/tenants/${tenantId}/brokers/installs/${installId7}/deployments/${deploymentId7}/connections/${connectionId7}/bulk_migration?version=2024-10-15`,
-      JSON.stringify({ data: { type: 'broker_migration' } })
+      JSON.stringify({data: {type: 'broker_migration'}}),
     )
     .reply(201, mockBulkMigrationApplySuccessResponse)
     .post(

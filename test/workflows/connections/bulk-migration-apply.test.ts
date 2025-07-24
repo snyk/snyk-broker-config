@@ -49,15 +49,15 @@ describe('connections bulk-migration apply workflow', () => {
 
     // @ts-ignore
     const cfg: Config = {}
-    const command = new BulkMigrationApplyCommand(
-      [],
-      cfg,
-    )
+    const command = new BulkMigrationApplyCommand([], cfg)
 
     // Mock selection methods
     command.selectDeployment = async () => successTestDeploymentId
-    command.selectConnection = async () => ({ id: successTestConnectionId, name: 'Mocked Success Connection', type: 'generic' })
-
+    command.selectConnection = async () => ({
+      id: successTestConnectionId,
+      name: 'Mocked Success Connection',
+      type: 'generic',
+    })
 
     const {stdout, stderr, error} = await captureOutput(async () => {
       sendScenario(stdin, [])
@@ -82,13 +82,14 @@ describe('connections bulk-migration apply workflow', () => {
 
     // @ts-ignore
     const cfg: Config = {}
-    const command = new BulkMigrationApplyCommand(
-      [],
-      cfg,
-    )
+    const command = new BulkMigrationApplyCommand([], cfg)
 
     command.selectDeployment = async () => errorTestDeploymentId
-    command.selectConnection = async () => ({ id: errorTestConnectionId, name: 'Mocked Error Connection', type: 'generic' })
+    command.selectConnection = async () => ({
+      id: errorTestConnectionId,
+      name: 'Mocked Error Connection',
+      type: 'generic',
+    })
 
     const {stdout, stderr, error} = await captureOutput(async () => {
       sendScenario(stdin, [])
