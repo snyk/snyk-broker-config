@@ -33,9 +33,7 @@ export default class BulkMigrationApply extends BaseCommand<typeof BulkMigration
   async run(): Promise<string> {
     this.log('\n' + ux.colorize('red', BulkMigrationApply.description))
     const {args} = await this.parse(BulkMigrationApply)
-    const ids = getCommonIds(args)
-    const tenantId = ids.tenantId
-    const installId = ids.installId
+    const {tenantId, installId} = getCommonIds(args)
 
     if (!tenantId) {
       this.error('Tenant ID must be provided either as an argument or as a TENANT_ID environment variable.', {exit: 1})
