@@ -248,3 +248,28 @@ export interface ApplyContextResponse {
   }
   errors?: any
 }
+
+export interface BulkMigrationCreateResponseDataAttributes {
+  status: string
+}
+
+export interface BulkMigrationCreateResponseData {
+  id: string
+  type: 'broker_migration'
+  attributes: BulkMigrationCreateResponseDataAttributes
+}
+
+export interface applyBulkMigrationResponse {
+  data: BulkMigrationCreateResponseData
+  jsonapi: {
+    version: string
+  }
+  links: {
+    self?: string // Added
+    first?: string
+    last?: string
+    prev?: string // Added
+    next?: string
+  }
+  errors?: any
+}
