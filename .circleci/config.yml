@@ -156,7 +156,7 @@ workflows:
           name: Snyk Security Scans
           context:
             - nodejs-install
-            - team-hybrid-snyk
+            - platformeng_access
           requires:
             - Install NPM packages
           <<: *filter-non-main-branches
@@ -183,7 +183,7 @@ workflows:
           name: Release to GitHub and NPM
           context:
             - nodejs-lib-release
-            - team-hybrid-snyk
+            - platformeng_access
           requires:
             - Build Linux tarballs
             - Build macOS installer
