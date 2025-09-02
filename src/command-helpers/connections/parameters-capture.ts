@@ -92,10 +92,13 @@ export const captureConnectionParams = async (
       }
 
       while (!isInputValidated) {
-        requiredParameters[key].input = await input({
+        const rawInput = await input({
           message: message,
           default: defaultValue,
         })
+        console.log(rawInput)
+        requiredParameters[key].input = rawInput.trim()
+        console.log(requiredParameters[key].input)
         if (requiredParameters[key].dataType) {
           switch (requiredParameters[key].dataType) {
             case 'hostname': {

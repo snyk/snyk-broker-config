@@ -16,7 +16,7 @@ export const validatedInput = async (data: InputObject, typeToValidate?: Validat
   const overloadedMessage = `${data.message}. ${typeToValidate ? '(Must be a valid ' + typeToValidate + ').' : ''}`
 
   while (!isInputValidated) {
-    value = await input({message: overloadedMessage, default: data.default ?? ''})
+    value = (await input({message: overloadedMessage, default: data.default ?? ''})).trim()
 
     if (typeToValidate) {
       switch (typeToValidate) {
