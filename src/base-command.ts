@@ -16,7 +16,7 @@ import {
 } from './types.js'
 import {getConnectionsForDeployment, createConnectionForDeployment} from './api/connections.js'
 import {captureConnectionParams} from './command-helpers/connections/parameters-capture.js'
-import {getAccessibleTenants, getTenantRole} from './api/tenants.js'
+import {getAccessibleTenants, isTenantAdmin} from './api/tenants.js'
 import {validatedInput, ValidationType} from './utils/input-validation.js'
 import {validateSnykToken} from './api/snyk.js'
 import {getContextsForForDeployment} from './api/contexts.js'
@@ -65,9 +65,10 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       this.log(ux.colorize('yellow', `Windows: set SNYK_TOKEN=${process.env.SNYK_TOKEN}\n`))
     }
 
+    let userId: string
     try {
-      await validateSnykToken(process.env.SNYK_TOKEN)
-      this.log(`✓ Valid Snyk Token.`)
+      userId = await validateSnykToken(process.env.SNYK_TOKEN)
+      this.log(`✓ Valid Snyk Token for user ${userId}.`)
     } catch (error) {
       this.error(`Invalid Snyk Token. ${error}`)
     }
@@ -101,7 +102,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     process.env.TENANT_ID = tenantId
 
     try {
-      await getTenantRole(tenantId)
+      await isTenantAdmin(tenantId, userId)
       this.log(`✓ Tenant Admin role confirmed.`)
     } catch (error) {
       this.debug(error)
@@ -248,12 +249,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         message: 'Name is already in use. Please enter a unique human friendly name for your Connection.',
       })
     }
-    const params = await captureConnectionParams(
-      tenantID,
-      installId,
-      deploymentId,
-      connectionType,
-    )
+    const params = await captureConnectionParams(tenantID, installId, deploymentId, connectionType)
     const newConnection = await createConnectionForDeployment(
       tenantID,
       installId,
