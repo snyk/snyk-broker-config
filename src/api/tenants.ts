@@ -48,13 +48,61 @@ export const getAccessibleTenants = async () => {
   }
 }
 
-export const getTenantRole = async (tenantId: string) => {
+interface TenantMembership {
+  id: string
+  type: 'tenant_membership'
+  attributes: {
+    created_at: string
+  }
+  relationships: {
+    role: {
+      data: {
+        id: string
+        type: string
+        attributes: {
+          name: string
+        }
+      }
+    }
+    tenant: {
+      id: string
+      type: 'tenant'
+      attributes: {
+        name: string
+      }
+    }
+    user: {
+      data: {
+        id: string
+        type: 'user'
+        attributes: {
+          account_type: string
+          active: boolean
+          email: string
+          login_method: string
+          name: string
+          username: string
+        }
+        meta: {
+          tenant_owner: boolean
+        }
+      }
+    }
+  }
+}
+
+interface TenantsMembershipResponse {
+  data: Array<TenantMembership>
+}
+
+export const isTenantAdmin = async (tenantId: string, userId: string) => {
   const headers = {...commonHeaders, ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/memberships`
   const config = getConfig()
 
   const url = new URL(`${config.API_HOSTNAME}/${apiPath}`)
   url.searchParams.append('role_name', 'admin')
+  url.searchParams.append('user_id', userId)
   url.searchParams.append('version', config.API_VERSION_TENANTS)
 
   const req: HttpRequest = {
@@ -65,7 +113,11 @@ export const getTenantRole = async (tenantId: string) => {
   try {
     const response = await makeRequest(req)
     logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return JSON.parse(response.body) as TenantsListingResponse
+
+    const parsedResponse = JSON.parse(response.body) as TenantsMembershipResponse
+    if (parsedResponse.data.length === 0) {
+      throw new Error(`User ${userId} does not have the required permission.`)
+    }
   } catch (error: any) {
     throw new Error(error)
   }

@@ -4,6 +4,7 @@ import {ConnectionResponse, GetOrgsForBulkMigrationResponse} from '../../src/api
 export const upArrow = '\u001b[A'
 export const downArrow = '\u001b[B'
 export const tab = '\u0009'
+export const userId = '00000000-0000-0000-0000-000000000000'
 export const appId = 'cb43d761-bd17-4b44-9b6c-e5b8ad077d33'
 export const snykToken = 'cb43d761-bd17-4b44-9b6c-e5b8ad077d33'
 export const orgId = '3a7c1ab9-8914-4f39-a8c0-5752af653a88'
@@ -82,7 +83,7 @@ export const tenants = {
   ],
 }
 
-const tenantRoles = {
+const tenantMemberships = {
   data: [
     {
       type: 'tenant_membership',
@@ -129,7 +130,7 @@ const tenantRoles = {
   jsonapi: {},
 }
 
-export const forbiddenTenantMembersResponse = {
+const forbiddenTenantMembersResponse = {
   jsonapi: {
     version: '1.0',
   },
@@ -283,6 +284,20 @@ export const createCredentialsResponse = {
   ],
 }
 
+const selfResponse = {
+    data: {
+      id: userId,
+      type: 'user',
+      attributes: {
+        avatar_url: '',
+        default_org_context: '',
+        email: '',
+        name: '',
+        username: '',
+      },
+    },
+  }
+
 const urlPrefixTenantIdAndInstallId = `/rest/tenants/${tenantId}/brokers/installs/${installId}`
 const urlPrefixTenantIdAndInstallId2 = `/rest/tenants/${tenantId}/brokers/installs/${installId2}`
 const urlPrefixTenantIdAndInstallId3 = `/rest/tenants/${tenantId}/brokers/installs/${installId3}`
@@ -312,7 +327,7 @@ export const beforeStep = () => {
     .persist()
     .get(`/rest/self?version=2024-05-31`)
     .reply(() => {
-      return [200, 'OK']
+      return [200, selfResponse]
     })
     .get(`/rest/orgs/${orgId}/apps/installs?version=2024-05-31`)
     .reply(() => {
@@ -342,13 +357,13 @@ export const beforeStep = () => {
     .reply(() => {
       return [200, tenants]
     })
-    .get(`/rest/tenants/${tenantId}/memberships?role_name=admin&version=2024-10-14~experimental`)
+    .get(`/rest/tenants/${tenantId}/memberships?role_name=admin&user_id=${userId}&version=2024-10-14~experimental`)
     .reply(() => {
-      return [200, tenantRoles]
+      return [200, tenantMemberships]
     })
-    .get(`/rest/tenants/${nonAdminTenantId}/memberships?role_name=admin&version=2024-10-14~experimental`)
+    .get(`/rest/tenants/${nonAdminTenantId}/memberships?role_name=admin&user_id=${userId}&version=2024-10-14~experimental`)
     .reply(() => {
-      return [403, forbiddenTenantMembersResponse]
+      return [200, forbiddenTenantMembersResponse]
     })
     .get(`${urlPrefixTenantIdAndInstallId}/deployments?version=2024-10-15`)
     .reply((uri, body) => {

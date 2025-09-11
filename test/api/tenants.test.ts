@@ -1,8 +1,9 @@
-import {getAccessibleTenants, getTenantRole} from '../../src/api/tenants'
+import {getAccessibleTenants, isTenantAdmin} from '../../src/api/tenants'
 import {expect} from 'chai'
 import nock from 'nock'
 
 describe('Tenants Api calls', () => {
+  const userId = '00000000-0000-0000-0000-000000000000'
   const tenantId = '00000000-0000-0000-0000-000000000000'
   const tenants = {
     data: [
@@ -80,7 +81,7 @@ describe('Tenants Api calls', () => {
       .reply(() => {
         return [200, tenants]
       })
-      .get(`/rest/tenants/${tenantId}/memberships?role_name=admin&version=2024-10-14~experimental`)
+      .get(`/rest/tenants/${tenantId}/memberships?role_name=admin&user_id=${userId}&version=2024-10-14~experimental`)
       .reply(() => {
         return [200, tenantRoles]
       })
@@ -90,8 +91,8 @@ describe('Tenants Api calls', () => {
     expect(accessibleTenants).to.deep.equal(tenants)
   })
 
-  it('getTenantRole', async () => {
-    const tenantRoles = await getTenantRole(tenantId)
+  it('isTenantAdmin', async () => {
+    const tenantRoles = await isTenantAdmin(tenantId, userId)
     expect(tenantRoles).to.deep.equal(tenantRoles)
   })
 })

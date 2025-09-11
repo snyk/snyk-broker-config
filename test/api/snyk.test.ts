@@ -29,11 +29,11 @@ describe('Snyk Token Validation', () => {
       .persist()
       .get(`/rest/self?version=2024-05-31`)
       .reply(() => {
-        return [200, 'OK']
+        return [200, {data: {id: 'some-user-id'}}]
       })
     try {
-      await validateSnykToken('523022f6-33af-4791-a25a-8ade918c3c78')
-      expect(true).to.be.true
+      const userId = await validateSnykToken('523022f6-33af-4791-a25a-8ade918c3c78')
+      expect(userId).to.eq('some-user-id')
     } catch (error) {
       expect(error).to.be.undefined
     }

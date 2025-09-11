@@ -3,7 +3,7 @@ import {expect} from 'chai'
 import {stdin as fstdin} from 'mock-stdin'
 
 import Deployments from '../../../src/commands/workflows/deployments/get'
-import {beforeStep, orgId, snykToken} from '../../test-utils/nock-utils'
+import {beforeStep, orgId, snykToken, nonAdminTenantId} from '../../test-utils/nock-utils'
 import {sendScenario} from '../../test-utils/stdin-utils'
 
 describe('deployment workflows', () => {
@@ -13,7 +13,7 @@ describe('deployment workflows', () => {
     delete process.env.TENANT_ID
   })
   it('runs workflow deployment list', async () => {
-    process.env.TENANT_ID = '00000000-0000-0000-0000-000000000001'
+    process.env.TENANT_ID = nonAdminTenantId
     const stdin = fstdin()
     // @ts-ignore
     const cfg: Config = {}
