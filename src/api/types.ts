@@ -15,6 +15,7 @@ export interface AppInstallResponseData {
     }
   }
 }
+
 export interface AppInstallResponse {
   data: AppInstallResponseData
   jsonapi: {
@@ -26,6 +27,7 @@ export interface AppInstallResponse {
     next?: string
   }
 }
+
 export interface AppInstallsResponse {
   data: AppInstallResponseData[]
   jsonapi: {
@@ -49,6 +51,7 @@ export interface CredentialsAttributes {
   environment_variable_name: string
   type: string
 }
+
 export type CredentialsAttributesEnvVarNames = Record<string, string>
 
 export interface CredentialsListResponseData {
@@ -138,6 +141,7 @@ export interface IntegrationsResponseData {
   type: string
   integration_type: string
 }
+
 export interface IntegrationsResponse {
   data: IntegrationsResponseData[]
   jsonapi: {
@@ -149,6 +153,7 @@ export interface IntegrationsResponse {
     next?: string
   }
 }
+
 export interface IntegrationResponse {
   data: IntegrationsResponseData
   jsonapi: {
@@ -162,28 +167,13 @@ export interface IntegrationResponse {
   errors?: any
 }
 
-export interface OrgResource {
-  id: string
-  type: 'broker_organization'
-}
-
-export interface GetOrgsForBulkMigrationResponse {
-  data: OrgResource[]
-  jsonapi: {
-    version: string
-  }
-  links: {
-    first?: string
-    last?: string
-    next?: string
-  }
-}
 export interface ConnectionRelationship {
   data: {
     id: string
     type: string
   }
 }
+
 export interface AppliedIntegrationsRelationship {
   data: {
     id: string
@@ -191,6 +181,7 @@ export interface AppliedIntegrationsRelationship {
     type: string
   }
 }
+
 export interface ContextsResponseData {
   id: string
   type: string
@@ -202,6 +193,7 @@ export interface ContextsResponseData {
     applied_integrations: AppliedIntegrationsRelationship[]
   }
 }
+
 export interface ContextsResponse {
   data: ContextsResponseData[]
   jsonapi: {
@@ -246,5 +238,39 @@ export interface ApplyContextResponse {
     last?: string
     next?: string
   }
+  errors?: any
+}
+
+export interface OrgResource {
+  id: string
+  type: 'broker_organization'
+}
+
+export interface GetOrgsForBulkMigrationResponse {
+  data: OrgResource[]
+  jsonapi: {
+    version: string
+  }
+  links: {
+    first?: string
+    last?: string
+    next?: string
+  }
+}
+
+export interface BulkMigrationCreateResponseData {
+  id: string
+  type: 'broker_migration'
+  attributes: {
+    status: string
+  }
+}
+
+export interface applyBulkMigrationResponse {
+  data: BulkMigrationCreateResponseData
+  jsonapi: {
+    version: string
+  }
+  links: {}
   errors?: any
 }

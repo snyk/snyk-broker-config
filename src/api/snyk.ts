@@ -9,14 +9,14 @@ const logger = createLogger('snyk-broker-config')
 
 interface SelfResponse {
   data: {
-    id: string;
-    type: "user";
+    id: string
+    type: 'user'
     attributes: {
-      avatar_url: string;
-      default_org_context: string;
-      email: string;
-      name: string;
-      username: string;
+      avatar_url: string
+      default_org_context: string
+      email: string
+      name: string
+      username: string
     }
   }
 }
@@ -39,9 +39,8 @@ export const validateSnykToken = async (snykToken: string): Promise<string> => {
     const response = await makeRequest(req)
     logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
 
-    const parsedResponse = JSON.parse(response.body) as SelfResponse;
-    return parsedResponse.data.id;
-
+    const parsedResponse = JSON.parse(response.body) as SelfResponse
+    return parsedResponse.data.id
   } catch (error: any) {
     let errorMessage = error
     if (error.includes('401: Unauthorized.')) {
