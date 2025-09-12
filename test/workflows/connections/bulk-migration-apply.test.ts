@@ -67,7 +67,7 @@ describe('connections bulk-migration apply workflow', () => {
     expect(error, `Command execution error: ${error?.message}`).to.be.undefined
     expect(stderr, 'Expected stderr to be empty').to.equal('')
 
-    expect(stdout).to.contain('Universal Broker Bulk-Migration - Apply operation')
+    expect(stdout).to.contain('Universal Broker - Apply Bulk-Migration Workflow')
     expect(stdout).to.contain(
       `Initiating bulk migration for Connection ${successTestConnectionId}, Deployment ${successTestDeploymentId}, Tenant ${successTestTenantId}, Install ${successTestInstallId}...`,
     )
@@ -100,7 +100,7 @@ describe('connections bulk-migration apply workflow', () => {
     // Default exit code for this.error() without explicit code is 2
     expect(error?.oclif?.exit).to.equal(2)
 
-    expect(stdout).to.contain('Universal Broker Bulk-Migration - Apply operation')
+    expect(stdout).to.contain('Universal Broker - Apply Bulk-Migration Workflow')
     expect(stdout).to.contain(
       `Initiating bulk migration for Connection ${errorTestConnectionId}, Deployment ${errorTestDeploymentId}, Tenant ${errorTestTenantId}, Install ${errorTestInstallId}...`,
     )

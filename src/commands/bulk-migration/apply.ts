@@ -56,7 +56,6 @@ export default class BulkMigrationApply extends BaseCommand<typeof BulkMigration
 
     try {
       const bulkMigrationResponse: applyBulkMigrationResponse = await applyBulkMigration(
-        // Renamed
         tenantId,
         installId,
         deploymentId,

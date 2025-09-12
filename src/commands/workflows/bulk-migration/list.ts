@@ -16,7 +16,7 @@ export default class BulkMigrationList extends BaseCommand<typeof BulkMigrationL
     ...commonApiRelatedArgs,
   }
 
-  static description = 'Universal Broker Bulk-Migration - List operation'
+  static description = 'Universal Broker - List Bulk-Migration Workflow'
 
   static examples = [
     `$ <%= config.bin %> <%= command.id %>`,

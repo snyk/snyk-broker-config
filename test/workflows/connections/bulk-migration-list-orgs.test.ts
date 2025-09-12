@@ -45,7 +45,7 @@ describe('connections bulk-migration list workflow - with orgs', () => {
     expect(error, `Command execution error: ${error?.message}`).to.be.undefined
     expect(stderr, 'Expected stderr to be empty').to.equal('')
 
-    expect(stdout).to.contain('Universal Broker Bulk-Migration - List operation')
+    expect(stdout).to.contain('Universal Broker - List Bulk-Migration Workflow')
     expect(stdout).to.contain(
       `Fetching bulk migration orgs for Connection ${testConnectionId}, Deployment ${testDeploymentId}, Tenant ${testTenantId}, Install ${testInstallId}...`,
     )
