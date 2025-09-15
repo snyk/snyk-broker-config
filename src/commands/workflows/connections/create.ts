@@ -28,7 +28,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       this.log(
         ux.colorize(
           'yellow',
-          `Helpful tip ! You can use a credentials reference for any field by simply entering the creds ref UUID. Use workflows credentials create|get to create|list available credentials reference(s).\n`,
+          `Helpful tip! You can use a credentials reference for any field by simply entering the creds ref UUID. Use workflows credentials create|get to create|list available credentials reference(s).\n`,
         ),
       )
 
