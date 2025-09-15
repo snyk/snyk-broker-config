@@ -42,6 +42,7 @@ export interface TypeParams {
     dataType?: 'hostname' | 'url'
     skippable?: boolean
     prohibitedValues: string[]
+    exampleFormat?: string
   }
 }
 
@@ -82,6 +83,7 @@ export const flagConnectionMapping: TypeMapping = {
       description: 'Artifactory URL (Credentials Reference UUID as it may contain sensitive values)',
       sensitive: true,
       prohibitedValues: [],
+      exampleFormat: '<username>:<password>@<yourdomain.artifactory.com>/artifactory'
     },
   },
   jira: {
@@ -105,6 +107,7 @@ export const flagConnectionMapping: TypeMapping = {
       description: 'Nexus URL (Credentials Reference UUID as it may contain sensitive values)',
       sensitive: true,
       prohibitedValues: [],
+      exampleFormat: 'https://<username>:<password>@<your.nexus.hostname>'
     },
   },
   'azure-repos': {
