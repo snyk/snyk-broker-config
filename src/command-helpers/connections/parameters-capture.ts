@@ -75,7 +75,6 @@ export const captureConnectionParams = async (
         }
         requiredParameters[key].input = selectedCredId.id
       }
-
     } else {
       let isInputValidated = false
       let message = `${key}: ${value.description}. `
@@ -121,10 +120,14 @@ export const captureConnectionParams = async (
           isInputValidated = true
         }
       }
-
     }
     if (value.exampleFormat) {
-      console.log(ux.colorize('yellow', `\nHint! your credential reference URL value should have the following format: ${value.exampleFormat}.\n`))
+      console.log(
+        ux.colorize(
+          'yellow',
+          `\nHint! your credential reference URL value should have the following format: ${value.exampleFormat}.\n`,
+        ),
+      )
     }
   }
   const connectionParams: Record<string, string> = {}
