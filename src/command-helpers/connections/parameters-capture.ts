@@ -125,7 +125,7 @@ export const captureConnectionParams = async (
       console.log(
         ux.colorize(
           'yellow',
-          `\nHint! your credential reference URL value should have the following format: ${value.exampleFormat}.\n`,
+          `\nHint! Your credential reference URL value should have the following format: ${value.exampleFormat}.\n`,
         ),
       )
     }
