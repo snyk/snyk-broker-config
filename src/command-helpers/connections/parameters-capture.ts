@@ -5,6 +5,7 @@ import {CredentialsAttributes, CredentialsListResponse} from '../../api/types.js
 import {isNotProhibitedValue, isValidHostnameWithPort, isValidUrl, isValidUUID} from '../../utils/validation.js'
 import {validatedInput, ValidationType} from '../../utils/input-validation.js'
 import {getConfig} from '../../config/config.js'
+import {ux} from '@oclif/core'
 
 export const captureConnectionParams = async (
   tenantID: string,
@@ -119,6 +120,14 @@ export const captureConnectionParams = async (
           isInputValidated = true
         }
       }
+    }
+    if (value.exampleFormat) {
+      console.log(
+        ux.colorize(
+          'yellow',
+          `\nHint! Your credential reference URL value should have the following format: ${value.exampleFormat}.\n`,
+        ),
+      )
     }
   }
   const connectionParams: Record<string, string> = {}
