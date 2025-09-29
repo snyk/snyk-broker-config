@@ -25,6 +25,12 @@ filter-tags-only: &filter-tags-only
       ignore: /.*/
 
 commands:
+  set-package-version:
+    steps:
+      - run:
+          name: Set tag as version in package.json
+          command: |
+            npm version --commit-hooks false --git-tag-version false ${CIRCLE_TAG/v/''}
   install-github-release:
     parameters:
       version:
@@ -59,6 +65,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - set-package-version
       - run:
           name: Build macOS .pkg installers
           command: |
@@ -77,6 +84,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - set-package-version
       - run:
           name: Build Windows installers
           command: |
@@ -95,6 +103,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - set-package-version
       - run:
           name: Build Linux tarballs
           command: |
@@ -172,15 +181,15 @@ jobs:
           name: Upload assets to GitHub release
           command: |
             CIRCLE_SHORT_SHA1=$(git rev-parse --short ${CIRCLE_SHA1})
-            CLI_VERSION=${CIRCLE_TAG}-${CIRCLE_SHORT_SHA1}
+            CLI_VERSION=${CIRCLE_TAG/v/''}-${CIRCLE_SHORT_SHA1}
 
             # linux
             github-release upload --user snyk --repo snyk-broker-config --tag ${CIRCLE_TAG} --security-token ${GH_TOKEN} \
-              --name snyk-broker-config_${CIRCLE_TAG}.${CIRCLE_SHORT_SHA1}-1_amd64.deb --file dist/deb/snyk-broker-config-${CIRCLE_TAG}.${CIRCLE_SHORT_SHA1}-1_amd64.deb
+              --name snyk-broker-config_${CIRCLE_TAG/v/''}.${CIRCLE_SHORT_SHA1}-1_amd64.deb --file dist/deb/snyk-broker-config_${CIRCLE_TAG/v/''}.${CIRCLE_SHORT_SHA1}-1_amd64.deb
             github-release upload --user snyk --repo snyk-broker-config --tag ${CIRCLE_TAG} --security-token ${GH_TOKEN} \
-              --name snyk-broker-config_${CIRCLE_TAG}.${CIRCLE_SHORT_SHA1}-1_arm64.deb --file dist/deb/snyk-broker-config-${CIRCLE_TAG}.${CIRCLE_SHORT_SHA1}-1_arm64.deb
+              --name snyk-broker-config_${CIRCLE_TAG/v/''}.${CIRCLE_SHORT_SHA1}-1_arm64.deb --file dist/deb/snyk-broker-config_${CIRCLE_TAG/v/''}.${CIRCLE_SHORT_SHA1}-1_arm64.deb
              github-release upload --user snyk --repo snyk-broker-config --tag ${CIRCLE_TAG} --security-token ${GH_TOKEN} \
-              --name snyk-broker-config_${CIRCLE_TAG}.${CIRCLE_SHORT_SHA1}-1_armel.deb --file dist/deb/snyk-broker-config-${CIRCLE_TAG}.${CIRCLE_SHORT_SHA1}-1_armel.deb
+              --name snyk-broker-config_${CIRCLE_TAG/v/''}.${CIRCLE_SHORT_SHA1}-1_armel.deb --file dist/deb/snyk-broker-config_${CIRCLE_TAG/v/''}.${CIRCLE_SHORT_SHA1}-1_armel.deb
 
             # macos
             github-release upload --user snyk --repo snyk-broker-config --tag ${CIRCLE_TAG} --security-token ${GH_TOKEN} \
