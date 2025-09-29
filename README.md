@@ -30,6 +30,8 @@ USAGE
 # Commands
 <!-- commands -->
 * [`snyk-broker-config autocomplete [SHELL]`](#snyk-broker-config-autocomplete-shell)
+* [`snyk-broker-config bulk-migration apply DEPLOYMENTID CONNECTIONID [APIURL] [APIVERSION]`](#snyk-broker-config-bulk-migration-apply-deploymentid-connectionid-apiurl-apiversion)
+* [`snyk-broker-config bulk-migration list DEPLOYMENTID CONNECTIONID [APIURL] [APIVERSION]`](#snyk-broker-config-bulk-migration-list-deploymentid-connectionid-apiurl-apiversion)
 * [`snyk-broker-config commands`](#snyk-broker-config-commands)
 * [`snyk-broker-config connections create DEPLOYMENTID [APIURL] [APIVERSION]`](#snyk-broker-config-connections-create-deploymentid-apiurl-apiversion)
 * [`snyk-broker-config connections delete DEPLOYMENTID CONNECTIONID [APIURL] [APIVERSION]`](#snyk-broker-config-connections-delete-deploymentid-connectionid-apiurl-apiversion)
@@ -59,12 +61,15 @@ USAGE
 * [`snyk-broker-config plugins unlink [PLUGIN]`](#snyk-broker-config-plugins-unlink-plugin)
 * [`snyk-broker-config plugins update`](#snyk-broker-config-plugins-update)
 * [`snyk-broker-config version`](#snyk-broker-config-version)
+* [`snyk-broker-config workflows bulk-migration apply [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-bulk-migration-apply-apiurl-apiversion)
+* [`snyk-broker-config workflows bulk-migration list [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-bulk-migration-list-apiurl-apiversion)
 * [`snyk-broker-config workflows connections create [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-connections-create-apiurl-apiversion)
 * [`snyk-broker-config workflows connections delete [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-connections-delete-apiurl-apiversion)
 * [`snyk-broker-config workflows connections disconnect [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-connections-disconnect-apiurl-apiversion)
 * [`snyk-broker-config workflows connections get [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-connections-get-apiurl-apiversion)
 * [`snyk-broker-config workflows connections integrate [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-connections-integrate-apiurl-apiversion)
 * [`snyk-broker-config workflows connections migrate [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-connections-migrate-apiurl-apiversion)
+* [`snyk-broker-config workflows connections update [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-connections-update-apiurl-apiversion)
 * [`snyk-broker-config workflows contexts apply [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-contexts-apply-apiurl-apiversion)
 * [`snyk-broker-config workflows contexts create [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-contexts-create-apiurl-apiversion)
 * [`snyk-broker-config workflows contexts delete [APIURL] [APIVERSION]`](#snyk-broker-config-workflows-contexts-delete-apiurl-apiversion)
@@ -111,6 +116,76 @@ EXAMPLES
 ```
 
 _See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v3.2.14/src/commands/autocomplete/index.ts)_
+
+## `snyk-broker-config bulk-migration apply DEPLOYMENTID CONNECTIONID [APIURL] [APIVERSION]`
+
+Initiate bulk migration for integrations from legacy to universal broker for a specific connection.
+
+```
+USAGE
+  $ snyk-broker-config bulk-migration apply DEPLOYMENTID CONNECTIONID [APIURL]
+    [APIVERSION] [--json] [--log-level debug|warn|error|info|trace]
+
+ARGUMENTS
+  DEPLOYMENTID  Deployment ID
+  CONNECTIONID  Connection ID
+  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIVERSION    [default: 2024-10-15] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Initiate bulk migration for integrations from legacy to universal broker for a specific connection.
+
+EXAMPLES
+  # With TENANT_ID and INSTALL_ID exported as environment variables:
+
+  $ snyk-broker-config bulk-migration apply DEPLOYMENT_ID CONNECTION_ID
+
+  # With TENANT_ID and INSTALL_ID provided as arguments:
+
+  $ snyk-broker-config bulk-migration apply TENANT_ID INSTALL_ID DEPLOYMENT_ID CONNECTION_ID
+```
+
+_See code: [src/commands/bulk-migration/apply.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/bulk-migration/apply.ts)_
+
+## `snyk-broker-config bulk-migration list DEPLOYMENTID CONNECTIONID [APIURL] [APIVERSION]`
+
+List organizations eligible for bulk migration for a specific connection.
+
+```
+USAGE
+  $ snyk-broker-config bulk-migration list DEPLOYMENTID CONNECTIONID [APIURL]
+    [APIVERSION] [--json] [--log-level debug|warn|error|info|trace]
+
+ARGUMENTS
+  DEPLOYMENTID  Deployment ID
+  CONNECTIONID  Connection ID
+  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIVERSION    [default: 2024-10-15] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  List organizations eligible for bulk migration for a specific connection.
+
+EXAMPLES
+  # With TENANT_ID and INSTALL_ID exported as environment variables:
+
+  $ snyk-broker-config bulk-migration list DEPLOYMENT_ID CONNECTION_ID
+
+  # With TENANT_ID and INSTALL_ID provided as arguments:
+
+  $ snyk-broker-config bulk-migration list TENANT_ID INSTALL_ID DEPLOYMENT_ID CONNECTION_ID
+```
+
+_See code: [src/commands/bulk-migration/list.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/bulk-migration/list.ts)_
 
 ## `snyk-broker-config commands`
 
@@ -160,8 +235,8 @@ USAGE
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
-  APIURL        [default: https://api.dev.snyk.io] API URL
-  APIVERSION    [default: 2024-02-08~experimental] API Version
+  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIVERSION    [default: 2024-10-15] API Version
 
 FLAGS
   -n, --name=<value>                         (required) Connection name
@@ -176,13 +251,14 @@ FLAGS
       --bitbucket_password=<value>           Bitbucket Password Credentials Reference UUID (leave empty if using PAT)
       --bitbucket_pat=<value>                Bitbucket Pat Credentials Reference UUID (leave empty if using user/pass)
       --bitbucket_username=<value>           Bitbucket Username (leave empty if using PAT)
-      --broker_client_url=<value>            Broker Client URL
+      --broker_client_url=<value>            Broker Client URL (Must be the URL of your broker client)
       --checkmarx=<value>                    Checkmarx Hostname (leave empty if not using Checkmarx)
       --checkmarx_password=<value>           Checkmarx Password Credentials Reference UUID (leave empty if not using
                                              Checkmarx)
       --checkmarx_username=<value>           Checkmarx Username (leave empty if not using Checkmarx)
-      --cr_agent_url=<value>                 Container Registry Agent URL
-      --cr_base=<value>                      Container Registry Base URL (The hostname of your CR) 
+      --cr_agent_url=<value>                 Container Registry Agent URL (Must be the URL of your container registry
+                                             agent)
+      --cr_base=<value>                      Container Registry Base URL (The hostname of your CR)
       --cr_external_id=<value>               Container Registry External ID
       --cr_password=<value>                  Container Registry Password Credentials Reference UUID
       --cr_region=<value>                    Container Registry Region
@@ -218,7 +294,7 @@ EXAMPLES
   $ snyk-broker-config connections create TENANT_ID INSTALL_ID DEPLOYMENT_ID --type github
 ```
 
-_See code: [src/commands/connections/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/connections/create.ts)_
+_See code: [src/commands/connections/create.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/connections/create.ts)_
 
 ## `snyk-broker-config connections delete DEPLOYMENTID CONNECTIONID [APIURL] [APIVERSION]`
 
@@ -232,8 +308,8 @@ USAGE
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
   CONNECTIONID  Connection ID
-  APIURL        [default: https://api.dev.snyk.io] API URL
-  APIVERSION    [default: 2024-02-08~experimental] API Version
+  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIVERSION    [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -253,7 +329,7 @@ EXAMPLES
   $ snyk-broker-config connections delete TENANT_ID INSTALL_ID DEPLOYMENT_ID CONNECTION_ID
 ```
 
-_See code: [src/commands/connections/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/connections/delete.ts)_
+_See code: [src/commands/connections/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/connections/delete.ts)_
 
 ## `snyk-broker-config connections list DEPLOYMENTID [APIURL] [APIVERSION]`
 
@@ -266,8 +342,8 @@ USAGE
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
-  APIURL        [default: https://api.dev.snyk.io] API URL
-  APIVERSION    [default: 2024-02-08~experimental] API Version
+  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIVERSION    [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -287,7 +363,7 @@ EXAMPLES
   $ snyk-broker-config connections list TENANT_ID INSTALL_ID DEPLOYMENT_ID
 ```
 
-_See code: [src/commands/connections/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/connections/list.ts)_
+_See code: [src/commands/connections/list.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/connections/list.ts)_
 
 ## `snyk-broker-config connections update DEPLOYMENTID CONNECTIONID [APIURL] [APIVERSION]`
 
@@ -310,8 +386,8 @@ USAGE
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
   CONNECTIONID  Connection ID
-  APIURL        [default: https://api.dev.snyk.io] API URL
-  APIVERSION    [default: 2024-02-08~experimental] API Version
+  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIVERSION    [default: 2024-10-15] API Version
 
 FLAGS
   -n, --name=<value>                         (required) Connection name
@@ -326,19 +402,20 @@ FLAGS
       --bitbucket_password=<value>           Bitbucket Password Credentials Reference UUID (leave empty if using PAT)
       --bitbucket_pat=<value>                Bitbucket Pat Credentials Reference UUID (leave empty if using user/pass)
       --bitbucket_username=<value>           Bitbucket Username (leave empty if using PAT)
-      --broker_client_url=<value>            Broker Client URL
+      --broker_client_url=<value>            Broker Client URL (Must be the URL of your broker client)
       --checkmarx=<value>                    Checkmarx Hostname (leave empty if not using Checkmarx)
       --checkmarx_password=<value>           Checkmarx Password Credentials Reference UUID (leave empty if not using
                                              Checkmarx)
       --checkmarx_username=<value>           Checkmarx Username (leave empty if not using Checkmarx)
-      --cr_agent_url=<value>                 CR Agent URL
-      --cr_base=<value>                      CR Base URL
-      --cr_external_id=<value>               CR External ID
-      --cr_password=<value>                  CR Password Credentials Reference UUID
-      --cr_region=<value>                    CR Region
-      --cr_role_arn=<value>                  CR Role Arn
-      --cr_token=<value>                     CR Token Credentials Reference UUID
-      --cr_username=<value>                  CR Username
+      --cr_agent_url=<value>                 Container Registry Agent URL (Must be the URL of your container registry
+                                             agent)
+      --cr_base=<value>                      Container Registry Base URL (The hostname of your CR)
+      --cr_external_id=<value>               Container Registry External ID
+      --cr_password=<value>                  Container Registry Password Credentials Reference UUID
+      --cr_region=<value>                    Container Registry Region
+      --cr_role_arn=<value>                  Container Registry Role Arn
+      --cr_token=<value>                     Container Registry Token Credentials Reference UUID
+      --cr_username=<value>                  Container Registry Username
       --github=<value>                       Github URL
       --github_api=<value>                   Github Api URL
       --github_app_client_id=<value>         Github App Client ID Credentials Refs
@@ -368,7 +445,7 @@ EXAMPLES
   $ snyk-broker-config connections update TENANT_ID INSTALL_ID DEPLOYMENT_ID CONNECTION_ID --type github
 ```
 
-_See code: [src/commands/connections/update.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/connections/update.ts)_
+_See code: [src/commands/connections/update.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/connections/update.ts)_
 
 ## `snyk-broker-config credentials create DEPLOYMENTID [APIURL] [APIVERSION]`
 
@@ -381,8 +458,8 @@ USAGE
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
-  APIURL        [default: https://api.dev.snyk.io] API URL
-  APIVERSION    [default: 2024-02-08~experimental] API Version
+  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIVERSION    [default: 2024-10-15] API Version
 
 FLAGS
   -c, --comment=<value>       (required) Comment about credentials reference(s).
@@ -408,7 +485,7 @@ EXAMPLES
   $ snyk-broker-config credentials create TENANT_ID INSTALL_ID DEPLOYMENT_ID --comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github
 ```
 
-_See code: [src/commands/credentials/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/credentials/create.ts)_
+_See code: [src/commands/credentials/create.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/credentials/create.ts)_
 
 ## `snyk-broker-config credentials delete DEPLOYMENTID [APIURL] [APIVERSION]`
 
@@ -421,8 +498,8 @@ USAGE
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
-  APIURL        [default: https://api.dev.snyk.io] API URL
-  APIVERSION    [default: 2024-02-08~experimental] API Version
+  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIVERSION    [default: 2024-10-15] API Version
 
 FLAGS
   -c, --credentialsIds=<value>  (required) Credentials reference(s) ID(s).
@@ -445,7 +522,7 @@ EXAMPLES
   $ snyk-broker-config credentials delete TENANT_ID INSTALL_ID DEPLOYMENT_ID -c CREDENTIALS_ID
 ```
 
-_See code: [src/commands/credentials/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/credentials/delete.ts)_
+_See code: [src/commands/credentials/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/credentials/delete.ts)_
 
 ## `snyk-broker-config credentials list DEPLOYMENTID [APIURL] [APIVERSION]`
 
@@ -458,8 +535,8 @@ USAGE
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
-  APIURL        [default: https://api.dev.snyk.io] API URL
-  APIVERSION    [default: 2024-02-08~experimental] API Version
+  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIVERSION    [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -479,7 +556,7 @@ EXAMPLES
   $ snyk-broker-config credentials list TENANT_ID INSTALL_ID DEPLOYMENT_ID
 ```
 
-_See code: [src/commands/credentials/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/credentials/list.ts)_
+_See code: [src/commands/credentials/list.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/credentials/list.ts)_
 
 ## `snyk-broker-config credentials update DEPLOYMENTID [APIURL] [APIVERSION]`
 
@@ -492,8 +569,8 @@ USAGE
 
 ARGUMENTS
   DEPLOYMENTID  Deployment ID
-  APIURL        [default: https://api.dev.snyk.io] API URL
-  APIVERSION    [default: 2024-02-08~experimental] API Version
+  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIVERSION    [default: 2024-10-15] API Version
 
 FLAGS
   -c, --comment=<value>        (required) Comment about credentials reference(s).
@@ -520,7 +597,7 @@ EXAMPLES
   $ snyk-broker-config credentials update TENANT_ID INSTALL_ID DEPLOYMENT_ID --credentialsId CREDENTIALID --comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github
 ```
 
-_See code: [src/commands/credentials/update.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/credentials/update.ts)_
+_See code: [src/commands/credentials/update.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/credentials/update.ts)_
 
 ## `snyk-broker-config deployments create APPINSTALLEDINORGID [APIURL] [APIVERSION]`
 
@@ -532,9 +609,9 @@ USAGE
     -d <value> [--json] [--log-level debug|warn|error|info|trace] [-o]
 
 ARGUMENTS
-  APPINSTALLEDINORGID  Broker App Installed in Org ID
-  APIURL               [default: https://api.dev.snyk.io] API URL
-  APIVERSION           [default: 2024-02-08~experimental] API Version
+  APPINSTALLEDINORGID  Org ID where the Broker App is installed
+  APIURL               [default: https://api.dev.snyk.io] API Url
+  APIVERSION           [default: 2024-10-15] API Version
 
 FLAGS
   -d, --data=<value>  (required) A series of key/value pairs comma separated. Ex:
@@ -559,7 +636,7 @@ EXAMPLES
   $ snyk-broker-config deployments create TENANT_ID INSTALL_ID APP_INSTALLED_ORG_ID --data mykey=myvalue,mykey2=myvalue2
 ```
 
-_See code: [src/commands/deployments/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/deployments/create.ts)_
+_See code: [src/commands/deployments/create.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/deployments/create.ts)_
 
 ## `snyk-broker-config deployments delete DEPLOYMENTID`
 
@@ -591,7 +668,7 @@ EXAMPLES
   $ snyk-broker-config deployments delete TENANT_ID INSTALL_ID DEPLOYMENT_ID
 ```
 
-_See code: [src/commands/deployments/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/deployments/delete.ts)_
+_See code: [src/commands/deployments/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/deployments/delete.ts)_
 
 ## `snyk-broker-config deployments list [APIURL] [APIVERSION]`
 
@@ -603,8 +680,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -624,7 +701,7 @@ EXAMPLES
   $ snyk-broker-config deployments list TENANT_ID INSTALL_ID
 ```
 
-_See code: [src/commands/deployments/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/deployments/list.ts)_
+_See code: [src/commands/deployments/list.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/deployments/list.ts)_
 
 ## `snyk-broker-config deployments update DEPLOYMENTID`
 
@@ -661,7 +738,7 @@ EXAMPLES
   $ snyk-broker-config deployments update TENANT_ID INSTALL_ID DEPLOYMENT_ID --data mykey=myvalue,mykey2=myvalue2
 ```
 
-_See code: [src/commands/deployments/update.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/deployments/update.ts)_
+_See code: [src/commands/deployments/update.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/deployments/update.ts)_
 
 ## `snyk-broker-config help [COMMAND]`
 
@@ -697,8 +774,8 @@ ARGUMENTS
   ORGID          Org ID
   INTEGRATIONID  Integration ID
   TYPE           type
-  APIURL         [default: https://api.dev.snyk.io] API URL
-  APIVERSION     [default: 2024-02-08~experimental] API Version
+  APIURL         [default: https://api.dev.snyk.io] API Url
+  APIVERSION     [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -718,7 +795,7 @@ EXAMPLES
   $ snyk-broker-config integrations create TENANT_ID INSTALL_ID CONNECTION_ID ORG_ID INTEGRATION_ID
 ```
 
-_See code: [src/commands/integrations/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/integrations/create.ts)_
+_See code: [src/commands/integrations/create.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/integrations/create.ts)_
 
 ## `snyk-broker-config integrations delete CONNECTIONID ORGID INTEGRATIONID [APIURL] [APIVERSION]`
 
@@ -733,8 +810,8 @@ ARGUMENTS
   CONNECTIONID   Connection ID
   ORGID          Org ID
   INTEGRATIONID  Integration ID
-  APIURL         [default: https://api.dev.snyk.io] API URL
-  APIVERSION     [default: 2024-02-08~experimental] API Version
+  APIURL         [default: https://api.dev.snyk.io] API Url
+  APIVERSION     [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -754,7 +831,7 @@ EXAMPLES
   $ snyk-broker-config integrations delete TENANT_ID INSTALL_ID CONNECTION_ID ORG_ID INTEGRATION_ID
 ```
 
-_See code: [src/commands/integrations/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/integrations/delete.ts)_
+_See code: [src/commands/integrations/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/integrations/delete.ts)_
 
 ## `snyk-broker-config integrations list CONNECTIONID [APIURL] [APIVERSION]`
 
@@ -767,8 +844,8 @@ USAGE
 
 ARGUMENTS
   CONNECTIONID  Connection ID
-  APIURL        [default: https://api.dev.snyk.io] API URL
-  APIVERSION    [default: 2024-02-08~experimental] API Version
+  APIURL        [default: https://api.dev.snyk.io] API Url
+  APIVERSION    [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -788,7 +865,7 @@ EXAMPLES
   $ snyk-broker-config integrations list TENANT_ID INSTALL_ID CONNECTION_ID
 ```
 
-_See code: [src/commands/integrations/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/integrations/list.ts)_
+_See code: [src/commands/integrations/list.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/integrations/list.ts)_
 
 ## `snyk-broker-config introduction`
 
@@ -811,7 +888,7 @@ EXAMPLES
   $ snyk-broker-config introduction
 ```
 
-_See code: [src/commands/introduction/index.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/introduction/index.ts)_
+_See code: [src/commands/introduction/index.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/introduction/index.ts)_
 
 ## `snyk-broker-config plugins`
 
@@ -1123,6 +1200,66 @@ FLAG DESCRIPTIONS
 
 _See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v2.2.18/src/commands/version.ts)_
 
+## `snyk-broker-config workflows bulk-migration apply [APIURL] [APIVERSION]`
+
+Universal Broker - Apply Bulk-Migration Workflow
+
+```
+USAGE
+  $ snyk-broker-config workflows bulk-migration apply [APIURL] [APIVERSION] [--json] [--log-level
+    debug|warn|error|info|trace]
+
+ARGUMENTS
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker - Apply Bulk-Migration Workflow
+
+EXAMPLES
+  $ snyk-broker-config workflows bulk-migration apply
+
+  # The command will then prompt for Tenant, Install, Deployment, and Connection selection.
+
+  # It will then initiate the bulk migration process for the selected connection.
+```
+
+_See code: [src/commands/workflows/bulk-migration/apply.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/bulk-migration/apply.ts)_
+
+## `snyk-broker-config workflows bulk-migration list [APIURL] [APIVERSION]`
+
+Universal Broker - List Bulk-Migration Workflow
+
+```
+USAGE
+  $ snyk-broker-config workflows bulk-migration list [APIURL] [APIVERSION] [--json] [--log-level
+    debug|warn|error|info|trace]
+
+ARGUMENTS
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker - List Bulk-Migration Workflow
+
+EXAMPLES
+  $ snyk-broker-config workflows bulk-migration list
+
+  # The command will then prompt for Tenant, Install, Deployment, and Connection selection.
+```
+
+_See code: [src/commands/workflows/bulk-migration/list.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/bulk-migration/list.ts)_
+
 ## `snyk-broker-config workflows connections create [APIURL] [APIVERSION]`
 
 Universal Broker - Create Connection Workflow
@@ -1133,8 +1270,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1148,7 +1285,7 @@ EXAMPLES
   $ snyk-broker-config workflows connections create
 ```
 
-_See code: [src/commands/workflows/connections/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/connections/create.ts)_
+_See code: [src/commands/workflows/connections/create.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/connections/create.ts)_
 
 ## `snyk-broker-config workflows connections delete [APIURL] [APIVERSION]`
 
@@ -1160,8 +1297,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1175,7 +1312,7 @@ EXAMPLES
   $ snyk-broker-config workflows connections delete
 ```
 
-_See code: [src/commands/workflows/connections/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/connections/delete.ts)_
+_See code: [src/commands/workflows/connections/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/connections/delete.ts)_
 
 ## `snyk-broker-config workflows connections disconnect [APIURL] [APIVERSION]`
 
@@ -1187,8 +1324,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1202,7 +1339,7 @@ EXAMPLES
   $ snyk-broker-config workflows connections disconnect
 ```
 
-_See code: [src/commands/workflows/connections/disconnect.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/connections/disconnect.ts)_
+_See code: [src/commands/workflows/connections/disconnect.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/connections/disconnect.ts)_
 
 ## `snyk-broker-config workflows connections get [APIURL] [APIVERSION]`
 
@@ -1214,8 +1351,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1229,7 +1366,7 @@ EXAMPLES
   $ snyk-broker-config workflows connections get
 ```
 
-_See code: [src/commands/workflows/connections/get.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/connections/get.ts)_
+_See code: [src/commands/workflows/connections/get.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/connections/get.ts)_
 
 ## `snyk-broker-config workflows connections integrate [APIURL] [APIVERSION]`
 
@@ -1241,8 +1378,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1256,7 +1393,7 @@ EXAMPLES
   $ snyk-broker-config workflows connections integrate
 ```
 
-_See code: [src/commands/workflows/connections/integrate.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/connections/integrate.ts)_
+_See code: [src/commands/workflows/connections/integrate.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/connections/integrate.ts)_
 
 ## `snyk-broker-config workflows connections migrate [APIURL] [APIVERSION]`
 
@@ -1268,8 +1405,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1283,7 +1420,34 @@ EXAMPLES
   $ snyk-broker-config workflows connections migrate
 ```
 
-_See code: [src/commands/workflows/connections/migrate.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/connections/migrate.ts)_
+_See code: [src/commands/workflows/connections/migrate.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/connections/migrate.ts)_
+
+## `snyk-broker-config workflows connections update [APIURL] [APIVERSION]`
+
+Universal Broker - Update Connection Workflow
+
+```
+USAGE
+  $ snyk-broker-config workflows connections update [APIURL] [APIVERSION] [--json] [--log-level
+    debug|warn|error|info|trace]
+
+ARGUMENTS
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
+
+GLOBAL FLAGS
+  --json                Format output as json.
+  --log-level=<option>  [default: info] Specify level for logging.
+                        <options: debug|warn|error|info|trace>
+
+DESCRIPTION
+  Universal Broker - Update Connection Workflow
+
+EXAMPLES
+  $ snyk-broker-config workflows connections update
+```
+
+_See code: [src/commands/workflows/connections/update.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/connections/update.ts)_
 
 ## `snyk-broker-config workflows contexts apply [APIURL] [APIVERSION]`
 
@@ -1295,8 +1459,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1310,7 +1474,7 @@ EXAMPLES
   $ snyk-broker-config workflows contexts apply
 ```
 
-_See code: [src/commands/workflows/contexts/apply.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/contexts/apply.ts)_
+_See code: [src/commands/workflows/contexts/apply.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/contexts/apply.ts)_
 
 ## `snyk-broker-config workflows contexts create [APIURL] [APIVERSION]`
 
@@ -1322,8 +1486,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1337,11 +1501,11 @@ EXAMPLES
   $ snyk-broker-config workflows contexts create
 ```
 
-_See code: [src/commands/workflows/contexts/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/contexts/create.ts)_
+_See code: [src/commands/workflows/contexts/create.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/contexts/create.ts)_
 
 ## `snyk-broker-config workflows contexts delete [APIURL] [APIVERSION]`
 
-Universal Broker -  Delete Contexts Workflow
+Universal Broker - Delete Contexts Workflow
 
 ```
 USAGE
@@ -1349,8 +1513,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1358,13 +1522,13 @@ GLOBAL FLAGS
                         <options: debug|warn|error|info|trace>
 
 DESCRIPTION
-  Universal Broker -  Delete Contexts Workflow
+  Universal Broker - Delete Contexts Workflow
 
 EXAMPLES
   $ snyk-broker-config workflows contexts delete
 ```
 
-_See code: [src/commands/workflows/contexts/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/contexts/delete.ts)_
+_See code: [src/commands/workflows/contexts/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/contexts/delete.ts)_
 
 ## `snyk-broker-config workflows contexts get [APIURL] [APIVERSION]`
 
@@ -1376,8 +1540,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1391,7 +1555,7 @@ EXAMPLES
   $ snyk-broker-config workflows contexts get
 ```
 
-_See code: [src/commands/workflows/contexts/get.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/contexts/get.ts)_
+_See code: [src/commands/workflows/contexts/get.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/contexts/get.ts)_
 
 ## `snyk-broker-config workflows contexts list [APIURL] [APIVERSION]`
 
@@ -1403,8 +1567,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1418,7 +1582,7 @@ EXAMPLES
   $ snyk-broker-config workflows contexts list
 ```
 
-_See code: [src/commands/workflows/contexts/list.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/contexts/list.ts)_
+_See code: [src/commands/workflows/contexts/list.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/contexts/list.ts)_
 
 ## `snyk-broker-config workflows contexts usage [APIURL] [APIVERSION]`
 
@@ -1430,8 +1594,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1445,11 +1609,11 @@ EXAMPLES
   $ snyk-broker-config workflows contexts usage
 ```
 
-_See code: [src/commands/workflows/contexts/usage.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/contexts/usage.ts)_
+_See code: [src/commands/workflows/contexts/usage.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/contexts/usage.ts)_
 
 ## `snyk-broker-config workflows contexts withdraw [APIURL] [APIVERSION]`
 
-Universal Broker -  Withdraw Contexts Workflow
+Universal Broker - Withdraw Contexts Workflow
 
 ```
 USAGE
@@ -1457,8 +1621,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1466,13 +1630,13 @@ GLOBAL FLAGS
                         <options: debug|warn|error|info|trace>
 
 DESCRIPTION
-  Universal Broker -  Withdraw Contexts Workflow
+  Universal Broker - Withdraw Contexts Workflow
 
 EXAMPLES
   $ snyk-broker-config workflows contexts withdraw
 ```
 
-_See code: [src/commands/workflows/contexts/withdraw.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/contexts/withdraw.ts)_
+_See code: [src/commands/workflows/contexts/withdraw.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/contexts/withdraw.ts)_
 
 ## `snyk-broker-config workflows credentials create [APIURL] [APIVERSION]`
 
@@ -1484,8 +1648,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1499,11 +1663,11 @@ EXAMPLES
   $ snyk-broker-config workflows credentials create
 ```
 
-_See code: [src/commands/workflows/credentials/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/credentials/create.ts)_
+_See code: [src/commands/workflows/credentials/create.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/credentials/create.ts)_
 
 ## `snyk-broker-config workflows credentials delete [APIURL] [APIVERSION]`
 
-Universal Broker -  Credentials Deletion Workflow
+Universal Broker - Credentials Deletion Workflow
 
 ```
 USAGE
@@ -1511,8 +1675,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1520,7 +1684,7 @@ GLOBAL FLAGS
                         <options: debug|warn|error|info|trace>
 
 DESCRIPTION
-  Universal Broker -  Credentials Deletion Workflow
+  Universal Broker - Credentials Deletion Workflow
 
 EXAMPLES
   [with exported TENANT_ID, INSTALL_ID]
@@ -1532,7 +1696,7 @@ EXAMPLES
   $ snyk-broker-config workflows credentials delete TENANT_ID INSTALL_ID
 ```
 
-_See code: [src/commands/workflows/credentials/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/credentials/delete.ts)_
+_See code: [src/commands/workflows/credentials/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/credentials/delete.ts)_
 
 ## `snyk-broker-config workflows credentials get [APIURL] [APIVERSION]`
 
@@ -1544,8 +1708,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1559,7 +1723,7 @@ EXAMPLES
   $ snyk-broker-config workflows credentials get
 ```
 
-_See code: [src/commands/workflows/credentials/get.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/credentials/get.ts)_
+_See code: [src/commands/workflows/credentials/get.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/credentials/get.ts)_
 
 ## `snyk-broker-config workflows deployments create [APIURL] [APIVERSION]`
 
@@ -1571,8 +1735,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1586,11 +1750,11 @@ EXAMPLES
   $ snyk-broker-config workflows deployments create
 ```
 
-_See code: [src/commands/workflows/deployments/create.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/deployments/create.ts)_
+_See code: [src/commands/workflows/deployments/create.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/deployments/create.ts)_
 
 ## `snyk-broker-config workflows deployments delete [APIURL] [APIVERSION]`
 
-Universal Broker -  Delete Deployment workflow
+Universal Broker - Delete Deployment workflow
 
 ```
 USAGE
@@ -1598,8 +1762,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1613,7 +1777,7 @@ EXAMPLES
   $ snyk-broker-config workflows deployments delete
 ```
 
-_See code: [src/commands/workflows/deployments/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/deployments/delete.ts)_
+_See code: [src/commands/workflows/deployments/delete.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/deployments/delete.ts)_
 
 ## `snyk-broker-config workflows deployments get [APIURL] [APIVERSION]`
 
@@ -1625,8 +1789,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1640,7 +1804,7 @@ EXAMPLES
   $ snyk-broker-config workflows deployments get
 ```
 
-_See code: [src/commands/workflows/deployments/get.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/deployments/get.ts)_
+_See code: [src/commands/workflows/deployments/get.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/deployments/get.ts)_
 
 ## `snyk-broker-config workflows deployments update [APIURL] [APIVERSION]`
 
@@ -1652,8 +1816,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1667,7 +1831,7 @@ EXAMPLES
   $ snyk-broker-config workflows deployments update
 ```
 
-_See code: [src/commands/workflows/deployments/update.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/deployments/update.ts)_
+_See code: [src/commands/workflows/deployments/update.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/deployments/update.ts)_
 
 ## `snyk-broker-config workflows integrations get [APIURL] [APIVERSION]`
 
@@ -1679,8 +1843,8 @@ USAGE
     debug|warn|error|info|trace]
 
 ARGUMENTS
-  APIURL      [default: https://api.dev.snyk.io] API URL
-  APIVERSION  [default: 2024-02-08~experimental] API Version
+  APIURL      [default: https://api.dev.snyk.io] API Url
+  APIVERSION  [default: 2024-10-15] API Version
 
 GLOBAL FLAGS
   --json                Format output as json.
@@ -1694,5 +1858,5 @@ EXAMPLES
   $ snyk-broker-config workflows integrations get
 ```
 
-_See code: [src/commands/workflows/integrations/get.ts](https://github.com/snyk/snyk-broker-config/blob/v1.17.3/src/commands/workflows/integrations/get.ts)_
+_See code: [src/commands/workflows/integrations/get.ts](https://github.com/snyk/snyk-broker-config/blob/v0.0.0-development/src/commands/workflows/integrations/get.ts)_
 <!-- commandsstop -->

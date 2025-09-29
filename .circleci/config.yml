@@ -17,6 +17,29 @@ filter-main-branch-only: &filter-main-branch-only
   filters:
     branches:
       only: main
+filter-tags-only: &filter-tags-only
+  filters:
+    tags:
+      only: /^v.*/
+    branches:
+      ignore: /.*/
+
+commands:
+  install-github-release:
+    parameters:
+      version:
+        type: string
+        default: "v0.10.0"
+    steps:
+      - run:
+          name: Install github-release
+          command: |
+            curl -L https://github.com/github-release/github-release/releases/download/<<parameters.version>>/linux-amd64-github-release.bz2 -o linux-amd64-github-release.bz2
+            bzip2 -d linux-amd64-github-release.bz2
+            chmod +x linux-amd64-github-release && sudo mv linux-amd64-github-release /usr/local/bin/github-release
+      - run:
+          name: Verify github-release
+          command: github-release --version
 
 jobs:
   build:
@@ -42,8 +65,10 @@ jobs:
             npm run build
             npm run prepack
             npm run pack:macos
-      - store_artifacts:
-          path: dist/macos/
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist/macos/
   build-win:
     macos:
       xcode: 16.4.0
@@ -60,8 +85,10 @@ jobs:
             npm run build
             npm run prepack
             npm run pack:win
-      - store_artifacts:
-          path: dist/win32/
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist/win32/
   build-linux:
     <<: *defaults
     steps:
@@ -76,8 +103,10 @@ jobs:
             npm run build
             npm run prepack
             npm run pack:linux
-      - store_artifacts:
-          path: dist/deb/
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist/deb/
   install-npm-packages:
     <<: *defaults
     environment:
@@ -132,6 +161,40 @@ jobs:
           name: Release to GitHub and NPM
           command: |
             npx semantic-release
+  upload-github-release-assets:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - install-github-release
+      - run:
+          name: Upload assets to GitHub release
+          command: |
+            CIRCLE_SHORT_SHA1=$(git rev-parse --short ${CIRCLE_SHA1})
+            CLI_VERSION=${CIRCLE_TAG}-${CIRCLE_SHORT_SHA1}
+
+            # linux
+            github-release upload --user snyk --repo snyk-broker-config --tag ${CIRCLE_TAG} --security-token ${GH_TOKEN} \
+              --name snyk-broker-config_${CIRCLE_TAG}.${CIRCLE_SHORT_SHA1}-1_amd64.deb --file dist/deb/snyk-broker-config-${CIRCLE_TAG}.${CIRCLE_SHORT_SHA1}-1_amd64.deb
+            github-release upload --user snyk --repo snyk-broker-config --tag ${CIRCLE_TAG} --security-token ${GH_TOKEN} \
+              --name snyk-broker-config_${CIRCLE_TAG}.${CIRCLE_SHORT_SHA1}-1_arm64.deb --file dist/deb/snyk-broker-config-${CIRCLE_TAG}.${CIRCLE_SHORT_SHA1}-1_arm64.deb
+             github-release upload --user snyk --repo snyk-broker-config --tag ${CIRCLE_TAG} --security-token ${GH_TOKEN} \
+              --name snyk-broker-config_${CIRCLE_TAG}.${CIRCLE_SHORT_SHA1}-1_armel.deb --file dist/deb/snyk-broker-config-${CIRCLE_TAG}.${CIRCLE_SHORT_SHA1}-1_armel.deb
+
+            # macos
+            github-release upload --user snyk --repo snyk-broker-config --tag ${CIRCLE_TAG} --security-token ${GH_TOKEN} \
+              --name snyk-broker-config-v${CLI_VERSION}-arm64.pkg --file dist/macos/snyk-broker-config-v${CLI_VERSION}-arm64.pkg
+            github-release upload --user snyk --repo snyk-broker-config --tag ${CIRCLE_TAG} --security-token ${GH_TOKEN} \
+              --name snyk-broker-config-v${CLI_VERSION}-x64.pkg --file dist/macos/snyk-broker-config-v${CLI_VERSION}-x64.pkg
+
+            # win
+            github-release upload --user snyk --repo snyk-broker-config --tag ${CIRCLE_TAG} --security-token ${GH_TOKEN} \
+              --name snyk-broker-config-v${CLI_VERSION}-arm64.exe --file dist/win32/snyk-broker-config-v${CLI_VERSION}-arm64.exe
+            github-release upload --user snyk --repo snyk-broker-config --tag ${CIRCLE_TAG} --security-token ${GH_TOKEN} \
+              --name snyk-broker-config-v${CLI_VERSION}-x64.exe --file dist/win32/snyk-broker-config-v${CLI_VERSION}-x64.exe
+            github-release upload --user snyk --repo snyk-broker-config --tag ${CIRCLE_TAG} --security-token ${GH_TOKEN} \
+              --name snyk-broker-config-v${CLI_VERSION}-x86.exe --file dist/win32/snyk-broker-config-v${CLI_VERSION}-x86.exe
 
 workflows:
   version: 2
@@ -164,28 +227,44 @@ workflows:
           name: Run tests
           requires:
             - Install NPM packages
-      - build-linux:
-          name: Build Linux tarballs
-          requires:
-            - Run tests
-          <<: *filter-main-branch-only
-      - build-macos:
-          name: Build macOS installer
-          requires:
-            - Run tests
-          <<: *filter-main-branch-only
-      - build-win:
-          name: Build Windows installer
-          requires:
-            - Run tests
-          <<: *filter-main-branch-only
       - release:
           name: Release to GitHub and NPM
           context:
             - nodejs-lib-release
             - platformeng_access
           requires:
+            - Run tests
+          <<: *filter-main-branch-only
+
+  Release standalone installers:
+    jobs:
+      - install-npm-packages:
+          name: Install NPM packages
+          context:
+            - nodejs-install
+          <<: *filter-tags-only
+      - build-linux:
+          name: Build Linux tarballs
+          requires:
+            - Install NPM packages
+          <<: *filter-tags-only
+      - build-macos:
+          name: Build macOS installer
+          requires:
+            - Install NPM packages
+          <<: *filter-tags-only
+      - build-win:
+          name: Build Windows installer
+          requires:
+            - Install NPM packages
+          <<: *filter-tags-only
+      - upload-github-release-assets:
+          name: Upload assets to GitHub release
+          context:
+            - nodejs-lib-release
+            - team-hybrid-snyk
+          requires:
             - Build Linux tarballs
             - Build macOS installer
             - Build Windows installer
-          <<: *filter-main-branch-only
+          <<: *filter-tags-only
