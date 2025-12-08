@@ -13,8 +13,6 @@ import {
   GetOrgsForBulkMigrationResponse,
   OrgResource,
 } from '../../src/api/types'
-import {getConfig} from '../../src/config/config'
-
 describe('Connections Api calls', () => {
   const getConnectionsResponse: ConnectionsResponse = {
     data: [
@@ -61,7 +59,7 @@ describe('Connections Api calls', () => {
   }
   before(() => {
     process.env.SNYK_TOKEN = 'dummy'
-    nock(getConfig().API_HOSTNAME)
+    nock('https://api.snyk.io')
       .persist()
       .post(
         '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments/00000000-0000-0000-0000-000000000000/connections?version=2024-10-15',
