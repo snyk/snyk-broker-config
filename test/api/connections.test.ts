@@ -3,12 +3,32 @@ import {
   updateConnectionForDeployment,
   deleteConnectionForDeployment,
   getBulkMigrationOrgs,
+  getConnectionsForDeployment,
 } from '../../src/api/connections'
 import {expect} from 'chai'
 import nock from 'nock'
-import {ConnectionResponse, GetOrgsForBulkMigrationResponse, OrgResource} from '../../src/api/types'
+import {
+  ConnectionResponse,
+  ConnectionsResponse,
+  GetOrgsForBulkMigrationResponse,
+  OrgResource,
+} from '../../src/api/types'
+import {getConfig} from '../../src/config/config'
 
 describe('Connections Api calls', () => {
+  const getConnectionsResponse: ConnectionsResponse = {
+    data: [
+      {
+        id: '00000000-0000-0000-0000-000000000000',
+        type: 'broker_connection',
+        attributes: {},
+      },
+    ],
+    jsonapi: {
+      version: 'dummy',
+    },
+    links: {},
+  }
   const createResponse: ConnectionResponse = {
     data: {
       id: '00000000-0000-0000-0000-000000000000',
@@ -41,7 +61,7 @@ describe('Connections Api calls', () => {
   }
   before(() => {
     process.env.SNYK_TOKEN = 'dummy'
-    nock('https://api.snyk.io')
+    nock(getConfig().API_HOSTNAME)
       .persist()
       .post(
         '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments/00000000-0000-0000-0000-000000000000/connections?version=2024-10-15',
@@ -75,6 +95,14 @@ describe('Connections Api calls', () => {
         '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments/00000000-0000-0000-0000-000000000000/connections/00000000-0000-0000-0000-000000000000/bulk_migration?version=2024-10-15',
       )
       .reply(200, bulkMigrationMockResponse)
+      .get(
+        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments/00000000-0000-0000-0000-000000000000/connections?version=2024-10-15',
+      )
+      .reply(200, getConnectionsResponse)
+      .get(
+        '/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/installs/00000000-0000-0000-0000-000000000000/deployments/invalid-deployment-id/connections?version=2024-10-15',
+      )
+      .reply(404)
   })
   it('createConnectionForDeployment', async () => {
     const createConnectionResponse = await createConnectionForDeployment(
@@ -139,5 +167,23 @@ describe('Connections Api calls', () => {
       '00000000-0000-0000-0000-000000000000', // connectionId
     )
     expect(response).to.deep.equal(bulkMigrationMockResponse)
+  })
+
+  it('getConnectionsForDeployment', async () => {
+    const response = await getConnectionsForDeployment(
+      '00000000-0000-0000-0000-000000000000',
+      '00000000-0000-0000-0000-000000000000',
+      '00000000-0000-0000-0000-000000000000',
+    )
+    expect(response).to.deep.equal(getConnectionsResponse)
+  })
+
+  it('getConnectionsForDeployment handles 404', async () => {
+    const response = await getConnectionsForDeployment(
+      '00000000-0000-0000-0000-000000000000',
+      '00000000-0000-0000-0000-000000000000',
+      'invalid-deployment-id',
+    )
+    expect(response).to.deep.equal({data: [], jsonapi: {version: ''}, links: {}})
   })
 })
