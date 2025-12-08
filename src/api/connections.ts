@@ -26,7 +26,7 @@ export const getConnectionsForDeployment = async (tenantId: string, installId: s
     const response = await makeRequest(req)
     logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
     if (response.statusCode && response.statusCode === 404) {
-      return {data: [], errors: [{details: '404'}]}
+      return {data: [], jsonapi: {version: ''}, links: {}}
     }
     return JSON.parse(response.body) as ConnectionsResponse
   } catch (error: any) {
