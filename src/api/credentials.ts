@@ -26,6 +26,9 @@ export const getCredentialsForDeployment = async (tenantId: string, installId: s
   try {
     const response = await makeRequest(req)
     logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    if (response.statusCode && response.statusCode === 404) {
+      return {data: [], errors: [{details: '404'}]}
+    }
     return JSON.parse(response.body) as CredentialsListResponse
   } catch (error: any) {
     throw new Error(error)
