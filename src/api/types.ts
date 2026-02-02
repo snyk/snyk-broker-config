@@ -240,6 +240,7 @@ export interface ApplyContextResponse {
   }
   errors?: any
 }
+
 export interface OrgResource {
   id: string
   type: 'broker_organization'
