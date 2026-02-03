@@ -73,12 +73,13 @@ export const deleteContextById = async (tenantId: string, installId: string, con
     method: 'DELETE',
   }
 
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  if (!response.statusCode || response.statusCode > 299) {
-    throw new Error(`Deleting context ${contextId}. Response code ${response.statusCode ?? 'none'}.`)
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return response.statusCode
+  } catch (error: any) {
+    throw new Error(error)
   }
-  return response.statusCode
 }
 
 export const applyContext = async (tenantId: string, installId: string, contextId: string, orgId: string) => {
