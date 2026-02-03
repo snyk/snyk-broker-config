@@ -1,6 +1,14 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 version: v1.25.1
-ignore: {}
+ignore:
+  SNYK-JS-GLOB-14040952:
+    - '*':
+        reason: >-
+          glob@10.4.5 is bundled inside npm@10.x which is required by
+          @oclif/plugin-plugins. No fix available until oclif updates to npm 11.x
+          (requires Node 20+). The vulnerability requires crafted input to the glob
+          pattern which is not exposed in this CLI's usage.
+        expires: 2026-05-03T00:00:00.000Z
 patch: {}
 exclude:
   global:
