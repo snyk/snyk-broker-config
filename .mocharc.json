@@ -10,6 +10,7 @@
   "timeout": 60000,
   "node-option": [
     "loader=ts-node/esm",
-    "experimental-specifier-resolution=node"
+    "experimental-specifier-resolution=node",
+    "no-warnings=ExperimentalWarning"
   ]
 }

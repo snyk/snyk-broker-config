@@ -5,7 +5,7 @@ export type BrokerConnectionConfiguration = {
 
 export type FlagRelationship = string | {name: string; when: (flags: Record<string, unknown>) => Promise<boolean>}
 export type Relationship = {
-  type: 'all' | 'some' | 'none'
+  type: 'all' | 'some' | 'none' | 'only'
   flags: FlagRelationship[]
 }
 export type Deprecation = {

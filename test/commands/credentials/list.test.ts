@@ -26,25 +26,27 @@ describe('credentials list command', () => {
       .get(`/rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/credentials`)
       .query(true)
       .reply(404, {
-        errors: [{
-            status: "404",
-            title: "Not Found",
-            detail: "Deployment not found"
-        }]
+        errors: [
+          {
+            status: '404',
+            title: 'Not Found',
+            detail: 'Deployment not found',
+          },
+        ],
       })
 
     const mockConfig: any = {
-        runHook: () => Promise.resolve({successes: [], failures: []}),
-        runCommand: () => Promise.resolve(),
-        scopedEnvVarKey: () => '',
-        bin: 'snyk-broker-config',
-        topicSeparator: ' ',
-        pjson: {
-            oclif: {
-                topicSeparator: ' ',
-            }
+      runHook: () => Promise.resolve({successes: [], failures: []}),
+      runCommand: () => Promise.resolve(),
+      scopedEnvVarKey: () => '',
+      bin: 'snyk-broker-config',
+      topicSeparator: ' ',
+      pjson: {
+        oclif: {
+          topicSeparator: ' ',
         },
-        plugins: new Map(),
+      },
+      plugins: new Map(),
     }
 
     // Since class is loaded before env vars are set, args definition expects tenantId and installId
@@ -52,7 +54,7 @@ describe('credentials list command', () => {
 
     const {error, stdout} = await captureOutput(async () => cmd.run(), {print: false})
     if (error) {
-        throw new Error(`Command failed unexpectedly: ${error.message}`)
+      throw new Error(`Command failed unexpectedly: ${error.message}`)
     }
     expect(stdout).to.contain('Total = 0')
   })

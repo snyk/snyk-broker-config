@@ -1,8 +1,8 @@
-import {spawnSync} from 'child_process'
-import glob from 'glob'
+import {spawnSync} from 'node:child_process'
+import {globSync} from 'glob'
 
 // Find all test files
-const testFiles = glob.sync('./test/**/*.test.ts')
+const testFiles = globSync('./test/**/*.test.ts')
 let returnCode = 0
 const testsSummary = []
 testFiles.forEach((file) => {
