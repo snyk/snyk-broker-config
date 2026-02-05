@@ -31,25 +31,24 @@
     "@types/chai": "^4",
     "@types/global-agent": "^3.0.0",
     "@types/mocha": "^10",
-    "@types/node": "^18",
+    "@types/node": "^24",
     "@types/proxy-from-env": "^1.0.4",
     "chai": "^4",
-    "eslint": "^8",
-    "eslint-config-oclif": "^5",
-    "eslint-config-oclif-typescript": "^3",
-    "eslint-config-prettier": "^9",
-    "mocha": "^10",
+    "eslint": "^9",
+    "eslint-config-oclif": "^6",
+    "eslint-config-prettier": "^10",
+    "mocha": "^11",
     "mock-stdin": "^1.0.0",
     "nock": "^13.5.6",
     "oclif": "^4",
     "prettier": "^3.3.3",
     "semantic-release": "24.2.0",
-    "shx": "^0.3.3",
+    "shx": "^0.4.0",
     "ts-node": "^10",
     "typescript": "^5"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=24.0.0"
   },
   "files": [
     "/bin",
@@ -106,7 +105,7 @@
   "repository": "snyk/snyk-broker-config",
   "scripts": {
     "build": "shx rm -rf dist && tsc -b",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint .",
     "test": "node test/run-test.js",
     "prepack": "oclif manifest",
     "pack:linux": "oclif pack deb",
