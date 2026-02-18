@@ -5,7 +5,6 @@ import {BaseCommand} from '../../../base-command.js'
 import {deleteContextById} from '../../../api/contexts.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
-  static hidden = true // not yet GA
   public static enableJsonFlag = true
   static args = {
     ...commonApiRelatedArgs,
