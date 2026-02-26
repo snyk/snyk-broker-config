@@ -1,14 +1,28 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 version: v1.25.1
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
   SNYK-JS-GLOB-14040952:
     - '*':
         reason: >-
           glob@10.4.5 is bundled inside npm@10.x which is required by
-          @oclif/plugin-plugins. No fix available until oclif updates to npm 11.x
-          (requires Node 20+). The vulnerability requires crafted input to the glob
-          pattern which is not exposed in this CLI's usage.
+          @oclif/plugin-plugins. No fix available until oclif updates to npm
+          11.x (requires Node 20+). The vulnerability requires crafted input to
+          the glob pattern which is not exposed in this CLI's usage.
         expires: 2026-05-03T00:00:00.000Z
+  SNYK-JS-MINIMATCH-15309438:
+    - '*':
+        reason: >-
+          Ignore temporarily, until @oclif/core package upgrade.
+        expires: 2026-03-28T14:24:30.276Z
+        created: 2026-02-26T14:24:30.284Z
+  SNYK-JS-TAR-15307072:
+    - '*':
+        reason: >-
+          The functionality is not used in CLI, wait for a dep upgrade
+          from @oclif/plugin-plugins.
+        expires: 2026-03-28T14:24:45.838Z
+        created: 2026-02-26T14:24:45.845Z
 patch: {}
 exclude:
   global:
