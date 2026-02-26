@@ -5,7 +5,6 @@ import {printFormattedJSON} from '../../../utils/display.js'
 import {getContextsForForDeployment} from '../../../api/contexts.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
-  static hidden = true // not yet GA
   public static enableJsonFlag = true
   static args = {
     ...commonApiRelatedArgs,
