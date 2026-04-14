@@ -47,23 +47,18 @@ describe('Broker App Api calls', () => {
     expect(installedApp).to.deep.equal(response.data[0])
   })
 
-  it('get no installed broker app if app id is not found ', async () => {
-    process.env.SNYK_BROKER_APP_ID = 'dummy'
-    const orgId = '00000000-0000-0000-0000-00000000000'
+  it('returns undefined when no apps are installed', async () => {
+    const orgId = 'no-apps-installed-org-id'
 
-    try {
-      await getExistingAppInstalledOnOrgId(orgId)
-      expect.fail('Should have thrown an error')
-    } catch (error: any) {
-      expect(error.message).to.include(
-        'No Broker App installation found with the configured SNYK_BROKER_APP_ID (dummy)',
-      )
-    }
+    nock('https://api.snyk.io')
+      .get(`/rest/orgs/${orgId}/apps/installs?version=2024-05-31`)
+      .reply(200, {data: []})
 
-    delete process.env.SNYK_BROKER_APP_ID
+    const installedApp = await getExistingAppInstalledOnOrgId(orgId)
+    expect(installedApp).to.be.undefined
   })
 
-  it('should throw helpful error when wrong SNYK_BROKER_APP_ID is configured', async () => {
+  it('returns undefined when SNYK_BROKER_APP_ID does not match any installed app', async () => {
     const responseWithDifferentApps = {
       data: [
         {
@@ -85,20 +80,13 @@ describe('Broker App Api calls', () => {
       ],
     }
 
+    const orgId = 'apps-installed-org-id'
     nock('https://api.snyk.io')
-      .get(`/rest/orgs/wrong-app-id-test-org/apps/installs?version=2024-05-31`)
+      .get(`/rest/orgs/${orgId}/apps/installs?version=2024-05-31`)
       .reply(200, responseWithDifferentApps)
 
-    process.env.SNYK_BROKER_APP_ID = 'wrong-app-id-9999-8888-7777-666555444333'
-    const orgId = 'wrong-app-id-test-org'
 
-    try {
-      await getExistingAppInstalledOnOrgId(orgId)
-      expect.fail('Should have thrown an error')
-    } catch (error: any) {
-      expect(error.message).to.include('No Broker App installation found with the configured SNYK_BROKER_APP_ID')
-      expect(error.message).to.include('wrong-app-id-9999-8888-7777-666555444333')
-    }
-    delete process.env.SNYK_BROKER_APP_ID
+    const installedApp = await getExistingAppInstalledOnOrgId(orgId)
+    expect(installedApp).to.be.undefined
   })
 })

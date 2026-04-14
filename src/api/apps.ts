@@ -67,15 +67,9 @@ export const getExistingAppInstalledOnOrgId = async (orgId: string): Promise<App
     const installs = JSON.parse(response.body) as AppInstallsResponse
 
     const existingInstall = installs.data.find((x) => x.relationships.app.data.id === appId)
-    if (!existingInstall && installs.data.length > 0) {
-      throw new Error(`No Broker App installation found with the configured SNYK_BROKER_APP_ID (${appId}).`)
-    }
 
     return existingInstall
   } catch (error: any) {
-    if (error.message.includes('No Broker App installation found')) {
-      throw error
-    }
     throw new Error(error)
   }
 }
