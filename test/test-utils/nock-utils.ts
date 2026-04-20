@@ -1054,4 +1054,10 @@ export const beforeStep = () => {
         },
       ],
     })
+    .delete(
+      `${urlPrefixTenantId}/brokers/installs/${installId4}/contexts/${contextId4}/integrations/${integrationId4}?version=2024-02-08~experimental`,
+    )
+    .reply((uri, body) => {
+      return [204]
+    })
 }
