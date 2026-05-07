@@ -1,4 +1,4 @@
-import {commonHeaders} from '../common/rest-helpers.js'
+import {getCommonHeaders} from '../common/rest-helpers.js'
 import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
@@ -41,7 +41,7 @@ export interface DeploymentsResponse {
 }
 
 export const getDeployments = async (tenantId: string, installId: string) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments`
   const config = getConfig()
 
@@ -66,7 +66,7 @@ export const createDeployment = async (
   installId: string,
   deploymentAttributes: DeploymentAttributesMetadata,
 ) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments`
   const config = getConfig()
   const body = {
@@ -93,7 +93,7 @@ export const createDeployment = async (
 }
 
 export const deleteDeployment = async (tenantId: string, installId: string, deploymentId: string) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}`
   const config = getConfig()
 
@@ -114,7 +114,7 @@ export const updateDeployment = async (
   deploymentMetadata: DeploymentAttributesMetadata,
   deploymentAttributes?: Omit<UpdateDeploymentAttributes, 'metadata'>,
 ) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}`
   const config = getConfig()
   const body = {

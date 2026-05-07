@@ -1,4 +1,4 @@
-import {commonHeaders} from '../common/rest-helpers.js'
+import {getCommonHeaders} from '../common/rest-helpers.js'
 import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
@@ -13,7 +13,7 @@ import {
 const logger = createLogger('snyk-broker-config')
 
 export const getConnectionsForDeployment = async (tenantId: string, installId: string, deploymentId: string) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/connections`
   const config = getConfig()
 
@@ -40,7 +40,7 @@ export const applyBulkMigration = async (
   deploymentId: string,
   connectionId: string,
 ): Promise<applyBulkMigrationResponse> => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/connections/${connectionId}/bulk_migration`
   const config = getConfig()
 
@@ -71,7 +71,7 @@ export const getBulkMigrationOrgs = async (
   deploymentId: string,
   connectionId: string,
 ): Promise<GetOrgsForBulkMigrationResponse> => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/connections/${connectionId}/bulk_migration`
   const config = getConfig()
 
@@ -97,7 +97,7 @@ export const createConnectionForDeployment = async (
   connectionType: string,
   requiredConfigurationAttributes: Record<string, string>,
 ) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/connections`
   const config = getConfig()
 
@@ -141,7 +141,7 @@ export const updateConnectionForDeployment = async (
   connectionType: string,
   requiredConfigurationAttributes: Record<string, string>,
 ) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/connections/${connectionId}`
   const config = getConfig()
 
@@ -181,7 +181,7 @@ export const deleteConnectionForDeployment = async (
   deploymentId: string,
   connectionId: string,
 ) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const config = getConfig()
 
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/connections/${connectionId}`

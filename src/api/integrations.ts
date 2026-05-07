@@ -1,4 +1,4 @@
-import {commonHeaders} from '../common/rest-helpers.js'
+import {getCommonHeaders} from '../common/rest-helpers.js'
 import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
@@ -15,7 +15,7 @@ interface IntegrationBody {
   }
 }
 export const getIntegrationsForConnection = async (tenantId: string, connectionId: string) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/connections/${connectionId}/integrations`
   const config = getConfig()
 
@@ -39,7 +39,7 @@ export const deleteIntegrationsForConnection = async (
   orgId: string,
   integrationId: string,
 ) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/connections/${connectionId}/orgs/${orgId}/integrations/${integrationId}`
   const config = getConfig()
 
@@ -64,7 +64,7 @@ export const createIntegrationForConnection = async (
   orgId: string,
   integrationId?: string,
 ): Promise<IntegrationResponse> => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/connections/${connectionId}/orgs/${orgId}/integration`
   const config = getConfig()
 
@@ -97,6 +97,7 @@ export const disconnectIntegrationForOrgIdAndIntegrationId = async (
   type: string,
 ): Promise<void> => {
   const headers = {
+    ...getCommonHeaders(),
     'user-agent': 'Hybrid Platform Service',
     'Content-Type': 'application/json; charset=utf-8',
     ...getAuthHeader(),

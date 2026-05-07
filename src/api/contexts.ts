@@ -1,4 +1,4 @@
-import {commonHeaders} from '../common/rest-helpers.js'
+import {getCommonHeaders} from '../common/rest-helpers.js'
 import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
@@ -8,7 +8,7 @@ import {ApplyContextResponse, ContextResponse, ContextsResponse} from './types.j
 const logger = createLogger('snyk-broker-config')
 
 export const getContextsForForDeployment = async (tenantId: string, installId: string, deploymentId: string) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/contexts`
   const config = getConfig()
 
@@ -33,7 +33,7 @@ export const createContextForConnection = async (
   connectionId: string,
   parameters: Record<string, string>,
 ) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/contexts`
   const config = getConfig()
 
@@ -63,7 +63,7 @@ export const createContextForConnection = async (
 }
 
 export const deleteContextById = async (tenantId: string, installId: string, contextId: string) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const config = getConfig()
 
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/contexts/${contextId}`
@@ -83,7 +83,7 @@ export const deleteContextById = async (tenantId: string, installId: string, con
 }
 
 export const applyContext = async (tenantId: string, installId: string, contextId: string, orgId: string) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/contexts/${contextId}/integration`
   const config = getConfig()
 
@@ -119,7 +119,7 @@ export const withdrawContext = async (
   contextId: string,
   integrationId: string,
 ) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/contexts/${contextId}/integrations/${integrationId}`
   const config = getConfig()
 
