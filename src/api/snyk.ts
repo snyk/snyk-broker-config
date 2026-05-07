@@ -1,4 +1,4 @@
-import {commonHeaders} from '../common/rest-helpers.js'
+import {getCommonHeaders} from '../common/rest-helpers.js'
 import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
@@ -26,7 +26,7 @@ export const validateSnykToken = async (snykToken: string): Promise<string> => {
     throw new Error('Invalid Format.')
   }
   process.env.SNYK_TOKEN = snykToken
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/self`
   const config = getConfig()
 

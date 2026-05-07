@@ -1,4 +1,4 @@
-import {commonHeaders} from '../common/rest-helpers.js'
+import {getCommonHeaders} from '../common/rest-helpers.js'
 import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
@@ -30,7 +30,7 @@ interface TenantsListingResponse {
 const logger = createLogger('snyk-broker-config')
 
 export const getAccessibleTenants = async () => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants`
   const config = getConfig()
 
@@ -96,7 +96,7 @@ interface TenantsMembershipResponse {
 }
 
 export const isTenantAdmin = async (tenantId: string, userId: string) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/memberships`
   const config = getConfig()
 

@@ -1,4 +1,4 @@
-import {commonHeaders} from '../common/rest-helpers.js'
+import {getCommonHeaders} from '../common/rest-helpers.js'
 import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
@@ -24,7 +24,7 @@ export const installAppIdOnOrgId = async (orgId: string): Promise<AppInstallResp
     },
   }
 
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/orgs/${orgId}/apps/installs`
   const config = getConfig()
 
@@ -52,7 +52,7 @@ export const installAppIdOnOrgId = async (orgId: string): Promise<AppInstallResp
 export const getExistingAppInstalledOnOrgId = async (orgId: string): Promise<AppInstallResponseData | undefined> => {
   const appId = process.env.SNYK_BROKER_APP_ID ?? 'cb43d761-bd17-4b44-9b6c-e5b8ad077d33'
 
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/orgs/${orgId}/apps/installs`
   const config = getConfig()
 

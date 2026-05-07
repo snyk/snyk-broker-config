@@ -1,4 +1,4 @@
-import {commonHeaders} from '../common/rest-helpers.js'
+import {getCommonHeaders} from '../common/rest-helpers.js'
 import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
@@ -14,7 +14,7 @@ import {
 const logger = createLogger('snyk-broker-config')
 
 export const getCredentialsForDeployment = async (tenantId: string, installId: string, deploymentId: string) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/credentials`
   const config = getConfig()
 
@@ -41,7 +41,7 @@ export const getCredentialForDeployment = async (
   deploymentId: string,
   credentialId: string,
 ) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/credentials/${credentialId}`
   const config = getConfig()
 
@@ -65,7 +65,7 @@ export const createCredentials = async (
   deploymentId: string,
   attributesArray: CredentialsAttributes[],
 ) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/credentials`
   const config = getConfig()
   const body = {
@@ -95,7 +95,7 @@ export const deleteCredentials = async (
   deploymentId: string,
   credentialsId: string,
 ) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const config = getConfig()
 
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/credentials/${credentialsId}`
@@ -120,7 +120,7 @@ export const updateCredentials = async (
   credentialsId: string,
   attributes: CredentialsAttributes,
 ) => {
-  const headers = {...commonHeaders, ...getAuthHeader()}
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/installs/${installId}/deployments/${deploymentId}/credentials/${credentialsId}`
   const config = getConfig()
   const body = {
