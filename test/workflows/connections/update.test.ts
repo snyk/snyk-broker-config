@@ -3,7 +3,7 @@ import {expect} from 'chai'
 import {stdin as fstdin} from 'mock-stdin'
 
 import WorkflowsConnectionsUpdate from '../../../src/commands/workflows/connections/update' // Import the correct command
-import {beforeStep, downArrow, orgId4, snykToken} from '../../test-utils/nock-utils' // Keep common utils
+import {beforeStep, capturedRequestBodies, downArrow, orgId4, snykToken} from '../../test-utils/nock-utils' // Keep common utils
 import {sendScenarioWithOutAutoEnter} from '../../test-utils/stdin-utils' // Keep stdin utils
 
 describe('connection update workflow', () => {
@@ -29,6 +29,7 @@ describe('connection update workflow', () => {
           '\n',
           'updated-name',
           '\n',
+          'http://my.broker.client.url/',
           '\n',
           '\n',
         ])
@@ -39,5 +40,8 @@ describe('connection update workflow', () => {
     // TODO: Update assertions based on the expected output of the update command
     expect(stdout).to.contain('Connection Update Workflow completed.') // Update expected output message
     expect(error).to.be.undefined
+
+    const required = capturedRequestBodies.connectionUpdate?.data?.attributes?.configuration?.required
+    expect(required.broker_client_url).to.equal('http://my.broker.client.url')
   })
 })

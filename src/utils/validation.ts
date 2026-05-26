@@ -14,6 +14,11 @@ export function isValidUrl(url: string): boolean {
   return regex.test(url)
 }
 
+export function stripTrailingSlash(url: string): string {
+  if (url.endsWith('://')) return url
+  return url.replace(/\/+$/, '')
+}
+
 export function isNotProhibitedValue(prohibitedValues: string[], value: string) {
   return !prohibitedValues.includes(value)
 }
