@@ -7,6 +7,7 @@ import {
 } from '../../common/args.js'
 import {printFormattedJSON} from '../../utils/display.js'
 import {connectionsData} from '../../command-helpers/connections/flags.js'
+import {normalizeUrlAttributes} from '../../command-helpers/connections/parameters-capture.js'
 import {createConnectionForDeployment} from '../../api/connections.js'
 
 export default class Connections extends Command {
@@ -38,13 +39,14 @@ export default class Connections extends Command {
     const attributes = structuredClone(flags) as Omit<typeof flags, 'name' | 'type'>
     delete attributes.name
     delete attributes.type
+    const normalizedAttributes = normalizeUrlAttributes(flags.type, attributes as Record<string, string>)
     const connection = await createConnectionForDeployment(
       tenantId,
       installId,
       args.deploymentId,
       flags.name,
       flags.type,
-      attributes,
+      normalizedAttributes,
     )
     const connectionResponse = connection.data
 

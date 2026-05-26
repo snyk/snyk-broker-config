@@ -2,7 +2,13 @@ import {input, select, confirm} from '@inquirer/prompts'
 import {craConfigType1Types, flagConnectionMapping, TypeMapping, TypeParams} from './type-params-mapping.js'
 import {createCredentials, getCredentialsForDeployment} from '../../api/credentials.js'
 import {CredentialsAttributes, CredentialsListResponse} from '../../api/types.js'
-import {isNotProhibitedValue, isValidHostnameWithPort, isValidUrl, isValidUUID} from '../../utils/validation.js'
+import {
+  isNotProhibitedValue,
+  isValidHostnameWithPort,
+  isValidUrl,
+  isValidUUID,
+  stripTrailingSlash,
+} from '../../utils/validation.js'
 import {validatedInput, ValidationType} from '../../utils/input-validation.js'
 import {getConfig} from '../../config/config.js'
 import {ux} from '@oclif/core'
@@ -110,6 +116,9 @@ export const captureConnectionParams = async (
               isInputValidated =
                 (isValidUrl(requiredParameters[key].input) || isValidUUID(requiredParameters[key].input)) &&
                 isNotProhibitedValue(requiredParameters[key].prohibitedValues, requiredParameters[key].input)
+              if (isInputValidated && isValidUrl(requiredParameters[key].input)) {
+                requiredParameters[key].input = stripTrailingSlash(requiredParameters[key].input)
+              }
               break
             }
             default: {
@@ -140,6 +149,21 @@ export const captureConnectionParams = async (
     }
   }
   return connectionParams
+}
+
+export const normalizeUrlAttributes = (
+  connectionType: string,
+  attributes: Record<string, string>,
+): Record<string, string> => {
+  const typeParams = flagConnectionMapping[connectionType]
+  if (!typeParams) return attributes
+  const normalized: Record<string, string> = {...attributes}
+  for (const [key, value] of Object.entries(normalized)) {
+    if (typeParams[key]?.dataType === 'url' && typeof value === 'string' && isValidUrl(value)) {
+      normalized[key] = stripTrailingSlash(value)
+    }
+  }
+  return normalized
 }
 
 const getExistingCredentialsReference = async (
