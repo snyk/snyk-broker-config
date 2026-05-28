@@ -5,7 +5,7 @@ export function isValidUUID(val: string): boolean {
 
 export function isValidHostnameWithPort(hostname: string): boolean {
   const regex =
-    /^(?!:\/\/)([\dA-Za-z-]{1,63})(\.[\dA-Za-z-]{1,63})*(\.[A-Za-z]{2,6})?(:\d{1,5})?(\/[\w!$%&'()*+,./:;=@~-]*)?$/
+    /^\w(?:[\w-]{0,61}\w)?(?:\.\w(?:[\w-]{0,61}\w)?)*(?::\d{1,5})?(?:\/[\w!$%&'()*+,./:;=@~-]*)?$/
   return regex.test(hostname)
 }
 
