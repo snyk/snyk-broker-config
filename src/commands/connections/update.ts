@@ -8,6 +8,7 @@ import {
 } from '../../common/args.js'
 import {printFormattedJSON} from '../../utils/display.js'
 import {updateConnectionsData} from '../../command-helpers/connections/flags.js'
+import {normalizeUrlAttributes} from '../../command-helpers/connections/parameters-capture.js'
 import {getConnectionsForDeployment, updateConnectionForDeployment} from '../../api/connections.js'
 import {convertCredsToUuid} from '../../api/credentials.js'
 
@@ -58,6 +59,8 @@ export default class Connections extends Command {
     const attributes = structuredClone(flags) as Omit<typeof flags, 'name' | 'type'>
     delete attributes.name
     delete attributes.type
+    const mergedAttributes = {...existingAttributes, ...credentialsUuid, ...attributes} as Record<string, string>
+    const normalizedAttributes = normalizeUrlAttributes(flags.type, mergedAttributes)
     const connection = await updateConnectionForDeployment(
       tenantId,
       installId,
@@ -65,7 +68,7 @@ export default class Connections extends Command {
       args.connectionId,
       flags.name,
       flags.type,
-      {...existingAttributes, ...credentialsUuid, ...attributes},
+      normalizedAttributes,
     )
     const connectionResponse = JSON.parse(connection).data
 

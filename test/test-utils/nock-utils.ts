@@ -385,6 +385,11 @@ const mockBulkMigrationApplySuccessResponse: applyBulkMigrationResponse = {
   links: {self: `/self/link/migration-789`},
 }
 
+export const capturedRequestBodies: {
+  connectionCreate?: any
+  connectionUpdate?: any
+} = {}
+
 export const beforeStep = () => {
   const apiResponseSchema = {data: {}, links: {}}
   nock('https://api.snyk.io')
@@ -787,10 +792,12 @@ export const beforeStep = () => {
       `${urlPrefixTenantIdAndInstallId}/deployments/00000000-0000-0000-0000-000000000000/connections?version=2024-10-15`,
     )
     .reply((uri, body) => {
+      const parsedBody = JSON.parse(body.toString())
+      capturedRequestBodies.connectionCreate = parsedBody
       const createNockResponse = {
         ...createConnectionResponse,
       }
-      createNockResponse.data.attributes = JSON.parse(body.toString()).data.attributes
+      createNockResponse.data.attributes = parsedBody.data.attributes
       createNockResponse.data.id = '00000000-0000-0000-0000-000000000000'
       return [200, createNockResponse]
     })
@@ -864,10 +871,12 @@ export const beforeStep = () => {
       `${urlPrefixTenantIdAndInstallId4}/deployments/${deploymentId4}/connections/${connectionId3}?version=2024-10-15`,
     )
     .reply((uri, body) => {
+      const parsedBody = JSON.parse(body.toString())
+      capturedRequestBodies.connectionUpdate = parsedBody
       const updateNockResponse = {
         ...updateConnectionResponse,
       }
-      updateNockResponse.data.attributes = JSON.parse(body.toString()).data.attributes
+      updateNockResponse.data.attributes = parsedBody.data.attributes
       updateNockResponse.data.id = '00000000-0000-0000-0000-000000000003'
       return [200, updateNockResponse]
     })

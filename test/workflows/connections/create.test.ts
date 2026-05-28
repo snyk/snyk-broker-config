@@ -3,7 +3,7 @@ import {expect} from 'chai'
 import {stdin as fstdin} from 'mock-stdin'
 
 import Connections from '../../../src/commands/workflows/connections/create'
-import {beforeStep, downArrow, orgId, snykToken} from '../../test-utils/nock-utils'
+import {beforeStep, capturedRequestBodies, downArrow, orgId, snykToken} from '../../test-utils/nock-utils'
 import {sendScenarioWithOutAutoEnter} from '../../test-utils/stdin-utils'
 
 describe('connection workflows', () => {
@@ -25,18 +25,18 @@ describe('connection workflows', () => {
           '\n',
           downArrow,
           downArrow,
+          downArrow,
           '\n',
           'test-conn',
           '\n',
-          'http://broker.client.url',
+          'http://broker.client.url/',
           '\n',
-          'http://artifactory.hostname',
+          'http://artifactory.hostname/',
           '\n',
           'artifactory-crbase.hostname',
           '\n',
           'username',
           '\n',
-          'y',
           '\n',
           'ARTIFACTORY_PASSWORD',
           '\n',
@@ -49,5 +49,9 @@ describe('connection workflows', () => {
     )
     expect(stdout).to.contain('Connection Create Workflow completed.')
     expect(error).to.be.undefined
+
+    const required = capturedRequestBodies.connectionCreate?.data?.attributes?.configuration?.required
+    expect(required.broker_client_url).to.equal('http://broker.client.url')
+    expect(required.cr_agent_url).to.equal('http://artifactory.hostname')
   })
 })
