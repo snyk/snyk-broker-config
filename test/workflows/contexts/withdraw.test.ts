@@ -24,6 +24,6 @@ describe('deployment workflows', () => {
 
     expect(error).to.be.undefined
 
-    expect(stdout).to.contain('Contexts Withdraw Workflow completed.')
+    expect(stderr).to.contain('Contexts Withdraw Workflow completed.')
   })
 })

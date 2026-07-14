@@ -30,14 +30,14 @@ export default class Connections extends BaseCommand<typeof Connections> {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', Connections.description))
+  async run() {
+    this.heading(Connections.description)
     const {args} = await this.parse(Connections)
     const {tenantId, installId} = getCommonIds(args)
     const connections = await getConnectionsForDeployment(tenantId, installId, args.deploymentId!)
     const connectionsList = connections.data
 
-    this.log(
+    this.logStatus(
       ux.colorize(
         'cyan',
         `Getting Universal Broker Connections for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,
@@ -47,8 +47,8 @@ export default class Connections extends BaseCommand<typeof Connections> {
     for (const connection of connectionsList) {
       this.log(printFormattedJSON(connection))
     }
-    this.log(`Total = ${connectionsList.length}`)
+    this.logStatus(`Total = ${connectionsList.length}`)
 
-    return JSON.stringify(connectionsList)
+    return connectionsList
   }
 }

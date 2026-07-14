@@ -30,14 +30,14 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', Integrations.description))
+  async run() {
+    this.heading(Integrations.description)
     const {args} = await this.parse(Integrations)
     const {tenantId} = getCommonIds(args)
     const integrations = await getIntegrationsForConnection(tenantId, args.connectionId)
     const integrationsList = integrations.data ?? []
 
-    this.log(
+    this.logStatus(
       ux.colorize(
         'cyan',
         `Getting Universal Broker Connections Integrations for Connection ${args.connectionId}, Tenant ${tenantId}`,
@@ -47,7 +47,7 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
     for (const connection of integrationsList) {
       this.log(printFormattedJSON(connection))
     }
-    this.log(ux.colorize('cyan', `Total = ${integrationsList.length}`))
-    return JSON.stringify(integrationsList)
+    this.logStatus(ux.colorize('cyan', `Total = ${integrationsList.length}`))
+    return integrationsList
   }
 }

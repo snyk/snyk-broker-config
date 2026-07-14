@@ -9,7 +9,7 @@ import {credentialId, credentialsData} from '../../command-helpers/credentials/f
 import {printFormattedJSON} from '../../utils/display.js'
 import {updateCredentials} from '../../api/credentials.js'
 import {BaseCommand} from '../../base-command.js'
-import {CredentialsAttributes} from '../../api/types.js'
+import {CredentialsAttributes, CredentialsListResponseData} from '../../api/types.js'
 
 export default class Credentials extends BaseCommand<typeof Credentials> {
   static args = {
@@ -32,8 +32,8 @@ export default class Credentials extends BaseCommand<typeof Credentials> {
     `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID --credentialsId CREDENTIALID --comment "mycomment" --env_var_name MY_GITHUB_TOKEN --type github`,
   ]
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', Credentials.description))
+  async run() {
+    this.heading(Credentials.description)
     const {args, flags} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds(args)
 
@@ -44,15 +44,15 @@ export default class Credentials extends BaseCommand<typeof Credentials> {
     }
 
     const deployment = await updateCredentials(tenantId, installId, args.deploymentId, flags.credentialsId, attributes)
-    const deploymentResponse = JSON.parse(deployment).data as Array<any>
+    const deploymentResponse = JSON.parse(deployment).data as CredentialsListResponseData[]
 
-    this.log(
+    this.logStatus(
       ux.colorize(
         'cyan',
         `Updating Universal Broker Credentials ${flags.credentialsId} for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
       ),
     )
     this.log(printFormattedJSON(deploymentResponse))
-    return JSON.stringify(deploymentResponse)
+    return deploymentResponse
   }
 }

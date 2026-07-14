@@ -5,7 +5,7 @@ import {HttpRequest, makeRequest} from '../utils/http-request.js'
 import {createLogger} from '../utils/logger.js'
 import {ApplyContextResponse, ContextResponse, ContextsResponse} from './types.js'
 
-const logger = createLogger('snyk-broker-config')
+const logger = createLogger()
 
 export const getContextsForForDeployment = async (tenantId: string, installId: string, deploymentId: string) => {
   const headers = {...getCommonHeaders(), ...getAuthHeader()}

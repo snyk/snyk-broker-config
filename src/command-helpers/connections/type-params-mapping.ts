@@ -504,7 +504,7 @@ export const allRelationshipsFunc = (): Relationship[] => {
 }
 export const allConnectionsParametersFlagsFunc = (): Record<any, FlagProps> => {
   const flags: Record<any, FlagProps> = {}
-  for (const [key, value] of Object.entries(flagConnectionMapping)) {
+  for (const [, value] of Object.entries(flagConnectionMapping)) {
     for (const [key2, value2] of Object.entries(value)) {
       flags[key2] = Flags.string({
         description: value2.description,

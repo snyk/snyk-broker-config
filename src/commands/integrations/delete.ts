@@ -6,8 +6,9 @@ import {
   commonUniversalBrokerIntegrationsIds,
   getCommonIds,
 } from '../../common/args.js'
-import {deleteIntegrationsForConnection, getIntegrationsForConnection} from '../../api/integrations.js'
+import {deleteIntegrationsForConnection} from '../../api/integrations.js'
 import {BaseCommand} from '../../base-command.js'
+import {STATUS} from '../../utils/display.js'
 
 export default class Integrations extends BaseCommand<typeof Integrations> {
   public static enableJsonFlag = true
@@ -31,8 +32,8 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', Integrations.description))
+  async run() {
+    this.heading(Integrations.description)
     const {args} = await this.parse(Integrations)
     const {tenantId} = getCommonIds(args)
     const integrationsResponseCode = await deleteIntegrationsForConnection(
@@ -42,14 +43,14 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
       args.integrationId,
     )
     if (integrationsResponseCode === 204) {
-      this.log(
+      this.logStatus(
         ux.colorize(
-          'cyan',
-          `Deleted Universal Broker Connections Integration for Connection ${args.connectionId} for Org ${args.orgId}, Integration ${args.integrationId}, Tenant ${tenantId}`,
+          'green',
+          `${STATUS.DONE} Deleted Universal Broker Connections Integration for Connection ${args.connectionId} for Org ${args.orgId}, Integration ${args.integrationId}, Tenant ${tenantId}`,
         ),
       )
-      return JSON.stringify({responseCode: integrationsResponseCode})
+      return {responseCode: integrationsResponseCode}
     }
-    this.error(ux.colorize('red', `Error deleting Deployment. Status code: ${integrationsResponseCode}.`))
+    this.error(`Error deleting Deployment. Status code: ${integrationsResponseCode}.`)
   }
 }

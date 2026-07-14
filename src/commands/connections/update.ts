@@ -11,6 +11,7 @@ import {updateConnectionsData} from '../../command-helpers/connections/flags.js'
 import {normalizeUrlAttributes} from '../../command-helpers/connections/parameters-capture.js'
 import {getConnectionsForDeployment, updateConnectionForDeployment} from '../../api/connections.js'
 import {convertCredsToUuid} from '../../api/credentials.js'
+import {ConnectionResponse} from '../../api/types.js'
 
 export default class Connections extends Command {
   static args = {
@@ -33,8 +34,8 @@ export default class Connections extends Command {
     `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID CONNECTION_ID --type github`,
   ]
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', Connections.description))
+  async run() {
+    this.logToStderr(ux.colorize('cyan', Connections.description))
     const {args, flags} = await this.parse(Connections)
 
     const {tenantId, installId} = getCommonIds(args)
@@ -46,7 +47,7 @@ export default class Connections extends Command {
     }
     const existingAttributes = existingConnection.attributes.configuration.required as Record<string, string>
     const onlyCredentialsAttributes = Object.fromEntries(
-      Object.entries(existingAttributes).filter(([_, value]) => /\${[^}]+}/.test(value)),
+      Object.entries(existingAttributes).filter(([, value]) => /\${[^}]+}/.test(value)),
     )
     const credentialsUuid = await convertCredsToUuid(
       tenantId,
@@ -70,15 +71,15 @@ export default class Connections extends Command {
       flags.type,
       normalizedAttributes,
     )
-    const connectionResponse = JSON.parse(connection).data
+    const connectionResponse = (JSON.parse(connection) as ConnectionResponse).data
 
-    this.log(
+    this.logToStderr(
       ux.colorize(
         'cyan',
         `Updating Universal Broker Connections ${args.connectionId} for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
       ),
     )
     this.log(printFormattedJSON(connectionResponse))
-    return JSON.stringify(connectionResponse)
+    return connectionResponse
   }
 }

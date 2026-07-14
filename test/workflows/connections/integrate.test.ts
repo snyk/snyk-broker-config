@@ -22,10 +22,10 @@ describe('deployment workflows', () => {
       {print: false},
     )
 
-    expect(stdout).to.contain(
+    expect(stderr).to.contain(
       `Connection ${connectionId3} (type: github) integrated with integration ${integrationId3} on Org ${orgId3}.`,
     )
     expect(error).to.be.undefined
-    expect(stdout).to.contain('Connection Integrate Workflow completed.')
+    expect(stderr).to.contain('Connection Integrate Workflow completed.')
   })
 })

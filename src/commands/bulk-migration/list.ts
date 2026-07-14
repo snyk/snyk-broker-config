@@ -29,8 +29,8 @@ export default class BulkMigrationList extends BaseCommand<typeof BulkMigrationL
     `$ <%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID CONNECTION_ID`,
   ]
 
-  async run(): Promise<string> {
-    this.log('\\n' + ux.colorize('red', BulkMigrationList.description))
+  async run() {
+    this.heading(BulkMigrationList.description)
     const {args} = await this.parse(BulkMigrationList)
     const {tenantId, installId} = getCommonIds(args)
 
@@ -46,7 +46,7 @@ export default class BulkMigrationList extends BaseCommand<typeof BulkMigrationL
     const deploymentId = args.deploymentId!
     const connectionId = args.connectionId!
 
-    this.log(
+    this.logStatus(
       ux.colorize(
         'cyan',
         `Fetching bulk migration orgs for Connection ${connectionId}, Deployment ${deploymentId}, Tenant ${tenantId}, Install ${installId}...`,
@@ -58,15 +58,15 @@ export default class BulkMigrationList extends BaseCommand<typeof BulkMigrationL
     const orgsList: OrgResource[] = orgsListResponse.data
 
     if (orgsList && orgsList.length > 0) {
-      this.log('Organizations available for bulk migration:')
+      this.logStatus('Organizations available for bulk migration:')
       for (const org of orgsList) {
         this.log(printFormattedJSON(org))
       }
-      this.log(`Total organizations found: ${orgsList.length}`)
+      this.logStatus(`Total organizations found: ${orgsList.length}`)
     } else {
-      this.log('No organizations found for bulk migration for the specified connection.')
+      this.logStatus('No organizations found for bulk migration for the specified connection.')
     }
 
-    return JSON.stringify(orgsList || [])
+    return orgsList || []
   }
 }

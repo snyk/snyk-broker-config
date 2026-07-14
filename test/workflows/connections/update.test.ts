@@ -38,7 +38,7 @@ describe('connection update workflow', () => {
       {print: false}, // Keep print false for cleaner test output
     )
     // TODO: Update assertions based on the expected output of the update command
-    expect(stdout).to.contain('Connection Update Workflow completed.') // Update expected output message
+    expect(stderr).to.contain('Connection Update Workflow completed.') // Update expected output message
     expect(error).to.be.undefined
 
     const required = capturedRequestBodies.connectionUpdate?.data?.attributes?.configuration?.required

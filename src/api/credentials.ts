@@ -11,7 +11,7 @@ import {
   NewCredentialsResponse,
 } from './types.js'
 
-const logger = createLogger('snyk-broker-config')
+const logger = createLogger()
 
 export const getCredentialsForDeployment = async (tenantId: string, installId: string, deploymentId: string) => {
   const headers = {...getCommonHeaders(), ...getAuthHeader()}

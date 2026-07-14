@@ -5,7 +5,7 @@ import {HttpRequest, makeRequest} from '../utils/http-request.js'
 import {isValidUUID} from '../utils/validation.js'
 import {createLogger} from '../utils/logger.js'
 
-const logger = createLogger('snyk-broker-config')
+const logger = createLogger()
 
 interface SelfResponse {
   data: {

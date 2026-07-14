@@ -30,8 +30,8 @@ export default class Connections extends Command {
     `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID --type github`,
   ]
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', Connections.description))
+  async run() {
+    this.logToStderr(ux.colorize('cyan', Connections.description))
     const {args, flags} = await this.parse(Connections)
 
     const {tenantId, installId} = getCommonIds(args)
@@ -50,13 +50,13 @@ export default class Connections extends Command {
     )
     const connectionResponse = connection.data
 
-    this.log(
+    this.logToStderr(
       ux.colorize(
         'cyan',
         `Creating Universal Broker Connection for Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
       ),
     )
     this.log(printFormattedJSON(connectionResponse))
-    return JSON.stringify(connectionResponse)
+    return connectionResponse
   }
 }

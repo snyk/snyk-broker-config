@@ -1,5 +1,5 @@
 import {input, select, confirm} from '@inquirer/prompts'
-import {craConfigType1Types, flagConnectionMapping, TypeMapping, TypeParams} from './type-params-mapping.js'
+import {craConfigType1Types, flagConnectionMapping, TypeParams} from './type-params-mapping.js'
 import {createCredentials, getCredentialsForDeployment} from '../../api/credentials.js'
 import {CredentialsAttributes, CredentialsListResponse} from '../../api/types.js'
 import {
@@ -12,6 +12,7 @@ import {
 import {validatedInput, ValidationType} from '../../utils/input-validation.js'
 import {getConfig} from '../../config/config.js'
 import {ux} from '@oclif/core'
+import {STATUS} from '../../utils/display.js'
 
 export const captureConnectionParams = async (
   tenantID: string,
@@ -131,11 +132,11 @@ export const captureConnectionParams = async (
       }
     }
     if (value.exampleFormat) {
-      console.log(
+      process.stderr.write(
         ux.colorize(
-          'yellow',
-          `\nHint! Your credential reference URL value should have the following format: ${value.exampleFormat}.\n`,
-        ),
+          'cyan',
+          `\n${STATUS.TIP} Your credential reference URL value should have the following format: ${value.exampleFormat}.\n`,
+        ) + '\n',
       )
     }
   }

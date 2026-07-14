@@ -47,7 +47,7 @@ describe('connection workflows', () => {
       },
       {print: false},
     )
-    expect(stdout).to.contain('Connection Create Workflow completed.')
+    expect(stderr).to.contain('Connection Create Workflow completed.')
     expect(error).to.be.undefined
 
     const required = capturedRequestBodies.connectionCreate?.data?.attributes?.configuration?.required

@@ -30,14 +30,14 @@ export default class Credentials extends BaseCommand<typeof Credentials> {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', Credentials.description))
+  async run() {
+    this.heading(Credentials.description)
     const {args} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds(args)
     const credentials = await getCredentialsForDeployment(tenantId, installId, args.deploymentId!)
     const credentialsList = credentials.data
 
-    this.log(
+    this.logStatus(
       ux.colorize(
         'cyan',
         `Getting Universal Broker Credentials for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,
@@ -46,8 +46,8 @@ export default class Credentials extends BaseCommand<typeof Credentials> {
     for (const credential of credentialsList) {
       this.log(printFormattedJSON(credential))
     }
-    this.log(`Total = ${credentialsList.length}`)
+    this.logStatus(`Total = ${credentialsList.length}`)
 
-    return JSON.stringify(credentialsList)
+    return credentialsList
   }
 }

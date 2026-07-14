@@ -23,12 +23,12 @@ describe('credentials workflows', () => {
     )
     expect(stderr).to.contain('')
     expect(error).to.be.undefined
-    expect(stdout).to.contain('Found single accessible Tenant. Using 00000000-0000-0000-0000-000000000000.')
-    expect(stdout).to.contain(
+    expect(stderr).to.contain('Found single accessible Tenant. Using 00000000-0000-0000-0000-000000000000.')
+    expect(stderr).to.contain(
       'Now using Tenant Id 00000000-0000-0000-0000-000000000000 and Install Id 00000000-0000-0000-0000-000000000000.',
     )
-    expect(stdout).to.contain('Now using Deployment 00000000-0000-0000-0000-000000000000.')
-    expect(stdout).to.contain(
+    expect(stderr).to.contain('Now using Deployment 00000000-0000-0000-0000-000000000000.')
+    expect(stderr).to.contain(
       'Creating Universal Broker Credentials for Deployment 00000000-0000-0000-0000-000000000000 for Tenant 00000000-0000-0000-0000-000000000000, Install 00000000-0000-0000-0000-000000000000',
     )
     expect(stdout).to.contain(`- id: 00000000-0000-0000-0000-0000000000001
@@ -38,6 +38,6 @@ describe('credentials workflows', () => {
             environment_variable_name: ARTIFACTORY_CR_CREDS_ENV_VAR
             type: artifactory-cr`)
 
-    expect(stdout).to.contain('Credentials Create Workflow completed.')
+    expect(stderr).to.contain('Credentials Create Workflow completed.')
   })
 })

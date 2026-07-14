@@ -1,7 +1,6 @@
 import {ux} from '@oclif/core'
 import {
   commonUniversalBrokerArgs,
-  commonUniversalBrokerDeploymentId,
   commonApiRelatedArgs,
   getCommonIds,
   commonUniversalBrokerConnectionId,
@@ -30,8 +29,8 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
     `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID CONNECTION_ID ORG_ID INTEGRATION_ID`,
   ]
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', Integrations.description))
+  async run() {
+    this.heading(Integrations.description)
     const {args} = await this.parse(Integrations)
 
     const {tenantId} = getCommonIds(args)
@@ -44,7 +43,7 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
       args.integrationId ?? null,
     )
     const integrationResponse = integration
-    this.log(
+    this.logStatus(
       ux.colorize(
         'cyan',
         `Creating Universal Broker Connections Integration for Connection ${args.connectionId} for Org ${args.orgId}, Integration ${args.integrationId}, Tenant ${tenantId},`,
@@ -52,6 +51,6 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
     )
     this.log(printFormattedJSON(integrationResponse))
 
-    return JSON.stringify(integrationResponse)
+    return integrationResponse
   }
 }

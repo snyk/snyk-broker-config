@@ -8,6 +8,7 @@ import {
 import {credentialsIds} from '../../command-helpers/credentials/flags.js'
 import {deleteCredentials} from '../../api/credentials.js'
 import {BaseCommand} from '../../base-command.js'
+import {STATUS} from '../../utils/display.js'
 
 export default class Credentials extends BaseCommand<typeof Credentials> {
   static args = {
@@ -33,12 +34,12 @@ export default class Credentials extends BaseCommand<typeof Credentials> {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', Credentials.description))
+  async run() {
+    this.heading(Credentials.description)
     const {args, flags} = await this.parse(Credentials)
     const {tenantId, installId} = getCommonIds({tenantId: args.tenantId, installId: args.installId})
     const credentialsIdsArray = flags.credentialsIds.split(',')
-    this.log(
+    this.logStatus(
       `Deleting Universal Broker Credentials for Deployment ${args.deploymentId}, Tenant ${tenantId}, Install ${installId}`,
     )
     const jsonResponse = []
@@ -47,16 +48,16 @@ export default class Credentials extends BaseCommand<typeof Credentials> {
       if (deleteResponseCode === 204) {
         jsonResponse.push({responseCode: deleteResponseCode})
 
-        this.log(
+        this.logStatus(
           ux.colorize(
-            'cyan',
-            `Deleted Universal Broker Credentials ${credentialsId} in Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
+            'green',
+            `${STATUS.DONE} Deleted Universal Broker Credentials ${credentialsId} in Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
           ),
         )
       } else {
-        this.error(ux.colorize('red', `Error deleting Credentials for Deployment. Status code: ${deleteResponseCode}.`))
+        this.error(`Error deleting Credentials for Deployment. Status code: ${deleteResponseCode}.`)
       }
     }
-    return JSON.stringify(jsonResponse)
+    return jsonResponse
   }
 }

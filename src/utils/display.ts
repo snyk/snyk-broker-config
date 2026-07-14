@@ -1,5 +1,14 @@
 import {ux} from '@oclif/core/ux'
 
+// Text status tokens so meaning never depends on colour alone.
+export const STATUS = {
+  OK: '[OK]',
+  DONE: '[DONE]',
+  WARN: '[WARN]',
+  IMPORTANT: '[IMPORTANT]',
+  TIP: 'TIP:',
+} as const
+
 export function printFormattedJSON(objectReceived: any, indent: number = 2): string {
   let stringOutput = ''
   const indentation = ' '.repeat(indent)
@@ -13,10 +22,10 @@ export function printFormattedJSON(objectReceived: any, indent: number = 2): str
 
   for (const key in obj) {
     if (typeof obj[key] === 'object' && obj[key] !== null) {
-      stringOutput += `${indentation}${key === 'id' ? `-` : ' '} ${ux.colorize('yellow', key)}:\n`
+      stringOutput += `${indentation}${key === 'id' ? `-` : ' '} ${ux.colorize('cyan', key)}:\n`
       stringOutput += `${printFormattedJSON(obj[key], indent + 4)}\n`
     } else {
-      stringOutput += `${indentation}${key === 'id' ? `\n${indentation}-` : ' '} ${ux.colorize('yellow', key)}: ${ux.colorize('green', obj[key])}\n`
+      stringOutput += `${indentation}${key === 'id' ? `\n${indentation}-` : ' '} ${ux.colorize('cyan', key)}: ${obj[key]}\n`
     }
   }
   return stringOutput

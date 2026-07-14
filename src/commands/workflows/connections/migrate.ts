@@ -1,13 +1,10 @@
 import {ux} from '@oclif/core'
 import {commonApiRelatedArgs} from '../../../common/args.js'
-import {confirm, input} from '@inquirer/prompts'
+import {confirm} from '@inquirer/prompts'
 import {BaseCommand} from '../../../base-command.js'
-import {nonSourceIntegrations} from '../../../command-helpers/connections/type-params-mapping.js'
-import {
-  createIntegrationForConnection,
-  disconnectIntegrationForOrgIdAndIntegrationId,
-} from '../../../api/integrations.js'
+import {createIntegrationForConnection} from '../../../api/integrations.js'
 import {validatedInput, ValidationType} from '../../../utils/input-validation.js'
+import {STATUS} from '../../../utils/display.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -19,20 +16,20 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
   static examples = [`<%= config.bin %> <%= command.id %>`]
 
-  async run(): Promise<string> {
+  async run() {
     try {
-      this.log('\n' + ux.colorize('red', Workflows.description))
+      this.heading(Workflows.description)
 
-      const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
+      const {installId, tenantId} = await this.setupFlow()
 
-      this.log(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
+      this.logStatus(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
-      const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
-      this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
+      const deploymentId = await this.selectDeployment(tenantId, installId)
+      this.logStatus(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
 
       // this.log(ux.colorize('cyan', `Let's create a ${connectionType} connection now.\n`))
       const selectedConnection = await this.selectConnection(tenantId, installId, deploymentId)
-      this.log(
+      this.logStatus(
         ux.colorize(
           'cyan',
           `Selected Connection ID ${selectedConnection.id}. Ready to migrate integration to use this Connection.\n`,
@@ -44,8 +41,8 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         message: `[CAUTION!] Are you sure you want to migrate the integration of type ${selectedConnection.type} in org ${orgId}? Existing service could be impacted.`,
       })
       if (!isMigrationConfirmed) {
-        this.log(ux.colorize('red', 'Cancelling Connection migration.'))
-        return ''
+        this.logStatus(ux.colorize('yellow', `${STATUS.WARN} Cancelling Connection migration.`))
+        return
       }
       const connectionIntegration = await createIntegrationForConnection(
         tenantId,
@@ -54,23 +51,22 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         orgId,
       )
       if (connectionIntegration.errors) {
-        this.error(ux.colorize('red', JSON.stringify(connectionIntegration.errors)))
+        this.error(JSON.stringify(connectionIntegration.errors))
       }
-      this.log(
+      this.logStatus(
         ux.colorize(
           'cyan',
           `Connection ${connectionIntegration.data.id} (type: ${selectedConnection.type}) integrated with integration ${connectionIntegration.data.id} on Org ${orgId}.`,
         ),
       )
-      this.log(ux.colorize('red', 'Connection Migrate Workflow completed.'))
+      this.logStatus(ux.colorize('green', `${STATUS.DONE} Connection Migrate Workflow completed.`))
     } catch (error: any) {
       if (error.name === 'ExitPromptError') {
-        this.log(ux.colorize('red', 'Goodbye.'))
+        this.logStatus('Goodbye.')
       } else {
         // Handle other errors or rethrow
         throw error
       }
     }
-    return JSON.stringify('')
   }
 }

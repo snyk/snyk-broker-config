@@ -30,8 +30,8 @@ export default class Deployments extends BaseCommand<typeof Deployments> {
     `<%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID APP_INSTALLED_ORG_ID --data mykey=myvalue,mykey2=myvalue2`,
   ]
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', Deployments.description))
+  async run() {
+    this.heading(Deployments.description)
     const {args, flags} = await this.parse(Deployments)
     const {tenantId, installId} = getCommonIds(args)
     const metadataValues = flags.data.split(',').map((x) => {
@@ -53,8 +53,10 @@ export default class Deployments extends BaseCommand<typeof Deployments> {
 
     const deployment = await createDeployment(tenantId, installId, attributes)
 
-    this.log(ux.colorize('cyan', `Creating Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
+    this.logStatus(
+      ux.colorize('cyan', `Creating Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`),
+    )
     this.log(printFormattedJSON(deployment.data))
-    return JSON.stringify(deployment)
+    return deployment
   }
 }

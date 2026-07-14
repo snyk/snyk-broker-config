@@ -24,7 +24,7 @@ describe('deployment workflows', () => {
     )
     expect(stderr).to.contain('')
     expect(error).to.be.undefined
-    expect(stdout).to.contain(`Deleting Context ${connectionId3}`)
-    expect(stdout).to.contain('Context Deletion Workflow completed.')
+    expect(stderr).to.contain(`Deleting Context ${connectionId3}`)
+    expect(stderr).to.contain('Context Deletion Workflow completed.')
   })
 })

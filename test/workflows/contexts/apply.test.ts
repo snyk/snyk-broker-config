@@ -23,7 +23,7 @@ describe('deployment workflows', () => {
     )
 
     expect(error).to.be.undefined
-    expect(stdout).to.contain(`Applying Context ID ${contextId4} on integrations ${integrationId4}`)
-    expect(stdout).to.contain('Contexts Apply Workflow completed.')
+    expect(stderr).to.contain(`Applying Context ID ${contextId4} on integrations ${integrationId4}`)
+    expect(stderr).to.contain('Contexts Apply Workflow completed.')
   })
 })

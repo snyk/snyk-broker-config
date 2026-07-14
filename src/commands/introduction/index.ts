@@ -11,7 +11,7 @@ export default class Intro extends BaseCommand<typeof Intro> {
   static examples = [`<%= config.bin %> <%= command.id %>`]
 
   async run(): Promise<void> {
-    this.log('\n' + ux.colorize('red', Intro.description))
+    this.heading(Intro.description)
 
     const connectionsGraphModelBasic = treeify.default(
       {
@@ -138,14 +138,13 @@ export default class Intro extends BaseCommand<typeof Intro> {
     }
     helpText['exit'] = {id: 'exit', value: 'exit', text: 'Goodbye.'}
 
-    this.log('\n' + ux.colorize('blueBright', introText))
+    this.log('\n' + ux.colorize('cyan', introText))
     this.log(connectionsGraphModelBasic)
 
-    this.log('\n' + ux.colorize('blueBright', introText2))
-    this.log('\n' + ux.colorize('blueBright', connectionsIntegrationsIntroText))
+    this.log('\n' + ux.colorize('cyan', introText2))
+    this.log('\n' + ux.colorize('cyan', connectionsIntegrationsIntroText))
 
     this.log(connectionsIntegrationsModelBasic)
-    this.log(ux.colorize('cyan', '______________________________'))
     const choices = Object.values(helpText).map((x) => {
       return {id: x.id, value: x.value}
     })
@@ -158,7 +157,7 @@ export default class Intro extends BaseCommand<typeof Intro> {
       })
 
       const {text} = helpText[choice]
-      this.log(ux.colorize('blueBright', text))
+      this.logStatus(ux.colorize('cyan', text))
     }
   }
 }

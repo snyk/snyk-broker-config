@@ -4,6 +4,7 @@ import {confirm} from '@inquirer/prompts'
 import {BaseCommand} from '../../../base-command.js'
 import {deleteConnectionForDeployment} from '../../../api/connections.js'
 import {deleteIntegrationsForConnection, getIntegrationsForConnection} from '../../../api/integrations.js'
+import {STATUS} from '../../../utils/display.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -15,16 +16,16 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
   static examples = [`<%= config.bin %> <%= command.id %>`]
 
-  async run(): Promise<string> {
+  async run() {
     try {
-      this.log('\n' + ux.colorize('red', Workflows.description))
+      this.heading(Workflows.description)
 
-      const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
+      const {installId, tenantId} = await this.setupFlow()
 
-      this.log(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
+      this.logStatus(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
-      const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
-      this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
+      const deploymentId = await this.selectDeployment(tenantId, installId)
+      this.logStatus(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
 
       // this.log(ux.colorize('cyan', `Let's create a ${connectionType} connection now.\n`))
       const selectedConnection = await this.selectConnection(tenantId, installId, deploymentId)
@@ -39,7 +40,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
           }))
         ) {
           for (let i = 0; i < connectionIntegration.data.length; i++) {
-            this.log(
+            this.logStatus(
               `Disconnecting integration ${connectionIntegration.data[i].id} in org ${connectionIntegration.data[i].org_id}`,
             )
             await deleteIntegrationsForConnection(
@@ -49,34 +50,35 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
               connectionIntegration.data[i].id,
             )
           }
-          this.log(`✔ Disconnected.`)
+          this.logStatus(ux.colorize('green', `${STATUS.DONE} Disconnected.`))
         } else {
           this.error(
             `Please disconnect Connection integration(s) first (connection disconnect workflow). Connection is used by Org${connectionIntegration.data.length > 1 ? 's' : ''} ${connectionIntegration.data.map((x) => x.org_id).join(',')}.`,
           )
         }
       }
-      this.log(ux.colorize('cyan', `Selected Connection ID ${selectedConnection.id}. Ready to delete Connection.\n`))
+      this.logStatus(
+        ux.colorize('cyan', `Selected Connection ID ${selectedConnection.id}. Ready to delete Connection.\n`),
+      )
       if (
         await confirm({
           message: `Are you sure you want to delete Connection ${selectedConnection.id} ?`,
         })
       ) {
-        this.log(ux.colorize('blueBright', `Deleting Connection ${selectedConnection.id}`))
+        this.logStatus(ux.colorize('cyan', `Deleting Connection ${selectedConnection.id}`))
         await deleteConnectionForDeployment(tenantId, installId, deploymentId, selectedConnection.id)
       } else {
-        this.log(ux.colorize('cyan', 'Canceling.'))
+        this.logStatus(ux.colorize('cyan', 'Canceling.'))
       }
 
-      this.log(ux.colorize('red', 'Connection Deletion Workflow completed.'))
+      this.logStatus(ux.colorize('green', `${STATUS.DONE} Connection Deletion Workflow completed.`))
     } catch (error: any) {
       if (error.name === 'ExitPromptError') {
-        this.log(ux.colorize('red', 'Goodbye.'))
+        this.logStatus('Goodbye.')
       } else {
         // Handle other errors or rethrow
         throw error
       }
     }
-    return JSON.stringify('')
   }
 }
