@@ -43,7 +43,7 @@ export interface AppInstallsResponse {
 export interface AppInstallOutput {
   install_id: string
   client_id: string
-  client_secret: string
+  client_secret?: string
 }
 
 export interface CredentialsAttributes {

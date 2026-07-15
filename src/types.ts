@@ -2,6 +2,8 @@ export interface SetupParameters {
   installId: string
   tenantId: string
   appInstalledOnOrgId: string
+  clientId?: string
+  clientSecret?: string
 }
 
 export type TenantId = string

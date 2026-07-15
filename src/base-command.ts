@@ -127,6 +127,8 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
     let orgId
     let installId
+    let clientId
+    let clientSecret
     if (process.env.INSTALL_ID) {
       installId = process.env.INSTALL_ID
     } else if (await confirm({message: 'Have you installed the Broker App against an Org?'})) {
@@ -141,12 +143,13 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         ValidationType.UUID,
       )
       const appInstall = await installAppsWorfklow(orgId)
-      if (typeof appInstall === 'string') {
-        this.logStatus(ux.colorize('cyan', `Found an App already installed. Using Install ID ${appInstall}.`))
-        installId = appInstall
+      const {install_id, client_id, client_secret} = appInstall
+      installId = install_id
+      clientId = client_id
+      if (!client_secret) {
+        this.logStatus(ux.colorize('cyan', `Found an App already installed. Using Install ID ${installId}.`))
       } else {
-        const {install_id, client_id, client_secret} = appInstall
-        installId = install_id
+        clientSecret = client_secret
         this.logStatus(ux.colorize('cyan', `\n${STATUS.IMPORTANT}`))
         this.logStatus(ux.colorize('cyan', `App installed. Please store the following credentials securely:`))
         this.logStatus(ux.colorize('cyan', `- clientId: ${client_id}`))
@@ -178,7 +181,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       orgId = 'dummy'
     }
     const appInstalledOnOrgId = orgId ?? (await getAppInstalledOnOrgId(tenantId, installId))
-    return {installId, tenantId, appInstalledOnOrgId}
+    return {installId, tenantId, appInstalledOnOrgId, clientId, clientSecret}
   }
 
   async selectDeployment(tenantId: string, installId: string): Promise<DeploymentId> {
