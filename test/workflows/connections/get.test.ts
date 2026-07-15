@@ -57,6 +57,6 @@ describe('connections workflows', () => {
     type: broker_connection
 `.replaceAll(' ', ''),
     )
-    expect(stdout).to.contain('Connection Detail Workflow completed.')
+    expect(stderr).to.contain('Connection Detail Workflow completed.')
   })
 })

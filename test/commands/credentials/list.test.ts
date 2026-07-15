@@ -52,10 +52,10 @@ describe('credentials list command', () => {
     // Since class is loaded before env vars are set, args definition expects tenantId and installId
     const cmd = new Credentials([tenantId, installId, deploymentId], mockConfig)
 
-    const {error, stdout} = await captureOutput(async () => cmd.run(), {print: false})
+    const {error, stdout, stderr} = await captureOutput(async () => cmd.run(), {print: false})
     if (error) {
       throw new Error(`Command failed unexpectedly: ${error.message}`)
     }
-    expect(stdout).to.contain('Total = 0')
+    expect(stderr).to.contain('Total = 0')
   })
 })

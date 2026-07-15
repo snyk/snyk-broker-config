@@ -10,7 +10,7 @@ import {
   applyBulkMigrationResponse,
 } from './types.js'
 
-const logger = createLogger('snyk-broker-config')
+const logger = createLogger()
 
 export const getConnectionsForDeployment = async (tenantId: string, installId: string, deploymentId: string) => {
   const headers = {...getCommonHeaders(), ...getAuthHeader()}

@@ -33,6 +33,6 @@ describe('deployment workflows', () => {
 
     type: broker_deployment
 `)
-    expect(stdout).to.contain('Deployment Create Workflow completed.')
+    expect(stderr).to.contain('Deployment Create Workflow completed.')
   })
 })

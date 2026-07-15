@@ -1,5 +1,5 @@
 import {ux} from '@oclif/core'
-import {printFormattedJSON} from '../../utils/display.js'
+import {printFormattedJSON, STATUS} from '../../utils/display.js'
 import {
   commonApiRelatedArgs,
   commonUniversalBrokerArgs,
@@ -30,8 +30,8 @@ export default class BulkMigrationApply extends BaseCommand<typeof BulkMigration
     `$ <%= config.bin %> <%= command.id %> TENANT_ID INSTALL_ID DEPLOYMENT_ID CONNECTION_ID`,
   ]
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', BulkMigrationApply.description))
+  async run() {
+    this.heading(BulkMigrationApply.description)
     const {args} = await this.parse(BulkMigrationApply)
     const {tenantId, installId} = getCommonIds(args)
 
@@ -47,7 +47,7 @@ export default class BulkMigrationApply extends BaseCommand<typeof BulkMigration
     const deploymentId = args.deploymentId!
     const connectionId = args.connectionId!
 
-    this.log(
+    this.logStatus(
       ux.colorize(
         'cyan',
         `Initiating bulk migration for Connection ${connectionId}, Deployment ${deploymentId}, Tenant ${tenantId}, Install ${installId}...`,
@@ -62,11 +62,11 @@ export default class BulkMigrationApply extends BaseCommand<typeof BulkMigration
         connectionId,
       )
 
-      this.log(ux.colorize('green', '\nBulk migration process started successfully:'))
+      this.logStatus(ux.colorize('green', `\n${STATUS.OK} Bulk migration process started successfully:`))
       this.log(printFormattedJSON(bulkMigrationResponse.data))
-      return JSON.stringify(bulkMigrationResponse.data)
+      return bulkMigrationResponse.data
     } catch (error) {
-      this.error(ux.colorize('red', `\nFailed to start bulk migration: ${(error as Error).message}`), {exit: 1})
+      this.error(`\nFailed to start bulk migration: ${(error as Error).message}`, {exit: 1})
     }
   }
 }

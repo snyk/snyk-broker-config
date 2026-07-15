@@ -1,27 +1,10 @@
 import {ux} from '@oclif/core'
 import {commonApiRelatedArgs, commonUniversalBrokerArgs} from '../../../common/args.js'
-import {input, confirm, select} from '@inquirer/prompts'
-import {getAppInstalledOnOrgId} from '../../../workflows/apps.js'
-import {getDeployments} from '../../../api/deployments.js'
-import {isValidUUID} from '../../../utils/validation.js'
+import {confirm} from '@inquirer/prompts'
 import {BaseCommand} from '../../../base-command.js'
 import * as multiSelect from 'inquirer-select-pro'
 import {deleteCredentials, getCredentialForDeployment, getCredentialsForDeployment} from '../../../api/credentials.js'
-import {validatedInput, ValidationType} from '../../../utils/input-validation.js'
-
-interface SetupParameters {
-  installId: string
-  tenantId: string
-  appInstalledOnOrgId: string
-}
-
-type DeploymentId = string
-class ExitPromptError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'ExitPromptError'
-  }
-}
+import {STATUS} from '../../../utils/display.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -43,16 +26,16 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async run(): Promise<string> {
+  async run() {
     try {
-      this.log('\n' + ux.colorize('red', Workflows.description))
+      this.heading(Workflows.description)
 
-      const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
+      const {installId, tenantId} = await this.setupFlow()
 
-      this.log(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
+      this.logStatus(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
-      const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
-      this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
+      const deploymentId = await this.selectDeployment(tenantId, installId)
+      this.logStatus(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
 
       // this.log(ux.colorize('cyan', `Let's create a ${connectionType} connection now.\n`))
 
@@ -79,13 +62,13 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         })
       ) {
         for (const credentialsId of credentialsIdsToDelete) {
-          this.log(ux.colorize('blueBright', `Deleting credentials ${credentialsId}`))
+          this.logStatus(ux.colorize('cyan', `Deleting credentials ${credentialsId}`))
           const credential = await getCredentialForDeployment(tenantId, installId, deploymentId, credentialsId)
           if (credential.data.relationships && credential.data.relationships.broker_connections.length > 0) {
-            this.log(
+            this.logStatus(
               ux.colorize(
-                'red',
-                `Cannot delete ${credentialsId}. In use by ${credential.data.relationships.broker_connections.length} Connection ${credential.data.relationships.broker_connections.length > 1 ? 's' : ''} (${credential.data.relationships.broker_connections.map((x) => x.data.id).join(',')}). Skipping.`,
+                'yellow',
+                `${STATUS.WARN} Cannot delete ${credentialsId}. In use by ${credential.data.relationships.broker_connections.length} Connection ${credential.data.relationships.broker_connections.length > 1 ? 's' : ''} (${credential.data.relationships.broker_connections.map((x) => x.data.id).join(',')}). Skipping.`,
               ),
             )
             continue
@@ -94,18 +77,17 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
           }
         }
       } else {
-        this.log(ux.colorize('cyan', 'Cancelling.'))
+        this.logStatus(ux.colorize('cyan', 'Cancelling.'))
       }
 
-      this.log(ux.colorize('red', 'Credentials Deletion Workflow completed.'))
+      this.logStatus(ux.colorize('green', `${STATUS.DONE} Credentials Deletion Workflow completed.`))
     } catch (error: any) {
       if (error.name === 'ExitPromptError') {
-        this.log(ux.colorize('red', 'Goodbye.'))
+        this.logStatus('Goodbye.')
       } else {
         // Handle other errors or rethrow
         throw error
       }
     }
-    return JSON.stringify('')
   }
 }

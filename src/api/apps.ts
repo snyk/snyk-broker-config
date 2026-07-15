@@ -5,7 +5,7 @@ import {HttpRequest, makeRequest} from '../utils/http-request.js'
 import {createLogger} from '../utils/logger.js'
 import {AppInstallResponse, AppInstallResponseData, AppInstallsResponse} from './types.js'
 
-const logger = createLogger('snyk-broker-config')
+const logger = createLogger()
 
 export const installAppIdOnOrgId = async (orgId: string): Promise<AppInstallResponse> => {
   const appId = process.env.SNYK_BROKER_APP_ID ?? 'cb43d761-bd17-4b44-9b6c-e5b8ad077d33'

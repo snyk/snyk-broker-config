@@ -29,6 +29,6 @@ describe('integrations workflows', () => {
         org_id: ${orgId4}
         type: github
 `)
-    expect(stdout).to.contain('Connection Integration listing Workflow completed.')
+    expect(stderr).to.contain('Connection Integration listing Workflow completed.')
   })
 })

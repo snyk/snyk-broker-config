@@ -43,16 +43,15 @@ describe('connections bulk-migration list workflow - with orgs', () => {
     })
 
     expect(error, `Command execution error: ${error?.message}`).to.be.undefined
-    expect(stderr, 'Expected stderr to be empty').to.equal('')
 
-    expect(stdout).to.contain('Universal Broker - List Bulk-Migration Workflow')
-    expect(stdout).to.contain(
+    expect(stderr).to.contain('Universal Broker - List Bulk-Migration Workflow')
+    expect(stderr).to.contain(
       `Fetching bulk migration orgs for Connection ${testConnectionId}, Deployment ${testDeploymentId}, Tenant ${testTenantId}, Install ${testInstallId}...`,
     )
-    expect(stdout).to.contain('Organizations available for bulk migration:')
+    expect(stderr).to.contain('Organizations available for bulk migration:')
     expect(stdout).to.match(/id: org-uuid-returned-1/)
     expect(stdout).to.match(/type: broker_organization/)
     expect(stdout).to.match(/id: org-uuid-returned-2/)
-    expect(stdout).to.contain(`Total organizations found: 2`)
+    expect(stderr).to.contain(`Total organizations found: 2`)
   })
 })

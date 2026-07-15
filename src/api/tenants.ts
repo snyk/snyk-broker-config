@@ -27,7 +27,7 @@ interface TenantsListingResponse {
   data: Array<Tenant>
 }
 
-const logger = createLogger('snyk-broker-config')
+const logger = createLogger()
 
 export const getAccessibleTenants = async () => {
   const headers = {...getCommonHeaders(), ...getAuthHeader()}

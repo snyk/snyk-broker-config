@@ -20,6 +20,7 @@ import {getAccessibleTenants, isTenantAdmin} from './api/tenants.js'
 import {validatedInput, ValidationType} from './utils/input-validation.js'
 import {validateSnykToken} from './api/snyk.js'
 import {getContextsForForDeployment} from './api/contexts.js'
+import {STATUS} from './utils/display.js'
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<(typeof BaseCommand)['baseFlags'] & T['flags']>
 export type Args<T extends typeof Command> = Interfaces.InferredArgs<T['args']>
@@ -41,8 +42,18 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   protected flags!: Flags<T>
   protected args!: Args<T>
 
+  // Status/progress messages go to stderr so stdout carries only the data payload.
+  protected logStatus(message = ''): void {
+    this.logToStderr(message)
+  }
+
+  // Section title, rendered as an informational heading on stderr.
+  protected heading(text: string): void {
+    this.logToStderr(ux.colorize('cyan', text))
+  }
+
   public async init(): Promise<void> {
-    this.log(ux.colorize('yellow', `Using ${getConfig().API_HOSTNAME}.`))
+    this.logStatus(ux.colorize('cyan', `Using ${getConfig().API_HOSTNAME}.`))
     await super.init()
     const {args, flags} = await this.parse({
       flags: this.ctor.flags,
@@ -59,16 +70,17 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     if (!process.env.SNYK_TOKEN) {
       process.env.SNYK_TOKEN = await input({message: 'Enter your Snyk Token'})
 
-      this.log(ux.colorize('yellow', `\nTIPS`))
-      this.log(ux.colorize('yellow', `For smoother experience, please set the Snyk Token as env variable.`))
-      this.log(ux.colorize('yellow', `Linux/Mac: export SNYK_TOKEN=${process.env.SNYK_TOKEN}`))
-      this.log(ux.colorize('yellow', `Windows: set SNYK_TOKEN=${process.env.SNYK_TOKEN}\n`))
+      this.logStatus(
+        ux.colorize('cyan', `\n${STATUS.TIP} For a smoother experience, please set the Snyk Token as env variable.`),
+      )
+      this.logStatus(ux.colorize('cyan', `Linux/Mac: export SNYK_TOKEN=${process.env.SNYK_TOKEN}`))
+      this.logStatus(ux.colorize('cyan', `Windows: set SNYK_TOKEN=${process.env.SNYK_TOKEN}\n`))
     }
 
     let userId: string
     try {
       userId = await validateSnykToken(process.env.SNYK_TOKEN)
-      this.log(`✓ Valid Snyk Token for user ${userId}.`)
+      this.logStatus(ux.colorize('green', `${STATUS.OK} Valid Snyk Token for user ${userId}.`))
     } catch (error) {
       this.error(`Invalid Snyk Token. ${error}`)
     }
@@ -80,18 +92,20 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         )
       } else if (accessibleTenants.data.length === 1) {
         process.env.TENANT_ID = accessibleTenants.data[0].id
-        this.log(ux.colorize('yellow', `✓ Found single accessible Tenant. Using ${process.env.TENANT_ID}.`))
+        this.logStatus(
+          ux.colorize('green', `${STATUS.OK} Found single accessible Tenant. Using ${process.env.TENANT_ID}.`),
+        )
       } else {
-        this.log(
+        this.logStatus(
           ux.colorize(
-            'blueBright',
+            'cyan',
             `Your credentials can access tenants:\n${accessibleTenants.data.map((x) => `- ${x.attributes.name}: ${x.id}`).join(',\n')}.\n`,
           ),
         )
-        this.log(
+        this.logStatus(
           ux.colorize(
-            'yellow',
-            `export TENANT_ID=${process.env.TENANT_ID} (Windows: set TENANT_ID=${process.env.TENANT_ID}) to avoid inputting this for each command.\n`,
+            'cyan',
+            `${STATUS.TIP} export TENANT_ID=${process.env.TENANT_ID} (Windows: set TENANT_ID=${process.env.TENANT_ID}) to avoid inputting this for each command.\n`,
           ),
         )
       }
@@ -103,7 +117,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
     try {
       await isTenantAdmin(tenantId, userId)
-      this.log(`✓ Tenant Admin role confirmed.`)
+      this.logStatus(ux.colorize('green', `${STATUS.OK} Tenant Admin role confirmed.`))
     } catch (error) {
       this.debug(error)
       this.error(
@@ -128,22 +142,32 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       )
       const appInstall = await installAppsWorfklow(orgId)
       if (typeof appInstall === 'string') {
-        this.log(ux.colorize('blueBright', `Found an App already installed. Using Install ID ${appInstall}.`))
+        this.logStatus(ux.colorize('cyan', `Found an App already installed. Using Install ID ${appInstall}.`))
         installId = appInstall
       } else {
         const {install_id, client_id, client_secret} = appInstall
         installId = install_id
-        this.log(ux.colorize('red', `\nIMPORTANT !`))
-        this.log(ux.colorize('red', `App installed. Please store the following credentials securely:`))
-        this.log(ux.colorize('red', `- clientId: ${client_id}`))
-        this.log(ux.colorize('red', `- clientSecret: ${client_secret}`))
-        this.log(ux.colorize('red', `You will need them to run your Broker Client.\n`))
+        this.logStatus(ux.colorize('cyan', `\n${STATUS.IMPORTANT}`))
+        this.logStatus(ux.colorize('cyan', `App installed. Please store the following credentials securely:`))
+        this.logStatus(ux.colorize('cyan', `- clientId: ${client_id}`))
+        this.logStatus(ux.colorize('cyan', `- clientSecret: ${client_secret}`))
+        this.logStatus(ux.colorize('cyan', `You will need them to run your Broker Client.\n`))
         while (!(await confirm({message: 'Have you saved these credentials?'}))) {
-          this.log(ux.colorize('red', 'The client secret will never be visible again. Please save them securely.'))
+          this.logStatus(
+            ux.colorize(
+              'yellow',
+              `${STATUS.WARN} The client secret will never be visible again. Please save them securely.`,
+            ),
+          )
         }
-        this.log(ux.colorize('yellow', `\nFor smoother experience, please set the environment variable listed above.`))
-        this.log(ux.colorize('yellow', `Linux/Mac: export INSTALL_ID=${installId}`))
-        this.log(ux.colorize('yellow', `Windows: set INSTALL_ID=${installId}\n`))
+        this.logStatus(
+          ux.colorize(
+            'cyan',
+            `\n${STATUS.TIP} For a smoother experience, please set the environment variable listed above.`,
+          ),
+        )
+        this.logStatus(ux.colorize('cyan', `Linux/Mac: export INSTALL_ID=${installId}`))
+        this.logStatus(ux.colorize('cyan', `Windows: set INSTALL_ID=${installId}\n`))
         if (!(await confirm({message: `Continue?`}))) {
           process.exit(0)
         }
@@ -157,11 +181,11 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     return {installId, tenantId, appInstalledOnOrgId}
   }
 
-  async selectDeployment(tenantId: string, installId: string, appInstalledOnOrgId: string): Promise<DeploymentId> {
+  async selectDeployment(tenantId: string, installId: string): Promise<DeploymentId> {
     const deployments = await getDeployments(tenantId, installId)
     let deploymentId
     if (deployments.errors) {
-      this.log(`${deployments.errors[0].detail}`)
+      this.logStatus(`${deployments.errors[0].detail}`)
       this.error(`Please create a first connection by using the "workflows connections create" command.`)
     } else if (deployments.data) {
       deploymentId =
@@ -205,7 +229,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     const deployments = await getDeployments(tenantId, installId)
     let deploymentId
     if (deployments.errors) {
-      this.log(`${deployments.errors[0].detail}`)
+      this.logStatus(`${deployments.errors[0].detail}`)
       if (await confirm({message: 'Do you want to create a new Deployment?'})) {
         const newDeployment = await this.createNewDeployment(tenantId, installId, appInstalledOnOrgId)
         deploymentId = newDeployment.data.id

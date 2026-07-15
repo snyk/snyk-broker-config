@@ -29,6 +29,6 @@ describe('contexts workflows', () => {
     context:
         broker_client_url: https://my.broker.client:8000`.replaceAll(' ', ''),
     )
-    expect(stdout).to.contain('Contexts Get Workflow completed.')
+    expect(stderr).to.contain('Contexts Get Workflow completed.')
   })
 })

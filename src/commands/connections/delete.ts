@@ -6,8 +6,9 @@ import {
   commonUniversalBrokerDeploymentId,
   getCommonIds,
 } from '../../common/args.js'
-import {deleteConnectionForDeployment, getConnectionsForDeployment} from '../../api/connections.js'
+import {deleteConnectionForDeployment} from '../../api/connections.js'
 import {BaseCommand} from '../../base-command.js'
+import {STATUS} from '../../utils/display.js'
 
 export default class Connections extends BaseCommand<typeof Connections> {
   public static enableJsonFlag = true
@@ -31,8 +32,8 @@ export default class Connections extends BaseCommand<typeof Connections> {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', Connections.description))
+  async run() {
+    this.heading(Connections.description)
     const {args} = await this.parse(Connections)
     const {tenantId, installId} = getCommonIds(args)
     const deleteConnectionResponseCode = await deleteConnectionForDeployment(
@@ -42,15 +43,15 @@ export default class Connections extends BaseCommand<typeof Connections> {
       args.connectionId,
     )
     if (deleteConnectionResponseCode === 204) {
-      this.log(
+      this.logStatus(
         ux.colorize(
-          'cyan',
-          `Deleted Universal Broker Connection ${args.connectionId} for Tenant ${tenantId}, Install ${installId}`,
+          'green',
+          `${STATUS.DONE} Deleted Universal Broker Connection ${args.connectionId} for Tenant ${tenantId}, Install ${installId}`,
         ),
       )
 
-      return JSON.stringify({responseCode: deleteConnectionResponseCode})
+      return {responseCode: deleteConnectionResponseCode}
     }
-    this.error(ux.colorize('red', `Error deleting Broker Connection. Status code: ${deleteConnectionResponseCode}.`))
+    this.error(`Error deleting Broker Connection. Status code: ${deleteConnectionResponseCode}.`)
   }
 }

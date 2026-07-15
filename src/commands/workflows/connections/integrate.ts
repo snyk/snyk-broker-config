@@ -1,10 +1,9 @@
 import {ux} from '@oclif/core'
 import {commonApiRelatedArgs} from '../../../common/args.js'
-import {confirm, input} from '@inquirer/prompts'
 import {BaseCommand} from '../../../base-command.js'
-import {nonSourceIntegrations} from '../../../command-helpers/connections/type-params-mapping.js'
 import {createIntegrationForConnection} from '../../../api/integrations.js'
 import {validatedInput, ValidationType} from '../../../utils/input-validation.js'
+import {STATUS} from '../../../utils/display.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -16,19 +15,19 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
   static examples = [`<%= config.bin %> <%= command.id %>`]
 
-  async run(): Promise<string> {
+  async run() {
     try {
-      this.log('\n' + ux.colorize('red', Workflows.description))
+      this.heading(Workflows.description)
 
-      const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
+      const {installId, tenantId} = await this.setupFlow()
 
-      this.log(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
+      this.logStatus(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
-      const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
-      this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
+      const deploymentId = await this.selectDeployment(tenantId, installId)
+      this.logStatus(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
 
       const selectedConnection = await this.selectConnection(tenantId, installId, deploymentId)
-      this.log(
+      this.logStatus(
         ux.colorize(
           'cyan',
           `Selected Connection ID ${selectedConnection.id}. Ready to configure integrations to use this Connection.\n`,
@@ -43,23 +42,22 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         orgId,
       )
       if (connectionIntegration.errors) {
-        this.error(ux.colorize('red', JSON.stringify(connectionIntegration.errors)))
+        this.error(JSON.stringify(connectionIntegration.errors))
       }
-      this.log(
+      this.logStatus(
         ux.colorize(
           'cyan',
           `Connection ${selectedConnection.id} (type: ${selectedConnection.type}) integrated with integration ${connectionIntegration.data.id} on Org ${orgId}.`,
         ),
       )
-      this.log(ux.colorize('red', 'Connection Integrate Workflow completed.'))
+      this.logStatus(ux.colorize('green', `${STATUS.DONE} Connection Integrate Workflow completed.`))
     } catch (error: any) {
       if (error.name === 'ExitPromptError') {
-        this.log(ux.colorize('red', 'Goodbye.'))
+        this.logStatus('Goodbye.')
       } else {
         // Handle other errors or rethrow
         throw error
       }
     }
-    return JSON.stringify('')
   }
 }

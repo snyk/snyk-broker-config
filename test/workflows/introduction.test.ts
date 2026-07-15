@@ -14,7 +14,7 @@ describe('documentation', () => {
     // @ts-ignore
     const cfg: Config = {}
     const introduction = new Intro([], cfg)
-    const {stdout} = await captureOutput(
+    const {stdout, stderr} = await captureOutput(
       async () => {
         sendScenarioWithOutAutoEnter(stdin, [
           '\n',
@@ -38,6 +38,6 @@ describe('documentation', () => {
     expect(stdout).to.contain('Learn more about > connections')
     expect(stdout).to.contain('Learn more about > credentials')
     expect(stdout).to.contain('Learn more about > deployments')
-    expect(stdout).to.contain('Goodbye.')
+    expect(stderr).to.contain('Goodbye.')
   })
 })

@@ -4,7 +4,7 @@ import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
 import {createLogger} from '../utils/logger.js'
 
-const logger = createLogger('snyk-broker-config')
+const logger = createLogger()
 
 export interface DeploymentAttributesMetadata {
   [key: string]: any

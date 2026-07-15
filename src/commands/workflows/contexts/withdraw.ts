@@ -6,6 +6,7 @@ import {BaseCommand} from '../../../base-command.js'
 import {getIntegrationsForConnection} from '../../../api/integrations.js'
 import * as multiSelect from 'inquirer-select-pro'
 import {withdrawContext} from '../../../api/contexts.js'
+import {STATUS} from '../../../utils/display.js'
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
   static args = {
@@ -16,20 +17,20 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
   static examples = [`<%= config.bin %> <%= command.id %>`]
 
-  async run(): Promise<string> {
+  async run() {
     try {
-      this.log('\n' + ux.colorize('red', Workflows.description))
+      this.heading(Workflows.description)
 
-      const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
+      const {installId, tenantId} = await this.setupFlow()
 
-      this.log(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
+      this.logStatus(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
-      const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
-      this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
+      const deploymentId = await this.selectDeployment(tenantId, installId)
+      this.logStatus(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
 
       const selectedContext = await this.selectContext(tenantId, installId, deploymentId)
 
-      this.log(
+      this.logStatus(
         ux.colorize(
           'cyan',
           `Selected Context ID ${selectedContext.id}. Ready to select integrations to use this Context on.\n`,
@@ -47,7 +48,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         message: 'select',
         options: choices,
       })
-      this.log(
+      this.logStatus(
         ux.colorize(
           'cyan',
           `\nwithdrawing Context ID ${selectedContext.id} on integrations ${integrationsIdsToWithdrawContextTo.join(',')}\n`,
@@ -63,23 +64,22 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
             message: `Are you sure you want to withdraw context ${selectedContext.id} from integration ${integration.id} (org ${integration.org_id}}) ?`,
           })
         ) {
-          this.log(ux.colorize('blueBright', `Withdrawing Context ${selectedContext.id}`))
+          this.logStatus(ux.colorize('cyan', `Withdrawing Context ${selectedContext.id}`))
           await withdrawContext(tenantId, installId, selectedContext.id, integration.id)
         } else {
-          this.log(ux.colorize('cyan', 'Canceling.'))
+          this.logStatus(ux.colorize('cyan', 'Canceling.'))
         }
       }
 
-      this.log(ux.colorize('red', 'Contexts Withdraw Workflow completed.'))
-      return JSON.stringify(this.selectContext)
+      this.logStatus(ux.colorize('green', `${STATUS.DONE} Contexts Withdraw Workflow completed.`))
+      return selectedContext
     } catch (error: any) {
       if (error.name === 'ExitPromptError') {
-        this.log(ux.colorize('red', 'Goodbye.'))
+        this.logStatus('Goodbye.')
       } else {
         // Handle other errors or rethrow
         throw error
       }
     }
-    return JSON.stringify('')
   }
 }

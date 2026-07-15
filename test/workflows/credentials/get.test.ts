@@ -23,12 +23,12 @@ describe('credentials workflows', () => {
     )
     expect(stderr).to.contain('')
     expect(error).to.be.undefined
-    expect(stdout).to.contain('Found single accessible Tenant. Using 00000000-0000-0000-0000-000000000000.')
-    expect(stdout).to.contain(
+    expect(stderr).to.contain('Found single accessible Tenant. Using 00000000-0000-0000-0000-000000000000.')
+    expect(stderr).to.contain(
       'Now using Tenant Id 00000000-0000-0000-0000-000000000000 and Install Id 00000000-0000-0000-0000-000000000000.',
     )
-    expect(stdout).to.contain('Now using Deployment 00000000-0000-0000-0000-000000000000.')
-    expect(stdout).to.contain(
+    expect(stderr).to.contain('Now using Deployment 00000000-0000-0000-0000-000000000000.')
+    expect(stderr).to.contain(
       'Getting Universal Broker Credentials for Deployment 00000000-0000-0000-0000-000000000000, Tenant 00000000-0000-0000-0000-000000000000, Install 00000000-0000-0000-0000-000000000000',
     )
     expect(stdout).to.contain(`- id: 00000000-0000-0000-0000-0000000000001
@@ -38,8 +38,8 @@ describe('credentials workflows', () => {
         environment_variable_name: TEST_ENV_VAR
         type: github
 `)
-    expect(stdout).to.contain('Total = 1')
+    expect(stderr).to.contain('Total = 1')
 
-    expect(stdout).to.contain('Credentials Listing Workflow completed.')
+    expect(stderr).to.contain('Credentials Listing Workflow completed.')
   })
 })

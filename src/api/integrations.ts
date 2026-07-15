@@ -6,7 +6,7 @@ import {createLogger} from '../utils/logger.js'
 import {getDummyCredentialsForIntegrationType} from './integrations-utils.js'
 import {IntegrationResponse, IntegrationsResponse} from './types.js'
 
-const logger = createLogger('snyk-broker-config')
+const logger = createLogger()
 
 interface IntegrationBody {
   data: {

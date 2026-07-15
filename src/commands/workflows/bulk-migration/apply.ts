@@ -1,5 +1,5 @@
 import {ux} from '@oclif/core'
-import {printFormattedJSON} from '../../../utils/display.js'
+import {printFormattedJSON, STATUS} from '../../../utils/display.js'
 import {commonApiRelatedArgs} from '../../../common/args.js'
 import {applyBulkMigration} from '../../../api/connections.js'
 import {BaseCommand} from '../../../base-command.js'
@@ -18,20 +18,20 @@ export default class BulkMigrationApply extends BaseCommand<typeof BulkMigration
     `# It will then initiate the bulk migration process for the selected connection.`,
   ]
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', BulkMigrationApply.description))
+  async run() {
+    this.heading(BulkMigrationApply.description)
 
-    const {tenantId, installId, appInstalledOnOrgId} = await this.setupFlow()
-    this.log(ux.colorize('cyan', `\nUsing Tenant ID ${tenantId} and Install ID ${installId}.\n`))
+    const {tenantId, installId} = await this.setupFlow()
+    this.logStatus(ux.colorize('cyan', `\nUsing Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
-    const deploymentId = await this.selectDeployment(tenantId, installId, appInstalledOnOrgId)
-    this.log(ux.colorize('cyan', `Using Deployment ID ${deploymentId}.\n`))
+    const deploymentId = await this.selectDeployment(tenantId, installId)
+    this.logStatus(ux.colorize('cyan', `Using Deployment ID ${deploymentId}.\n`))
 
     const selectedConnection = await this.selectConnection(tenantId, installId, deploymentId)
     const connectionId = selectedConnection.id
-    this.log(ux.colorize('cyan', `Using Connection ID ${connectionId} (${selectedConnection.name}).\n`))
+    this.logStatus(ux.colorize('cyan', `Using Connection ID ${connectionId} (${selectedConnection.name}).\n`))
 
-    this.log(
+    this.logStatus(
       ux.colorize(
         'cyan',
         `Initiating bulk migration for Connection ${connectionId}, Deployment ${deploymentId}, Tenant ${tenantId}, Install ${installId}...`,
@@ -46,11 +46,11 @@ export default class BulkMigrationApply extends BaseCommand<typeof BulkMigration
         connectionId,
       )
 
-      this.log(ux.colorize('green', '\nBulk migration process started successfully:'))
+      this.logStatus(ux.colorize('green', `\n${STATUS.OK} Bulk migration process started successfully:`))
       this.log(printFormattedJSON(bulkMigrationResponse.data))
-      return JSON.stringify(bulkMigrationResponse.data)
+      return bulkMigrationResponse.data
     } catch (error) {
-      this.error(ux.colorize('red', `\nFailed to start bulk migration: ${(error as Error).message}`))
+      this.error(`\nFailed to start bulk migration: ${(error as Error).message}`)
     }
   }
 }

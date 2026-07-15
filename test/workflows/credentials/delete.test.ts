@@ -24,6 +24,6 @@ describe('deployment workflows', () => {
     )
     expect(stderr).to.contain('')
     expect(error).to.be.undefined
-    expect(stdout).to.contain('Credentials Deletion Workflow completed.')
+    expect(stderr).to.contain('Credentials Deletion Workflow completed.')
   })
 })

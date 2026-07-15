@@ -5,7 +5,7 @@ import {BaseCommand} from '../../../base-command.js'
 import {connectionTypes} from '../../../command-helpers/connections/type-params-mapping.js'
 import {CredentialsAttributes} from '../../../api/types.js'
 import {createCredentials} from '../../../api/credentials.js'
-import {printFormattedJSON} from '../../../utils/display.js'
+import {printFormattedJSON, STATUS} from '../../../utils/display.js'
 import {validatedInput, ValidationType} from '../../../utils/input-validation.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
@@ -18,16 +18,16 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
   static examples = [`<%= config.bin %> <%= command.id %>`]
 
-  async run(): Promise<string> {
+  async run() {
     try {
-      this.log('\n' + ux.colorize('red', Workflows.description))
+      this.heading(Workflows.description)
 
       const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
 
-      this.log(ux.colorize('cyan', `Now using Tenant Id ${tenantId} and Install Id ${installId}.\n`))
+      this.logStatus(ux.colorize('cyan', `Now using Tenant Id ${tenantId} and Install Id ${installId}.\n`))
 
       const deploymentId = await this.setupOrSelectDeployment(tenantId, installId, appInstalledOnOrgId)
-      this.log(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
+      this.logStatus(ux.colorize('cyan', `Now using Deployment ${deploymentId}.\n`))
 
       const attributes: CredentialsAttributes[] = []
       const type = await select({
@@ -54,7 +54,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
       const credentials = await createCredentials(tenantId, installId, deploymentId, attributes)
       const credentialsResponse = credentials.data
-      this.log(
+      this.logStatus(
         ux.colorize(
           'cyan',
           `Creating Universal Broker Credentials for Deployment ${deploymentId} for Tenant ${tenantId}, Install ${installId}`,
@@ -62,15 +62,14 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       )
       this.log(printFormattedJSON(credentialsResponse))
 
-      this.log(ux.colorize('red', 'Credentials Create Workflow completed.'))
+      this.logStatus(ux.colorize('green', `${STATUS.DONE} Credentials Create Workflow completed.`))
     } catch (error: any) {
       if (error.name === 'ExitPromptError') {
-        this.log(ux.colorize('red', 'Goodbye.'))
+        this.logStatus('Goodbye.')
       } else {
         // Handle other errors or rethrow
         throw error
       }
     }
-    return JSON.stringify('')
   }
 }

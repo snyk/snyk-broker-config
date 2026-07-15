@@ -1,4 +1,3 @@
-import {input} from '@inquirer/prompts'
 import {getExistingAppInstalledOnOrgId, installAppIdOnOrgId} from '../api/apps.js'
 import {getDeployments} from '../api/deployments.js'
 import {AppInstallOutput} from '../api/types.js'

@@ -32,7 +32,7 @@ describe('context workflows', () => {
       },
       {print: false},
     )
-    expect(stdout).to.contain('Context Create Workflow completed.')
+    expect(stderr).to.contain('Context Create Workflow completed.')
     expect(error).to.be.undefined
     expect(stdout.replaceAll(' ', '')).to.contain(
       `- id: 00000000-0000-0000-0000-000000000003

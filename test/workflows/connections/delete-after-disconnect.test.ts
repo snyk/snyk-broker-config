@@ -23,10 +23,10 @@ describe('deployment workflows', () => {
       {print: false},
     )
     expect(error).to.be.undefined
-    expect(stdout).to.contain(`Disconnecting integration ${integrationId4} in org ${orgId4}`)
-    expect(stdout).to.contain(`✔ Disconnected.`)
-    expect(stdout).to.contain(`Selected Connection ID ${connectionId4}. Ready to delete Connection.`)
-    expect(stdout).to.contain(`Deleting Connection ${connectionId4}`)
-    expect(stdout).to.contain(`Connection Deletion Workflow completed.`)
+    expect(stderr).to.contain(`Disconnecting integration ${integrationId4} in org ${orgId4}`)
+    expect(stderr).to.contain(`[DONE] Disconnected.`)
+    expect(stderr).to.contain(`Selected Connection ID ${connectionId4}. Ready to delete Connection.`)
+    expect(stderr).to.contain(`Deleting Connection ${connectionId4}`)
+    expect(stderr).to.contain(`Connection Deletion Workflow completed.`)
   })
 })

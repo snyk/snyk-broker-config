@@ -2,6 +2,7 @@ import {ux} from '@oclif/core'
 import {commonUniversalBrokerArgs, commonUniversalBrokerDeploymentId, getCommonIds} from '../../common/args.js'
 import {deleteDeployment} from '../../api/deployments.js'
 import {BaseCommand} from '../../base-command.js'
+import {STATUS} from '../../utils/display.js'
 
 export default class Deployments extends BaseCommand<typeof Deployments> {
   static args = {
@@ -22,11 +23,11 @@ export default class Deployments extends BaseCommand<typeof Deployments> {
   //     from: Flags.string({char: 'f', description: 'Who is saying hello', required: true}),
   //   }
 
-  async run(): Promise<string> {
-    this.log('\n' + ux.colorize('red', Deployments.description))
+  async run() {
+    this.heading(Deployments.description)
     const {args} = await this.parse(Deployments)
     const {tenantId, installId} = getCommonIds({tenantId: args.tenantId, installId: args.installId})
-    this.log(
+    this.logStatus(
       ux.colorize(
         'cyan',
         `Deleting Universal Broker Deployment ${args.deploymentId} for Tenant ${tenantId}, Install ${installId}`,
@@ -35,9 +36,14 @@ export default class Deployments extends BaseCommand<typeof Deployments> {
 
     const deploymentResponseCode = await deleteDeployment(tenantId, installId, args.deploymentId!)
     if (deploymentResponseCode === 204) {
-      this.log(ux.colorize('cyan', `Deleted Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`))
-      return JSON.stringify({responseCode: deploymentResponseCode})
+      this.logStatus(
+        ux.colorize(
+          'green',
+          `${STATUS.DONE} Deleted Universal Broker Deployment for Tenant ${tenantId}, Install ${installId}`,
+        ),
+      )
+      return {responseCode: deploymentResponseCode}
     }
-    this.error(ux.colorize('red', `Error deleting Deployment. Status code: ${deploymentResponseCode}.`))
+    this.error(`Error deleting Deployment. Status code: ${deploymentResponseCode}.`)
   }
 }

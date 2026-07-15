@@ -50,9 +50,7 @@ describe('Broker App Api calls', () => {
   it('returns undefined when no apps are installed', async () => {
     const orgId = 'no-apps-installed-org-id'
 
-    nock('https://api.snyk.io')
-      .get(`/rest/orgs/${orgId}/apps/installs?version=2024-05-31`)
-      .reply(200, {data: []})
+    nock('https://api.snyk.io').get(`/rest/orgs/${orgId}/apps/installs?version=2024-05-31`).reply(200, {data: []})
 
     const installedApp = await getExistingAppInstalledOnOrgId(orgId)
     expect(installedApp).to.be.undefined
@@ -84,7 +82,6 @@ describe('Broker App Api calls', () => {
     nock('https://api.snyk.io')
       .get(`/rest/orgs/${orgId}/apps/installs?version=2024-05-31`)
       .reply(200, responseWithDifferentApps)
-
 
     const installedApp = await getExistingAppInstalledOnOrgId(orgId)
     expect(installedApp).to.be.undefined

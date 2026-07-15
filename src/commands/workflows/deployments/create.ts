@@ -2,7 +2,7 @@ import {ux} from '@oclif/core'
 import {commonApiRelatedArgs} from '../../../common/args.js'
 import {confirm, input} from '@inquirer/prompts'
 import {BaseCommand} from '../../../base-command.js'
-import {printFormattedJSON} from '../../../utils/display.js'
+import {printFormattedJSON, STATUS} from '../../../utils/display.js'
 
 export default class Workflows extends BaseCommand<typeof Workflows> {
   public static enableJsonFlag = true
@@ -14,13 +14,13 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
   static examples = [`<%= config.bin %> <%= command.id %>`]
 
-  async run(): Promise<string> {
+  async run() {
     try {
-      this.log('\n' + ux.colorize('red', Workflows.description))
+      this.heading(Workflows.description)
 
       const {installId, tenantId, appInstalledOnOrgId} = await this.setupFlow()
 
-      this.log(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
+      this.logStatus(ux.colorize('cyan', `Now using Tenant ID ${tenantId} and Install ID ${installId}.\n`))
 
       const metadata: Record<string, string> = {}
       while (
@@ -35,17 +35,16 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
 
       const newDeployment = await this.createNewDeployment(tenantId, installId, appInstalledOnOrgId, metadata)
 
-      this.log(ux.colorize('cyan', `Created Deployment ${newDeployment.data.id}.\n`))
+      this.logStatus(ux.colorize('green', `${STATUS.DONE} Created Deployment ${newDeployment.data.id}.\n`))
       this.log(printFormattedJSON(newDeployment.data))
-      this.log(ux.colorize('red', 'Deployment Create Workflow completed.'))
+      this.logStatus(ux.colorize('green', `${STATUS.DONE} Deployment Create Workflow completed.`))
     } catch (error: any) {
       if (error.name === 'ExitPromptError') {
-        this.log(ux.colorize('red', 'Goodbye.'))
+        this.logStatus('Goodbye.')
       } else {
         // Handle other errors or rethrow
         throw error
       }
     }
-    return JSON.stringify('')
   }
 }

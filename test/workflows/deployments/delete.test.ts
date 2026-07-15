@@ -24,7 +24,7 @@ describe('deployment workflows', () => {
     )
     expect(stderr).to.contain('')
     expect(error).to.be.undefined
-    expect(stdout).to.contain('Deleting deployment 00000000-0000-0000-0000-000000000002')
-    expect(stdout).to.contain('Deployment Deletion Workflow completed.')
+    expect(stderr).to.contain('Deleting deployment 00000000-0000-0000-0000-000000000002')
+    expect(stderr).to.contain('Deployment Deletion Workflow completed.')
   })
 })
