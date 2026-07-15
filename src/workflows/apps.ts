@@ -4,10 +4,13 @@ import {AppInstallOutput} from '../api/types.js'
 import {isValidUUID} from '../utils/validation.js'
 import {validatedInput, ValidationType} from '../utils/input-validation.js'
 
-export const installAppsWorfklow = async (orgId: string): Promise<AppInstallOutput | string> => {
+export const installAppsWorfklow = async (orgId: string): Promise<AppInstallOutput> => {
   const existingInstall = await getExistingAppInstalledOnOrgId(orgId)
   if (existingInstall) {
-    return existingInstall.id
+    return {
+      install_id: existingInstall.id,
+      client_id: existingInstall.attributes.client_id,
+    }
   }
   const installData = await installAppIdOnOrgId(orgId)
   return {
