@@ -1,5 +1,5 @@
 import {makeRequest, HttpRequest} from '../../src/utils/http-request'
-import {ApiError} from '../../src/utils/api-error'
+import {ApiError, NetworkError} from '../../src/utils/errors'
 import {expect} from 'chai'
 import nock from 'nock'
 
@@ -111,19 +111,6 @@ describe('makeRequest error handling', () => {
     }
   })
 
-  it('captures the detail when the body uses the "details" spelling', async () => {
-    nock('https://example.com')
-      .get('/test')
-      .reply(401, {jsonapi: {version: '1.0'}, errors: [{status: '401', details: 'Unauthorized'}]})
-
-    try {
-      await makeRequest(errorRequest(), 0)
-      expect.fail('expected makeRequest to reject')
-    } catch (error) {
-      expect((error as ApiError).detail).to.equal('Unauthorized')
-    }
-  })
-
   it('prefixes the error message with the failing operation when one is set', async () => {
     nock('https://example.com')
       .get('/test')
@@ -136,6 +123,39 @@ describe('makeRequest error handling', () => {
       const apiError = error as ApiError
       expect(apiError.operation).to.equal('create the connection')
       expect(apiError.message).to.contain('Failed to create the connection.')
+    }
+  })
+
+  it('rejects with a NetworkError carrying the operation, code and raw message when the transport fails', async () => {
+    nock('https://example.com')
+      .get('/test')
+      .replyWithError({code: 'ECONNREFUSED', message: 'connect ECONNREFUSED 127.0.0.1:443'})
+
+    try {
+      await makeRequest({...errorRequest(), operation: 'list connections'}, 0)
+      expect.fail('expected makeRequest to reject')
+    } catch (error) {
+      expect(error).to.be.instanceOf(NetworkError)
+      const networkError = error as NetworkError
+      expect(networkError.operation).to.equal('list connections')
+      expect(networkError.code).to.equal('ECONNREFUSED')
+      expect(networkError.message).to.contain('Failed to list connections.')
+      expect(networkError.message).to.contain('ECONNREFUSED: connect ECONNREFUSED')
+    }
+  })
+
+  it('surfaces a TLS/cert error code even when the message omits it', async () => {
+    nock('https://example.com')
+      .get('/test')
+      .replyWithError({code: 'SELF_SIGNED_CERT_IN_CHAIN', message: 'self signed certificate in certificate chain'})
+
+    try {
+      await makeRequest({...errorRequest(), operation: 'list connections'}, 0)
+      expect.fail('expected makeRequest to reject')
+    } catch (error) {
+      const networkError = error as NetworkError
+      expect(networkError.code).to.equal('SELF_SIGNED_CERT_IN_CHAIN')
+      expect(networkError.message).to.contain('SELF_SIGNED_CERT_IN_CHAIN')
     }
   })
 

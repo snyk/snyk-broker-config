@@ -1,7 +1,5 @@
 import type {HttpRequest, HttpResponse} from './http-request.js'
 
-const MAX_RAW_DETAIL_LENGTH = 500
-
 export interface ApiErrorFields {
   statusCode: number | undefined
   statusText: string
@@ -42,13 +40,62 @@ export class ApiError extends Error {
   }
 }
 
-// A 404 response. Collection lookups treat this as "none exist"; specific-id
-// lookups let it surface as a failure like any other ApiError.
-export class NotFoundError extends ApiError {
-  constructor(fields: ApiErrorFields) {
-    super(fields)
-    this.name = 'NotFoundError'
+export interface NetworkErrorFields {
+  operation: string
+  interactionId: string
+  code: string
+  message: string
+}
+
+// A transport failure where no HTTP response was received (connection refused,
+// DNS, timeout, TLS/cert errors). No server status, url, or request id applies.
+export class NetworkError extends Error {
+  readonly operation: string
+  readonly interactionId: string
+  readonly code: string
+
+  constructor(fields: NetworkErrorFields) {
+    const prefix = fields.operation ? `Failed to ${fields.operation}.\n` : ''
+    const detail = fields.code ? `${fields.code}: ${fields.message}` : fields.message
+    super(`${prefix}- interactionId: ${fields.interactionId}\n\n- ${detail}`)
+    this.name = 'NetworkError'
+    this.operation = fields.operation
+    this.interactionId = fields.interactionId
+    this.code = fields.code
   }
+}
+
+function isNodeError(error: unknown): error is NodeJS.ErrnoException {
+  return error !== null && typeof error === 'object' && 'message' in error
+}
+
+// Builds a NetworkError from a transport-level failure, carrying the failing
+// operation and interaction id plus the raw underlying error code and message.
+// The Node error code (e.g. ECONNREFUSED, SELF_SIGNED_CERT_IN_CHAIN) is captured
+// explicitly because it is often absent from the message text.
+export const buildNetworkError = (
+  req: Pick<HttpRequest, 'operation'>,
+  interactionId: string,
+  error: unknown,
+): Error => {
+  if (!isNodeError(error)) {
+    return new Error(String(error))
+  }
+  return new NetworkError({
+    operation: req.operation ?? '',
+    interactionId,
+    code: error.code ?? '',
+    message: error.message,
+  })
+}
+// The JSON:API error body the Snyk backend returns on a failed request, e.g.
+// {"errors":[{"detail":"Permission denied","status":"403"}],"jsonapi":{"version":"1.0"}}.
+interface ApiErrorBody {
+  errors?: Array<{id?: string; detail?: string; status?: string}>
+}
+
+function isApiErrorBody(value: unknown): value is ApiErrorBody {
+  return typeof value === 'object' && value !== null && (!('errors' in value) || Array.isArray(value.errors))
 }
 
 // Builds a structured ApiError from a failed response, resolving the request id
@@ -69,22 +116,22 @@ export const buildApiError = (
   let detail: string | undefined
 
   try {
-    const parsed = JSON.parse(body)
-    const errors = (parsed?.errors as Array<{id?: string; detail?: string; details?: string}>) ?? []
+    const parsed: unknown = JSON.parse(body)
+    const errors = isApiErrorBody(parsed) ? (parsed.errors ?? []) : []
     bodyRequestId = errors.find((error) => error.id)?.id
     detail = errors
-      .map((error) => error.detail ?? error.details)
+      .map((error) => error.detail)
       .filter(Boolean)
       .join('; ')
   } catch {
-    detail = body?.trim().slice(0, MAX_RAW_DETAIL_LENGTH)
+    // if not JSON, use the body
+    detail = body?.trim()
   }
 
   const requestId =
     (Array.isArray(headerRequestId) ? headerRequestId[0] : headerRequestId) ?? bodyRequestId ?? fallbackRequestId
 
-  const ErrorClass = response.statusCode === 404 ? NotFoundError : ApiError
-  return new ErrorClass({
+  return new ApiError({
     statusCode: response.statusCode,
     statusText: response.statusText || '',
     requestId,

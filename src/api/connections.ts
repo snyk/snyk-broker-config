@@ -2,7 +2,7 @@ import {getCommonHeaders} from '../common/rest-helpers.js'
 import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
-import {NotFoundError} from '../utils/api-error.js'
+import {ApiError} from '../utils/errors.js'
 import {createLogger} from '../utils/logger.js'
 import {
   ConnectionResponse,
@@ -29,7 +29,7 @@ export const getConnectionsForDeployment = async (tenantId: string, installId: s
     logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
     return JSON.parse(response.body) as ConnectionsResponse
   } catch (error) {
-    if (error instanceof NotFoundError) {
+    if (error instanceof ApiError && error.statusCode === 404) {
       return {data: [], jsonapi: {version: ''}, links: {}}
     }
     throw error

@@ -2,7 +2,7 @@ import {getCommonHeaders} from '../common/rest-helpers.js'
 import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
-import {NotFoundError} from '../utils/api-error.js'
+import {ApiError} from '../utils/errors.js'
 import {createLogger} from '../utils/logger.js'
 import {AppInstallResponse, AppInstallResponseData, AppInstallsResponse} from './types.js'
 
@@ -72,7 +72,7 @@ export const getExistingAppInstalledOnOrgId = async (orgId: string): Promise<App
 
     return installs.data.find((x) => x.relationships.app.data.id === appId)
   } catch (error) {
-    if (error instanceof NotFoundError) {
+    if (error instanceof ApiError && error.statusCode === 404) {
       return undefined
     }
     throw error

@@ -20,7 +20,7 @@ import {getAccessibleTenants, isTenantAdmin} from './api/tenants.js'
 import {validatedInput, ValidationType} from './utils/input-validation.js'
 import {validateSnykToken} from './api/snyk.js'
 import {getContextsForForDeployment} from './api/contexts.js'
-import {ApiError} from './utils/api-error.js'
+import {ApiError, NetworkError} from './utils/errors.js'
 import {STATUS} from './utils/display.js'
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<(typeof BaseCommand)['baseFlags'] & T['flags']>
@@ -121,7 +121,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       this.logStatus(ux.colorize('green', `${STATUS.OK} Tenant Admin role confirmed.`))
     } catch (error) {
       this.debug(error)
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError || error instanceof NetworkError) {
         this.error(error.message)
       } else {
         this.error(

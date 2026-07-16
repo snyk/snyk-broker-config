@@ -3,7 +3,7 @@ import http from 'node:http'
 import https from 'node:https'
 import {getProxyForUrl} from 'proxy-from-env'
 import {bootstrap} from 'global-agent'
-import {buildApiError} from './api-error.js'
+import {buildApiError, buildNetworkError} from './errors.js'
 
 export interface HttpRequest {
   url: string
@@ -97,20 +97,20 @@ export const makeRequest = async (req: HttpRequest, retries = MAX_RETRY): Promis
               {error, requestId, interactionId},
               `Error getting response from downstream. Giving up after ${MAX_RETRY} retries.`,
             )
-            reject(error)
+            reject(buildNetworkError(req, interactionId, error))
           }
         })
       })
       request.on('error', (error) => {
         console.error({error, requestId, interactionId}, 'Error making request to downstream.')
-        reject(error)
+        reject(buildNetworkError(req, interactionId, error))
       })
       if (localRequest.body) {
         request.write(localRequest.body)
       }
       request.end()
     } catch (error) {
-      reject(error)
+      reject(buildNetworkError(req, interactionId, error))
     }
   })
 }
