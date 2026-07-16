@@ -34,19 +34,11 @@ export const validateSnykToken = async (snykToken: string): Promise<string> => {
     url: `${config.API_HOSTNAME}/${apiPath}?version=${config.APP_INSTALL_API_VERSION}`,
     headers: headers,
     method: 'GET',
+    operation: 'validate the Snyk token',
   }
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
 
-    const parsedResponse = JSON.parse(response.body) as SelfResponse
-    return parsedResponse.data.id
-  } catch (error: any) {
-    let errorMessage = error
-    if (error.includes('401: Unauthorized.')) {
-      errorMessage = `Invalid/stale token? Are you using the right region? (using ${config.API_HOSTNAME}).`
-      logger.error({error}, 'Error validating Snyk Token.')
-    }
-    throw new Error(errorMessage)
-  }
+  const parsedResponse = JSON.parse(response.body) as SelfResponse
+  return parsedResponse.data.id
 }

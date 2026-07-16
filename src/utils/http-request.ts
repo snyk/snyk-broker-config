@@ -3,12 +3,15 @@ import http from 'node:http'
 import https from 'node:https'
 import {getProxyForUrl} from 'proxy-from-env'
 import {bootstrap} from 'global-agent'
+import {buildApiError} from './api-error.js'
 
 export interface HttpRequest {
   url: string
   headers: Object
   method: string
   body?: string | Buffer | Uint8Array
+  // Human-readable operation for error output, e.g. "create the connection".
+  operation?: string
 }
 
 export interface HttpResponse {
@@ -60,11 +63,17 @@ export const makeRequest = async (req: HttpRequest, retries = MAX_RETRY): Promis
 
         // The whole response has been received.
         response.on('end', () => {
-          if (response.statusCode && response.statusCode > 299 && response.statusCode !== 404) {
-            const errors = (JSON.parse(data).errors as Array<any>) ?? ''
+          if (response.statusCode && response.statusCode > 299) {
             reject(
-              `${response.statusCode}: ${response.statusMessage}.\n\n- Url: (${req.method})${req.url}.\n- requestId: ${requestId}\n- interactionId: ${interactionId}\n\n- ${errors.map((error) => error.detail).join(';')}`,
+              buildApiError(
+                {headers: response.headers, statusCode: response.statusCode, statusText: response.statusMessage || ''},
+                data,
+                req,
+                requestId,
+                interactionId,
+              ),
             )
+            return
           }
           resolve({
             headers: response.headers,

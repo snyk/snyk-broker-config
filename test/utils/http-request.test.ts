@@ -1,4 +1,5 @@
 import {makeRequest, HttpRequest} from '../../src/utils/http-request'
+import {ApiError} from '../../src/utils/api-error'
 import {expect} from 'chai'
 import nock from 'nock'
 
@@ -60,5 +61,95 @@ describe('makeRequest SNYK-REQUEST-ID injection', () => {
     await makeRequest(req, 0)
     const id = (req.headers as Record<string, string>)['SNYK-REQUEST-ID']
     expect(id).to.equal(existingId)
+  })
+})
+
+describe('makeRequest error handling', () => {
+  afterEach(() => {
+    nock.cleanAll()
+  })
+
+  const errorRequest = (): HttpRequest => ({
+    url: 'https://example.com/test',
+    headers: {'Content-Type': 'application/json'},
+    method: 'GET',
+  })
+
+  it('rejects with an ApiError carrying status, detail and the server request id from the header', async () => {
+    const serverRequestId = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
+    nock('https://example.com')
+      .get('/test')
+      .reply(400, {errors: [{id: 'body-id', detail: 'Unknown query parameter'}]}, {'snyk-request-id': serverRequestId})
+
+    try {
+      await makeRequest(errorRequest(), 0)
+      expect.fail('expected makeRequest to reject')
+    } catch (error) {
+      expect(error).to.be.instanceOf(ApiError)
+      const apiError = error as ApiError
+      expect(apiError.statusCode).to.equal(400)
+      expect(apiError.requestId).to.equal(serverRequestId)
+      expect(apiError.detail).to.equal('Unknown query parameter')
+      expect(apiError.message).to.contain('400')
+      expect(apiError.message).to.contain('Unknown query parameter')
+      expect(apiError.message).to.contain(serverRequestId)
+    }
+  })
+
+  it('falls back to errors[].id when no snyk-request-id header is present', async () => {
+    nock('https://example.com')
+      .get('/test')
+      .reply(403, {errors: [{id: 'body-request-id', detail: 'Forbidden'}]})
+
+    try {
+      await makeRequest(errorRequest(), 0)
+      expect.fail('expected makeRequest to reject')
+    } catch (error) {
+      const apiError = error as ApiError
+      expect(apiError.requestId).to.equal('body-request-id')
+      expect(apiError.detail).to.equal('Forbidden')
+    }
+  })
+
+  it('captures the detail when the body uses the "details" spelling', async () => {
+    nock('https://example.com')
+      .get('/test')
+      .reply(401, {jsonapi: {version: '1.0'}, errors: [{status: '401', details: 'Unauthorized'}]})
+
+    try {
+      await makeRequest(errorRequest(), 0)
+      expect.fail('expected makeRequest to reject')
+    } catch (error) {
+      expect((error as ApiError).detail).to.equal('Unauthorized')
+    }
+  })
+
+  it('prefixes the error message with the failing operation when one is set', async () => {
+    nock('https://example.com')
+      .get('/test')
+      .reply(400, {errors: [{detail: 'Unknown query parameter'}]})
+
+    try {
+      await makeRequest({...errorRequest(), operation: 'create the connection'}, 0)
+      expect.fail('expected makeRequest to reject')
+    } catch (error) {
+      const apiError = error as ApiError
+      expect(apiError.operation).to.equal('create the connection')
+      expect(apiError.message).to.contain('Failed to create the connection.')
+    }
+  })
+
+  it('does not throw on a non-JSON error body and still reports the status code', async () => {
+    nock('https://example.com').get('/test').reply(502, '<html>Bad Gateway</html>')
+
+    try {
+      await makeRequest(errorRequest(), 0)
+      expect.fail('expected makeRequest to reject')
+    } catch (error) {
+      expect(error).to.be.instanceOf(ApiError)
+      const apiError = error as ApiError
+      expect(apiError.statusCode).to.equal(502)
+      expect(apiError.detail).to.contain('Bad Gateway')
+    }
   })
 })

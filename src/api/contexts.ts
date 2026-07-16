@@ -2,6 +2,7 @@ import {getCommonHeaders} from '../common/rest-helpers.js'
 import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
+import {NotFoundError} from '../utils/api-error.js'
 import {createLogger} from '../utils/logger.js'
 import {ApplyContextResponse, ContextResponse, ContextsResponse} from './types.js'
 
@@ -16,13 +17,17 @@ export const getContextsForForDeployment = async (tenantId: string, installId: s
     url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
     headers: headers,
     method: 'GET',
+    operation: 'list contexts',
   }
   try {
     const response = await makeRequest(req)
     logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
     return JSON.parse(response.body) as ContextsResponse
-  } catch (error: any) {
-    throw new Error(error)
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      return {data: [], jsonapi: {version: ''}, links: {}}
+    }
+    throw error
   }
 }
 
@@ -51,15 +56,12 @@ export const createContextForConnection = async (
     headers: headers,
     method: 'POST',
     body: JSON.stringify(body),
+    operation: 'create the context',
   }
 
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return JSON.parse(response.body) as ContextResponse
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  return JSON.parse(response.body) as ContextResponse
 }
 
 export const deleteContextById = async (tenantId: string, installId: string, contextId: string) => {
@@ -71,15 +73,12 @@ export const deleteContextById = async (tenantId: string, installId: string, con
     url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
     headers: headers,
     method: 'DELETE',
+    operation: 'delete the context',
   }
 
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return response.statusCode
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  return response.statusCode
 }
 
 export const applyContext = async (tenantId: string, installId: string, contextId: string, orgId: string) => {
@@ -102,15 +101,12 @@ export const applyContext = async (tenantId: string, installId: string, contextI
     headers: headers,
     method: 'PATCH',
     body: JSON.stringify(body),
+    operation: 'apply the context',
   }
 
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return JSON.parse(response.body) as ApplyContextResponse
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  return JSON.parse(response.body) as ApplyContextResponse
 }
 
 export const withdrawContext = async (
@@ -127,13 +123,10 @@ export const withdrawContext = async (
     url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
     headers: headers,
     method: 'DELETE',
+    operation: 'withdraw the context',
   }
 
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return response.statusCode
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  return response.statusCode
 }

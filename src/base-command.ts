@@ -20,6 +20,7 @@ import {getAccessibleTenants, isTenantAdmin} from './api/tenants.js'
 import {validatedInput, ValidationType} from './utils/input-validation.js'
 import {validateSnykToken} from './api/snyk.js'
 import {getContextsForForDeployment} from './api/contexts.js'
+import {ApiError} from './utils/api-error.js'
 import {STATUS} from './utils/display.js'
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<(typeof BaseCommand)['baseFlags'] & T['flags']>
@@ -82,7 +83,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       userId = await validateSnykToken(process.env.SNYK_TOKEN)
       this.logStatus(ux.colorize('green', `${STATUS.OK} Valid Snyk Token for user ${userId}.`))
     } catch (error) {
-      this.error(`Invalid Snyk Token. ${error}`)
+      this.error(error instanceof Error ? error.message : String(error))
     }
     if (!process.env.TENANT_ID) {
       const accessibleTenants = await getAccessibleTenants()
@@ -120,9 +121,13 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       this.logStatus(ux.colorize('green', `${STATUS.OK} Tenant Admin role confirmed.`))
     } catch (error) {
       this.debug(error)
-      this.error(
-        `This tool requires Tenant Admin role. Please use a Tenant level Admin account or upgrade your account to be Tenant Admin.`,
-      )
+      if (error instanceof ApiError) {
+        this.error(error.message)
+      } else {
+        this.error(
+          `This tool requires Tenant Admin role. Please use a Tenant level Admin account or upgrade your account to be Tenant Admin.`,
+        )
+      }
     }
 
     let orgId

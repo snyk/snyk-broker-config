@@ -2,6 +2,7 @@ import {getCommonHeaders} from '../common/rest-helpers.js'
 import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
+import {NotFoundError} from '../utils/api-error.js'
 import {createLogger} from '../utils/logger.js'
 import {
   CredentialsAttributes,
@@ -22,16 +23,17 @@ export const getCredentialsForDeployment = async (tenantId: string, installId: s
     url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
     headers: headers,
     method: 'GET',
+    operation: 'list credentials',
   }
   try {
     const response = await makeRequest(req)
     logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    if (response.statusCode && response.statusCode === 404) {
+    return JSON.parse(response.body) as CredentialsListResponse
+  } catch (error) {
+    if (error instanceof NotFoundError) {
       return {data: [], jsonapi: {version: ''}, links: {}}
     }
-    return JSON.parse(response.body) as CredentialsListResponse
-  } catch (error: any) {
-    throw new Error(error)
+    throw error
   }
 }
 
@@ -49,14 +51,11 @@ export const getCredentialForDeployment = async (
     url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
     headers: headers,
     method: 'GET',
+    operation: 'get the credential',
   }
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return JSON.parse(response.body) as CredentialsResponse
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  return JSON.parse(response.body) as CredentialsResponse
 }
 
 export const createCredentials = async (
@@ -79,14 +78,11 @@ export const createCredentials = async (
     headers: headers,
     method: 'POST',
     body: JSON.stringify(body),
+    operation: 'create credentials',
   }
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return JSON.parse(response.body) as NewCredentialsResponse
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  return JSON.parse(response.body) as NewCredentialsResponse
 }
 
 export const deleteCredentials = async (
@@ -103,14 +99,11 @@ export const deleteCredentials = async (
     url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
     headers: headers,
     method: 'DELETE',
+    operation: 'delete credentials',
   }
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return response.statusCode
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  return response.statusCode
 }
 
 export const updateCredentials = async (
@@ -134,14 +127,11 @@ export const updateCredentials = async (
     headers: headers,
     method: 'PATCH',
     body: JSON.stringify(body),
+    operation: 'update credentials',
   }
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return response.body
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  return response.body
 }
 
 export const convertCredsToUuid = async (

@@ -38,14 +38,11 @@ export const getAccessibleTenants = async () => {
     url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION_TENANTS}`,
     headers: headers,
     method: 'GET',
+    operation: 'list accessible tenants',
   }
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return JSON.parse(response.body) as TenantsListingResponse
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  return JSON.parse(response.body) as TenantsListingResponse
 }
 
 interface TenantMembership {
@@ -109,16 +106,13 @@ export const isTenantAdmin = async (tenantId: string, userId: string) => {
     url: url.toString(),
     headers: headers,
     method: 'GET',
+    operation: 'verify tenant admin role',
   }
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
 
-    const parsedResponse = JSON.parse(response.body) as TenantsMembershipResponse
-    if (parsedResponse.data.length === 0) {
-      throw new Error(`User ${userId} does not have the required permission.`)
-    }
-  } catch (error: any) {
-    throw new Error(error)
+  const parsedResponse = JSON.parse(response.body) as TenantsMembershipResponse
+  if (parsedResponse.data.length === 0) {
+    throw new Error(`User ${userId} does not have the required permission.`)
   }
 }

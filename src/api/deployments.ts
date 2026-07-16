@@ -2,6 +2,7 @@ import {getCommonHeaders} from '../common/rest-helpers.js'
 import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
+import {NotFoundError} from '../utils/api-error.js'
 import {createLogger} from '../utils/logger.js'
 
 const logger = createLogger()
@@ -49,16 +50,18 @@ export const getDeployments = async (tenantId: string, installId: string) => {
     url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
     headers: headers,
     method: 'GET',
+    operation: 'list deployments',
   }
-  const response = await makeRequest(req)
-  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-  if (response.statusCode && response.statusCode === 404) {
-    return {data: [], errors: [{details: '404'}]}
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return JSON.parse(response.body) as DeploymentsResponse
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      return {data: [], errors: [{details: '404'}]}
+    }
+    throw error
   }
-  if (response.statusCode && response.statusCode > 299) {
-    throw new Error(`${response.statusCode} - ${response.statusText ?? ''}`)
-  }
-  return JSON.parse(response.body) as DeploymentsResponse
 }
 
 export const createDeployment = async (
@@ -82,14 +85,11 @@ export const createDeployment = async (
     headers: headers,
     method: 'POST',
     body: JSON.stringify(body),
+    operation: 'create the deployment',
   }
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return JSON.parse(response.body) as DeploymentResponse
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  return JSON.parse(response.body) as DeploymentResponse
 }
 
 export const deleteDeployment = async (tenantId: string, installId: string, deploymentId: string) => {
@@ -101,6 +101,7 @@ export const deleteDeployment = async (tenantId: string, installId: string, depl
     url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
     headers: headers,
     method: 'DELETE',
+    operation: 'delete the deployment',
   }
   const response = await makeRequest(req)
   logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
@@ -133,6 +134,7 @@ export const updateDeployment = async (
     headers: headers,
     method: 'PATCH',
     body: JSON.stringify(body),
+    operation: 'update the deployment',
   }
   const response = await makeRequest(req)
   logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
