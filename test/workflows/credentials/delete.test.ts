@@ -16,7 +16,7 @@ describe('deployment workflows', () => {
     const deleteCredentials = new Credentials([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId, 'y', 'y'])
+        sendScenario(stdin, [snykToken, orgId, 'y', 'y'])
 
         return deleteCredentials.run()
       },

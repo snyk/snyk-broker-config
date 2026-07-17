@@ -16,7 +16,7 @@ describe('contexts workflows', () => {
     const listContext = new Contexts([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId3])
+        sendScenario(stdin, [snykToken, orgId3])
 
         return listContext.run()
       },

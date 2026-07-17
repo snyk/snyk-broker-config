@@ -3,8 +3,10 @@ import {
   deleteDeployment,
   DeploymentAttributesMetadata,
   getDeployments,
+  getDeploymentsForTenant,
   updateDeployment,
 } from '../../src/api/deployments'
+import {ApiError} from '../../src/utils/errors'
 import {expect} from 'chai'
 import nock from 'nock'
 
@@ -71,6 +73,30 @@ describe('Deployments Api calls', () => {
       .reply(() => {
         return [204]
       })
+      .get('/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/deployments?version=2024-10-15')
+      .reply((uri, body) => {
+        const response = apiResponseSchema
+        response.data = [
+          {
+            attributes: {
+              broker_app_installed_in_org_id: '00000000-0000-0000-0000-000000000000',
+              install_id: '00000000-0000-0000-0000-000000000000',
+              metadata: {},
+            },
+            id: '00000000-0000-0000-0000-000000000000',
+            type: 'broker_deployment',
+          },
+        ]
+        return [200, response]
+      })
+      .get('/rest/tenants/00000000-0000-0000-0000-000000000001/brokers/deployments?version=2024-10-15')
+      .reply(() => {
+        return [404, {}]
+      })
+      .get('/rest/tenants/00000000-0000-0000-0000-000000000002/brokers/deployments?version=2024-10-15')
+      .reply(() => {
+        return [500, {}]
+      })
   })
 
   it('getDeployments', async () => {
@@ -92,6 +118,42 @@ describe('Deployments Api calls', () => {
       ],
       links: {},
     })
+  })
+
+  it('getDeploymentsForTenant', async () => {
+    const gotDeployments = await getDeploymentsForTenant('00000000-0000-0000-0000-000000000000')
+    expect(gotDeployments).to.deep.equal({
+      data: [
+        {
+          attributes: {
+            broker_app_installed_in_org_id: '00000000-0000-0000-0000-000000000000',
+            install_id: '00000000-0000-0000-0000-000000000000',
+            metadata: {},
+          },
+          id: '00000000-0000-0000-0000-000000000000',
+          type: 'broker_deployment',
+        },
+      ],
+      links: {},
+    })
+  })
+
+  it('getDeploymentsForTenant returns empty on 404', async () => {
+    const gotDeployments = await getDeploymentsForTenant('00000000-0000-0000-0000-000000000001')
+    expect(gotDeployments).to.deep.equal({data: [], errors: [{details: '404'}]})
+  })
+
+  it('getDeploymentsForTenant rethrows non-404 errors', async () => {
+    let thrown: unknown
+    try {
+      await getDeploymentsForTenant('00000000-0000-0000-0000-000000000002')
+    } catch (error) {
+      thrown = error
+    }
+    expect(thrown).to.be.instanceOf(ApiError)
+    if (thrown instanceof ApiError) {
+      expect(thrown.statusCode).to.equal(500)
+    }
   })
 
   it('createDeployments', async () => {

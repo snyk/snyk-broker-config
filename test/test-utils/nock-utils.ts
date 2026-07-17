@@ -13,6 +13,8 @@ export const orgId3 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8a'
 export const orgId4 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8b'
 export const tenantId = '00000000-0000-0000-0000-000000000000'
 export const nonAdminTenantId = '00000000-0000-0000-0000-000000000001'
+export const discoverTenantId = '00000000-0000-0000-0000-0000000000d1'
+export const multiDiscoverTenantId = '00000000-0000-0000-0000-0000000000d2'
 export const installId = '00000000-0000-0000-0000-000000000000'
 export const installId2 = '00000000-0000-0000-0000-000000000002'
 export const installId3 = '00000000-0000-0000-0000-000000000003'
@@ -443,6 +445,96 @@ export const beforeStep = () => {
     )
     .reply(() => {
       return [200, forbiddenTenantMembersResponse]
+    })
+    .get(
+      `/rest/tenants/${discoverTenantId}/memberships?role_name=admin&user_id=${userId}&version=2024-10-14~experimental`,
+    )
+    .reply(() => {
+      return [200, tenantMemberships]
+    })
+    .get(
+      `/rest/tenants/${multiDiscoverTenantId}/memberships?role_name=admin&user_id=${userId}&version=2024-10-14~experimental`,
+    )
+    .reply(() => {
+      return [200, tenantMemberships]
+    })
+    // Tenant-level deployment discovery (GET /rest/tenants/{tenantId}/brokers/deployments)
+    .get(`${urlPrefixTenantId}/brokers/deployments?version=2024-10-15`)
+    .reply(() => {
+      return [200, {data: [], links: {}}]
+    })
+    .get(`/rest/tenants/${discoverTenantId}/brokers/deployments?version=2024-10-15`)
+    .reply(() => {
+      return [
+        200,
+        {
+          data: [
+            {
+              attributes: {broker_app_installed_in_org_id: orgId, install_id: installId, metadata: {}},
+              id: deploymentId,
+              type: 'broker_deployment',
+            },
+          ],
+          links: {},
+        },
+      ]
+    })
+    .get(`/rest/tenants/${multiDiscoverTenantId}/brokers/deployments?version=2024-10-15`)
+    .reply(() => {
+      return [
+        200,
+        {
+          data: [
+            {
+              attributes: {broker_app_installed_in_org_id: orgId, install_id: installId, metadata: {}},
+              id: deploymentId,
+              type: 'broker_deployment',
+            },
+            {
+              attributes: {broker_app_installed_in_org_id: orgId2, install_id: installId2, metadata: {}},
+              id: deploymentId2,
+              type: 'broker_deployment',
+            },
+          ],
+          links: {},
+        },
+      ]
+    })
+    .post(`/rest/tenants/${discoverTenantId}/brokers/installs/${installId}/deployments?version=2024-10-15`)
+    .reply((uri, body) => {
+      return [
+        200,
+        {
+          data: {
+            attributes: {
+              broker_app_installed_in_org_id: orgId,
+              install_id: installId,
+              metadata: {key: 'value'},
+            },
+            id: deploymentId,
+            type: 'broker_deployment',
+          },
+          links: {},
+        },
+      ]
+    })
+    .post(`/rest/tenants/${multiDiscoverTenantId}/brokers/installs/${installId2}/deployments?version=2024-10-15`)
+    .reply((uri, body) => {
+      return [
+        200,
+        {
+          data: {
+            attributes: {
+              broker_app_installed_in_org_id: orgId2,
+              install_id: installId2,
+              metadata: {key: 'value'},
+            },
+            id: deploymentId2,
+            type: 'broker_deployment',
+          },
+          links: {},
+        },
+      ]
     })
     .get(`${urlPrefixTenantIdAndInstallId}/deployments?version=2024-10-15`)
     .reply((uri, body) => {

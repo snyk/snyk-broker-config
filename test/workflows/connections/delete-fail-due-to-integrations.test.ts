@@ -16,7 +16,7 @@ describe('deployment workflows', () => {
     const deleteConnection = new Connections([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId4, downArrow, 'n'])
+        sendScenario(stdin, [snykToken, orgId4, downArrow, 'n'])
 
         return deleteConnection.run()
       },

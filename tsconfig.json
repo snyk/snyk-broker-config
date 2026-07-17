@@ -8,10 +8,14 @@
     "strict": true,
     "target": "es2022",
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo",
-    "moduleResolution": "node16"
+    "moduleResolution": "node16",
+    "types": ["node"]
   },
   "include": ["./src/**/*"],
   "ts-node": {
-    "esm": true
+    "esm": true,
+    "compilerOptions": {
+      "types": ["node", "mocha"]
+    }
   }
 }

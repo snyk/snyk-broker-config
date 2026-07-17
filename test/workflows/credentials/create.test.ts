@@ -16,7 +16,7 @@ describe('credentials workflows', () => {
     const createCredentials = new Credentials([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId, downArrow, 'ARTIFACTORY_CR_CREDS_ENV_VAR', 'test env var name'])
+        sendScenario(stdin, [snykToken, orgId, downArrow, 'ARTIFACTORY_CR_CREDS_ENV_VAR', 'test env var name'])
         return createCredentials.run()
       },
       {print: false},

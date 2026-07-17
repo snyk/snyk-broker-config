@@ -19,7 +19,6 @@ describe('connections bulk-migration list workflow - no orgs', () => {
     beforeStep()
     process.env.SNYK_TOKEN = snykToken
     process.env.TENANT_ID = testTenantId
-    process.env.INSTALL_ID = testInstallId
   })
 
   after(() => {
@@ -27,7 +26,6 @@ describe('connections bulk-migration list workflow - no orgs', () => {
     stdin.restore()
     delete process.env.SNYK_TOKEN
     delete process.env.TENANT_ID
-    delete process.env.INSTALL_ID
   })
 
   it('runs connections:bulk-migration:list and displays no organizations message', async () => {
@@ -35,6 +33,7 @@ describe('connections bulk-migration list workflow - no orgs', () => {
     const cfg: Config = {}
 
     const command = new BulkMigrationListCommand([], cfg)
+    command.discoverInstallFromTenant = async () => ({installId: testInstallId, appInstalledOnOrgId: testTenantId})
 
     const {stdout, stderr, error} = await captureOutput(async () => {
       sendScenario(stdin, [])

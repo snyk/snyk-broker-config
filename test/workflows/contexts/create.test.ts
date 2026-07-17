@@ -19,8 +19,6 @@ describe('context workflows', () => {
         sendScenarioWithOutAutoEnter(stdin, [
           snykToken,
           '\n',
-          'n',
-          '\n',
           orgId3,
           '\n',
           tab,

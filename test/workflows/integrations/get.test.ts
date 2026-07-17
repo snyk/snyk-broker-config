@@ -16,7 +16,7 @@ describe('integrations workflows', () => {
     const getIntegrations = new Integrations([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId4, downArrow])
+        sendScenario(stdin, [snykToken, orgId4, downArrow])
 
         return getIntegrations.run()
       },

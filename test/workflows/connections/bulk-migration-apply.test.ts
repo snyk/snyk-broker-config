@@ -45,13 +45,16 @@ describe('connections bulk-migration apply workflow', () => {
 
   it('runs connections:bulk-migration:apply and successfully starts migration', async () => {
     process.env.TENANT_ID = successTestTenantId
-    process.env.INSTALL_ID = successTestInstallId
 
     // @ts-ignore
     const cfg: Config = {}
     const command = new BulkMigrationApplyCommand([], cfg)
 
     // Mock selection methods
+    command.discoverInstallFromTenant = async () => ({
+      installId: successTestInstallId,
+      appInstalledOnOrgId: successTestTenantId,
+    })
     command.selectDeployment = async () => successTestDeploymentId
     command.selectConnection = async () => ({
       id: successTestConnectionId,
@@ -75,7 +78,6 @@ describe('connections bulk-migration apply workflow', () => {
 
   it('runs connections:bulk-migration:apply and handles API error', async () => {
     process.env.TENANT_ID = errorTestTenantId
-    process.env.INSTALL_ID = errorTestInstallId
     const errorMessage = 'Internal Server Error For Test'
     const errorDetail = 'Something went terribly wrong during apply for test.'
 
@@ -83,6 +85,10 @@ describe('connections bulk-migration apply workflow', () => {
     const cfg: Config = {}
     const command = new BulkMigrationApplyCommand([], cfg)
 
+    command.discoverInstallFromTenant = async () => ({
+      installId: errorTestInstallId,
+      appInstalledOnOrgId: errorTestTenantId,
+    })
     command.selectDeployment = async () => errorTestDeploymentId
     command.selectConnection = async () => ({
       id: errorTestConnectionId,

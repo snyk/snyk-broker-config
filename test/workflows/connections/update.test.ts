@@ -22,8 +22,6 @@ describe('connection update workflow', () => {
         sendScenarioWithOutAutoEnter(stdin, [
           snykToken,
           '\n',
-          'n',
-          '\n',
           orgId4,
           '\n',
           '\n',

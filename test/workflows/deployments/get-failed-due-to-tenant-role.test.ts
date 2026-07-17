@@ -20,7 +20,7 @@ describe('deployment workflows', () => {
     const getDeployment = new Deployments([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId])
+        sendScenario(stdin, [snykToken, orgId])
 
         return getDeployment.run()
       },

@@ -2,9 +2,14 @@
 import {Command, Flags, Interfaces, ux} from '@oclif/core'
 import {getConfig} from './config/config.js'
 import {input, confirm, select} from '@inquirer/prompts'
-import {isValidUUID} from './utils/validation.js'
-import {getAppInstalledOnOrgId, installAppsWorfklow} from './workflows/apps.js'
-import {createDeployment, DeploymentAttributes, DeploymentResponse, getDeployments} from './api/deployments.js'
+import {installAppsWorfklow} from './workflows/apps.js'
+import {
+  createDeployment,
+  DeploymentAttributes,
+  DeploymentResponse,
+  getDeployments,
+  getDeploymentsForTenant,
+} from './api/deployments.js'
 import {
   ConnectionId,
   ConnectionSelection,
@@ -85,6 +90,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     } catch (error) {
       this.error(error instanceof Error ? error.message : String(error))
     }
+    let tenantIdPrompted = false
     if (!process.env.TENANT_ID) {
       const accessibleTenants = await getAccessibleTenants()
       if (accessibleTenants.data.length === 0) {
@@ -103,18 +109,21 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
             `Your credentials can access tenants:\n${accessibleTenants.data.map((x) => `- ${x.attributes.name}: ${x.id}`).join(',\n')}.\n`,
           ),
         )
-        this.logStatus(
-          ux.colorize(
-            'cyan',
-            `${STATUS.TIP} export TENANT_ID=${process.env.TENANT_ID} (Windows: set TENANT_ID=${process.env.TENANT_ID}) to avoid inputting this for each command.\n`,
-          ),
-        )
+        tenantIdPrompted = true
       }
     }
 
     const tenantId =
       process.env.TENANT_ID ?? (await validatedInput({message: 'Enter your tenantID.'}, ValidationType.UUID))
     process.env.TENANT_ID = tenantId
+    if (tenantIdPrompted) {
+      this.logStatus(
+        ux.colorize(
+          'cyan',
+          `${STATUS.TIP} export TENANT_ID=${tenantId} (Windows: set TENANT_ID=${tenantId}) to avoid inputting this for each command.\n`,
+        ),
+      )
+    }
 
     try {
       await isTenantAdmin(tenantId, userId)
@@ -134,14 +143,11 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     let installId
     let clientId
     let clientSecret
-    if (process.env.INSTALL_ID) {
-      installId = process.env.INSTALL_ID
-    } else if (await confirm({message: 'Have you installed the Broker App against an Org?'})) {
-      installId = await validatedInput({message: 'Enter your Broker App Install ID'}, ValidationType.UUID)
-      if (!isValidUUID(installId)) {
-        this.error(`Must be a valid UUID.`)
-      }
-      // process.env.INSTALL_ID = installId
+    const discovered = await this.discoverInstallFromTenant(tenantId)
+    if (discovered) {
+      installId = discovered.installId
+      orgId = discovered.appInstalledOnOrgId
+      this.logStatus(ux.colorize('cyan', `Found existing Broker App Install ${installId} configured in this Tenant.`))
     } else {
       orgId = await validatedInput(
         {message: `Enter Org ID to install Broker App. Must be in Tenant ${tenantId}`},
@@ -168,14 +174,6 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
             ),
           )
         }
-        this.logStatus(
-          ux.colorize(
-            'cyan',
-            `\n${STATUS.TIP} For a smoother experience, please set the environment variable listed above.`,
-          ),
-        )
-        this.logStatus(ux.colorize('cyan', `Linux/Mac: export INSTALL_ID=${installId}`))
-        this.logStatus(ux.colorize('cyan', `Windows: set INSTALL_ID=${installId}\n`))
         if (!(await confirm({message: `Continue?`}))) {
           process.exit(0)
         }
@@ -185,8 +183,43 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     if (skipOrgId) {
       orgId = 'dummy'
     }
-    const appInstalledOnOrgId = orgId ?? (await getAppInstalledOnOrgId(tenantId, installId))
+    const appInstalledOnOrgId = orgId
     return {installId, tenantId, appInstalledOnOrgId, clientId, clientSecret}
+  }
+
+  async discoverInstallFromTenant(
+    tenantId: string,
+  ): Promise<{installId: string; appInstalledOnOrgId: string} | undefined> {
+    const deployments = await getDeploymentsForTenant(tenantId)
+    if (!deployments.data || deployments.data.length === 0) {
+      return undefined
+    }
+    // dedupe the deployments down to the distinct installs.
+    const installs = new Map<string, string>()
+    for (const deployment of deployments.data) {
+      if (!installs.has(deployment.attributes.install_id)) {
+        installs.set(deployment.attributes.install_id, deployment.attributes.broker_app_installed_in_org_id)
+      }
+    }
+    const newInstall = 'install-on-new-org'
+    const choice = await select({
+      message: 'Which Broker App Install do you want to use?',
+      choices: [
+        ...[...installs.entries()].map(([installId, orgId]) => ({
+          name: `Install ${installId} (Org ${orgId})`,
+          value: installId,
+        })),
+        {name: 'Create a new Broker App Install on a different Org', value: newInstall},
+      ],
+    })
+    if (choice === newInstall) {
+      return undefined
+    }
+    const appInstalledOnOrgId = installs.get(choice)
+    if (!appInstalledOnOrgId) {
+      return undefined
+    }
+    return {installId: choice, appInstalledOnOrgId}
   }
 
   async selectDeployment(tenantId: string, installId: string): Promise<DeploymentId> {
