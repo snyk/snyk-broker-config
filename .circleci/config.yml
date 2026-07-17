@@ -240,7 +240,7 @@ workflows:
       - release:
           name: Release to GitHub and NPM
           context:
-            - nodejs-lib-release
+            - github-release
             - platformeng_access
           requires:
             - Run tests
@@ -271,7 +271,7 @@ workflows:
       - upload-github-release-assets:
           name: Upload assets to GitHub release
           context:
-            - nodejs-lib-release
+            - github-release
             - team-hybrid-snyk
           requires:
             - Build Linux tarballs
