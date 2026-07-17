@@ -4,6 +4,9 @@
 export default {
   branches: ['main'],
   repositoryUrl: 'git@github.com:snyk/snyk-broker-config.git',
+  verifyConditions: [
+    '@semantic-release/github'
+  ], 
   prepare: [
     [
       // compile typescript files
