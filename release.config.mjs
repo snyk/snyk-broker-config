@@ -12,10 +12,13 @@ export default {
         prepareCmd: 'npm run build',
       },
     ],
-    '@semantic-release/npm',
+    ['@semantic-release/npm', { npmPublish: false }],
   ],
   publish: [
-    '@semantic-release/npm',
+    // Publish via `npm publish` so npm's OIDC trusted publishing is used
+    // (@semantic-release/npm can't yet, semantic-release/npm#1121).
+    ['@semantic-release/npm', { npmPublish: false }],
+    ['@semantic-release/exec', { publishCmd: 'npm publish' }],
     [
       '@semantic-release/github',
       {
