@@ -16,7 +16,7 @@ describe('deployment workflows', () => {
     const integrateConnection = new Connections([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId3, orgId3, integrationId3])
+        sendScenario(stdin, [snykToken, orgId3, orgId3, integrationId3])
         return integrateConnection.run()
       },
       {print: false},

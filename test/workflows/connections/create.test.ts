@@ -19,8 +19,6 @@ describe('connection workflows', () => {
         sendScenarioWithOutAutoEnter(stdin, [
           snykToken,
           '\n',
-          'n',
-          '\n',
           orgId,
           '\n',
           downArrow,

@@ -1,8 +1,5 @@
 import {getExistingAppInstalledOnOrgId, installAppIdOnOrgId} from '../api/apps.js'
-import {getDeployments} from '../api/deployments.js'
 import {AppInstallOutput} from '../api/types.js'
-import {isValidUUID} from '../utils/validation.js'
-import {validatedInput, ValidationType} from '../utils/input-validation.js'
 
 export const installAppsWorfklow = async (orgId: string): Promise<AppInstallOutput> => {
   const existingInstall = await getExistingAppInstalledOnOrgId(orgId)
@@ -18,19 +15,4 @@ export const installAppsWorfklow = async (orgId: string): Promise<AppInstallOutp
     client_id: installData.data.attributes.client_id,
     client_secret: installData.data.attributes.client_secret,
   }
-}
-
-export const getAppInstalledOnOrgId = async (tenantId: string, installId: string): Promise<string> => {
-  let orgId
-  const deployments = await getDeployments(tenantId, installId)
-  if (deployments.data && deployments.data.length === 0) {
-    orgId = await validatedInput({message: 'Enter the Org ID where you installed your Broker App'}, ValidationType.UUID)
-    if (!isValidUUID(installId)) {
-      throw new Error('Invalid Org ID entered.')
-    }
-  } else {
-    const deploymentsList = deployments.data as Array<any>
-    orgId = deploymentsList[0].attributes.broker_app_installed_in_org_id
-  }
-  return orgId
 }

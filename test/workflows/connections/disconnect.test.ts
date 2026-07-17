@@ -16,7 +16,7 @@ describe('deployment workflows', () => {
     const disconnectConnection = new Connections([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId4, downArrow, tab, 'y'])
+        sendScenario(stdin, [snykToken, orgId4, downArrow, tab, 'y'])
         return disconnectConnection.run()
       },
       {print: false},

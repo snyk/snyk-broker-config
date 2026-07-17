@@ -16,7 +16,7 @@ describe('deployment workflows', () => {
     const apply = new Contexts([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId4, tab])
+        sendScenario(stdin, [snykToken, orgId4, tab])
         return apply.run()
       },
       {print: false},

@@ -16,7 +16,7 @@ describe('deployment workflows', () => {
     const withdraw = new Contexts([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId4, tab, 'y'])
+        sendScenario(stdin, [snykToken, orgId4, tab, 'y'])
         return withdraw.run()
       },
       {print: false},

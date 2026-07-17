@@ -1,9 +1,13 @@
 {
   "extends": "../tsconfig",
   "compilerOptions": {
-    "noEmit": true
+    "noEmit": true,
+    "composite": false,
+    "rootDir": ".",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["node", "mocha"]
   },
-  "references": [
-    {"path": ".."}
-  ]
+  "include": ["./**/*.ts"],
+  "references": [{"path": ".."}]
 }

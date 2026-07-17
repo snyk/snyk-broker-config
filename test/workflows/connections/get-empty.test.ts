@@ -16,7 +16,7 @@ describe('connections workflows', () => {
     const getConnection = new Connections([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId2])
+        sendScenario(stdin, [snykToken, orgId2])
 
         return getConnection.run()
       },

@@ -64,6 +64,29 @@ export const getDeployments = async (tenantId: string, installId: string) => {
   }
 }
 
+export const getDeploymentsForTenant = async (tenantId: string) => {
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
+  const apiPath = `rest/tenants/${tenantId}/brokers/deployments`
+  const config = getConfig()
+
+  const req: HttpRequest = {
+    url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
+    headers: headers,
+    method: 'GET',
+    operation: 'list deployments',
+  }
+  try {
+    const response = await makeRequest(req)
+    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+    return JSON.parse(response.body) as DeploymentsResponse
+  } catch (error) {
+    if (error instanceof ApiError && error.statusCode === 404) {
+      return {data: [], errors: [{details: '404'}]}
+    }
+    throw error
+  }
+}
+
 export const createDeployment = async (
   tenantId: string,
   installId: string,

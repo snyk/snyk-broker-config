@@ -16,7 +16,7 @@ describe('credentials workflows', () => {
     const getCredentials = new Credentials([], cfg)
     const {stdout, stderr, error} = await captureOutput(
       async () => {
-        sendScenario(stdin, [snykToken, 'n', orgId])
+        sendScenario(stdin, [snykToken, orgId])
         return getCredentials.run()
       },
       {print: false},
