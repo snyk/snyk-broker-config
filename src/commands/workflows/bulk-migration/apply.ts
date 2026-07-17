@@ -50,7 +50,7 @@ export default class BulkMigrationApply extends BaseCommand<typeof BulkMigration
       this.log(printFormattedJSON(bulkMigrationResponse.data))
       return bulkMigrationResponse.data
     } catch (error) {
-      this.error(`\nFailed to start bulk migration: ${(error as Error).message}`)
+      this.error(`\n${error instanceof Error ? error.message : String(error)}`)
     }
   }
 }

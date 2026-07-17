@@ -4,6 +4,7 @@ import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
 import {isValidUUID} from '../utils/validation.js'
 import {createLogger} from '../utils/logger.js'
+import {ApiError} from '../utils/errors.js'
 
 const logger = createLogger()
 
@@ -34,6 +35,7 @@ export const validateSnykToken = async (snykToken: string): Promise<string> => {
     url: `${config.API_HOSTNAME}/${apiPath}?version=${config.APP_INSTALL_API_VERSION}`,
     headers: headers,
     method: 'GET',
+    operation: 'validate the Snyk token',
   }
   try {
     const response = await makeRequest(req)
@@ -41,12 +43,10 @@ export const validateSnykToken = async (snykToken: string): Promise<string> => {
 
     const parsedResponse = JSON.parse(response.body) as SelfResponse
     return parsedResponse.data.id
-  } catch (error: any) {
-    let errorMessage = error
-    if (error.includes('401: Unauthorized.')) {
-      errorMessage = `Invalid/stale token? Are you using the right region? (using ${config.API_HOSTNAME}).`
-      logger.error({error}, 'Error validating Snyk Token.')
+  } catch (error) {
+    if (error instanceof ApiError && error.statusCode === 401) {
+      throw new Error(`Invalid/stale token? Are you using the right region? (using ${config.API_HOSTNAME}).`)
     }
-    throw new Error(errorMessage)
+    throw error
   }
 }

@@ -2,6 +2,7 @@ import {getCommonHeaders} from '../common/rest-helpers.js'
 import {getConfig} from '../config/config.js'
 import {getAuthHeader} from '../utils/auth.js'
 import {HttpRequest, makeRequest} from '../utils/http-request.js'
+import {ApiError} from '../utils/errors.js'
 import {createLogger} from '../utils/logger.js'
 import {
   ConnectionResponse,
@@ -21,16 +22,17 @@ export const getConnectionsForDeployment = async (tenantId: string, installId: s
     url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
     headers: headers,
     method: 'GET',
+    operation: 'list connections',
   }
   try {
     const response = await makeRequest(req)
     logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    if (response.statusCode && response.statusCode === 404) {
+    return JSON.parse(response.body) as ConnectionsResponse
+  } catch (error) {
+    if (error instanceof ApiError && error.statusCode === 404) {
       return {data: [], jsonapi: {version: ''}, links: {}}
     }
-    return JSON.parse(response.body) as ConnectionsResponse
-  } catch (error: any) {
-    throw new Error(error)
+    throw error
   }
 }
 
@@ -55,14 +57,11 @@ export const applyBulkMigration = async (
     headers: headers,
     method: 'POST',
     body: JSON.stringify(body),
+    operation: 'start bulk migration',
   }
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return JSON.parse(response.body) as applyBulkMigrationResponse
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  return JSON.parse(response.body) as applyBulkMigrationResponse
 }
 
 export const getBulkMigrationOrgs = async (
@@ -79,14 +78,11 @@ export const getBulkMigrationOrgs = async (
     url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
     headers: headers,
     method: 'GET',
+    operation: 'list bulk migration orgs',
   }
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return JSON.parse(response.body) as GetOrgsForBulkMigrationResponse
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  return JSON.parse(response.body) as GetOrgsForBulkMigrationResponse
 }
 
 export const createConnectionForDeployment = async (
@@ -121,15 +117,12 @@ export const createConnectionForDeployment = async (
     headers: headers,
     method: 'POST',
     body: JSON.stringify(body),
+    operation: 'create the connection',
   }
 
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return JSON.parse(response.body) as ConnectionResponse
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  return JSON.parse(response.body) as ConnectionResponse
 }
 
 export const updateConnectionForDeployment = async (
@@ -165,14 +158,11 @@ export const updateConnectionForDeployment = async (
     headers: headers,
     method: 'PATCH',
     body: JSON.stringify(body),
+    operation: 'update the connection',
   }
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
-    return response.body
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  return response.body
 }
 
 export const deleteConnectionForDeployment = async (
@@ -189,13 +179,10 @@ export const deleteConnectionForDeployment = async (
     url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,
     headers: headers,
     method: 'DELETE',
+    operation: 'delete the connection',
   }
-  try {
-    const response = await makeRequest(req)
-    logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode, response: response.body}, 'Response')
 
-    return response.statusCode
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  return response.statusCode
 }
