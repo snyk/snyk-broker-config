@@ -60,3 +60,12 @@ export function wrapText(text: string, maxWidth: number = 100): string {
 
   return wrappedText.trim() // Trim the last newline to avoid extra blank line
 }
+
+// Render a timestamp as a human-readable date (e.g. "Jul 7, 2026"), or pass it through if unparseable.
+export function formatDate(value?: string): string | undefined {
+  if (!value) return
+  const date = new Date(value)
+  return Number.isNaN(date.getTime())
+    ? value
+    : date.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'})
+}

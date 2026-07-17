@@ -54,7 +54,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         pageSize: connectionTypes.length,
       })
       this.logStatus(ux.colorize('cyan', `Let's create a ${connectionType} Connection now.\n`))
-      const connectionId = await this.createNewConnection(tenantId, installId, deploymentId, connectionType)
+      const {id: connectionId} = await this.createNewConnection(tenantId, installId, deploymentId, connectionType)
       this.logStatus(
         ux.colorize(
           'cyan',
