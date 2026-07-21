@@ -265,7 +265,7 @@ export default class Setup extends BaseCommand<typeof Setup> {
       this.logStatus(
         ux.colorize(
           'cyan',
-          `\n${STATUS.TIP} The client secret was shown once at install time — re-run setup to regenerate it.`,
+          `\n${STATUS.TIP} The client secret was shown once at install time — re-run workflows setup to regenerate it.`,
         ),
       )
     }

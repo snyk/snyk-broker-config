@@ -3,7 +3,7 @@ import {expect} from 'chai'
 import {stdin as fstdin} from 'mock-stdin'
 import nock from 'nock'
 
-import Setup from '../../src/commands/setup'
+import Setup from '../../src/commands/workflows/setup'
 import {
   beforeStep,
   clientId,

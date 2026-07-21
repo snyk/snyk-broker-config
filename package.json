@@ -98,9 +98,6 @@
       "integrations": {
         "description": "Manages Universal Broker Connection Integrations in Organizations"
       },
-      "setup": {
-        "description": "Guided end-to-end provisioning of a new Universal Broker"
-      },
       "workflows": {
         "description": "Interactive workflows for Deployments, Credentials, Connections and Integrations management"
       }
