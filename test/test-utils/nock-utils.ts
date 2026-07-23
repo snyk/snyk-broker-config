@@ -28,6 +28,7 @@ export const connectionId4 = '00000000-0000-0000-0000-000000000004'
 export const integrationId3 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8a'
 export const integrationId4 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8b'
 export const clientId = '00000000-1234-0000-0000-000000000000'
+export const replacedClientSecret = 'snyk_cs_replaced_secret'
 export const contextId3 = '00000000-0000-0000-0000-000000000003'
 export const contextId4 = '00000000-0000-0000-0000-000000000004'
 export const orgId5 = '3a7c1ab9-8914-4f39-a8c0-5752af653a8c'
@@ -431,6 +432,23 @@ export const beforeStep = () => {
     .get(`/rest/orgs/${orgId8}/apps/installs?version=2024-05-31`)
     .reply(() => {
       return [200, appResponse8]
+    })
+    .post(`/rest/orgs/${orgId}/apps/installs/${installId}/secrets?version=2024-05-23`)
+    .reply(() => {
+      return [
+        200,
+        {
+          data: {
+            id: installId,
+            type: 'app_install',
+            attributes: {
+              client_id: clientId,
+              client_secret: replacedClientSecret,
+              installed_at: '2024-07-17T18:51:02Z',
+            },
+          },
+        },
+      ]
     })
     .get('/rest/tenants?version=2024-10-14~experimental')
     .reply(() => {

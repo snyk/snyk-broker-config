@@ -52,6 +52,33 @@ export const installAppIdOnOrgId = async (orgId: string): Promise<AppInstallResp
   }
 }
 
+export const replaceClientSecret = async (orgId: string, installId: string): Promise<string> => {
+  const body = {
+    data: {
+      attributes: {
+        mode: 'replace',
+      },
+      type: 'app',
+    },
+  }
+
+  const headers = {...getCommonHeaders(), ...getAuthHeader()}
+  const apiPath = `rest/orgs/${orgId}/apps/installs/${installId}/secrets`
+  const config = getConfig()
+
+  const req: HttpRequest = {
+    url: `${config.API_HOSTNAME}/${apiPath}?version=${config.APP_SECRET_API_VERSION}`,
+    headers: headers,
+    method: 'POST',
+    body: JSON.stringify(body),
+    operation: 'regenerate the Broker App client secret',
+  }
+  const response = await makeRequest(req)
+  logger.debug({url: req.url, statusCode: response.statusCode}, 'Response')
+  const install = JSON.parse(response.body) as AppInstallResponse
+  return install.data.attributes.client_secret
+}
+
 export const getExistingAppInstalledOnOrgId = async (orgId: string): Promise<AppInstallResponseData | undefined> => {
   const appId = process.env.SNYK_BROKER_APP_ID ?? 'cb43d761-bd17-4b44-9b6c-e5b8ad077d33'
 

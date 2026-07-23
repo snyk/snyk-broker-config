@@ -7,6 +7,7 @@ import {
   createDeployment,
   DeploymentAttributes,
   DeploymentResponse,
+  DeploymentResponseData,
   getDeployments,
   getDeploymentsForTenant,
 } from './api/deployments.js'
@@ -26,7 +27,7 @@ import {validatedInput, ValidationType} from './utils/input-validation.js'
 import {validateSnykToken} from './api/snyk.js'
 import {getContextsForForDeployment} from './api/contexts.js'
 import {ApiError, NetworkError} from './utils/errors.js'
-import {STATUS} from './utils/display.js'
+import {STATUS, formatDate} from './utils/display.js'
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<(typeof BaseCommand)['baseFlags'] & T['flags']>
 export type Args<T extends typeof Command> = Interfaces.InferredArgs<T['args']>
@@ -222,6 +223,18 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     return {installId: choice, appInstalledOnOrgId}
   }
 
+  // Deployment picker choices: the id labelled inline with a readable rendering of its metadata
+  // (comment and any custom keys, with the creation date folded in) rather than raw JSON.
+  private deploymentChoices(deployments: DeploymentResponseData[]) {
+    return deployments.map((deployment) => {
+      const {comment, createdAt, ...rest} = deployment.attributes.metadata ?? {}
+      const created = formatDate(createdAt)
+      const details = [comment, ...Object.entries(rest).map(([key, value]) => `${key}: ${value}`)].filter(Boolean)
+      const info = [details.join(' · '), created && `(${created})`].filter(Boolean).join(' ')
+      return {name: info ? `${deployment.id} — ${info}` : deployment.id, value: deployment.id}
+    })
+  }
+
   async selectDeployment(tenantId: string, installId: string): Promise<DeploymentId> {
     const deployments = await getDeployments(tenantId, installId)
     let deploymentId
@@ -234,9 +247,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
           ? deployments.data[0].id
           : await select({
               message: 'Which Deployment do you want to use?',
-              choices: deployments.data.map((x) => {
-                return {id: x.id, value: x.id, description: `metadata: ${JSON.stringify(x.attributes.metadata)}`}
-              }),
+              choices: this.deploymentChoices(deployments.data),
             })
     } else {
       this.error('Unexpected error in Deployment selection.')
@@ -285,9 +296,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
           ? deployments.data[0].id
           : await select({
               message: 'Which Deployment do you want to use?',
-              choices: deployments.data.map((x) => {
-                return {id: x.id, value: x.id, description: `metadata: ${JSON.stringify(x.attributes.metadata)}`}
-              }),
+              choices: this.deploymentChoices(deployments.data),
             })
     } else {
       this.error('Unexpected error in Deployment selection.')
@@ -300,7 +309,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     installId: InstallId,
     deploymentId: DeploymentId,
     connectionType: string,
-  ): Promise<ConnectionId> {
+  ): Promise<{id: ConnectionId; name: string}> {
     const existingConnections = await getConnectionsForDeployment(tenantID, installId, deploymentId)
     const regex = /^[\w-]+$/ // Any word character. Avoiding problems that way.
     let connectionFriendlyName = await input({message: 'Enter a human friendly name for your Connection.'})
@@ -323,7 +332,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       connectionType,
       params,
     )
-    return newConnection.data.id
+    return {id: newConnection.data.id, name: connectionFriendlyName}
   }
 
   async selectConnection(

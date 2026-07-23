@@ -6,6 +6,7 @@ export interface Config {
   API_VERSION: string
   API_VERSION_TENANTS: string
   APP_INSTALL_API_VERSION: string
+  APP_SECRET_API_VERSION: string
   MAX_RETRY: number
   LOG_LEVEL: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal'
 }

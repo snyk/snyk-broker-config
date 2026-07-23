@@ -3,6 +3,7 @@
     "API_VERSION":"2024-10-15",
     "API_VERSION_TENANTS": "2024-10-14~experimental",
     "APP_INSTALL_API_VERSION": "2024-05-31",
+    "APP_SECRET_API_VERSION": "2024-05-23",
     "MAX_RETRY": 3,
     "LOG_LEVEL": "info"
 
