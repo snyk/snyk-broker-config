@@ -214,6 +214,7 @@ workflows:
           name: Scan repository for secrets
           context:
             - snyk-bot-slack
+            - prodsec-orb-runtime
           channel: broker-alerts-cicd
       - install-npm-packages:
           name: Install NPM packages
@@ -230,6 +231,7 @@ workflows:
           context:
             - nodejs-install
             - platformeng_access
+            - prodsec-orb-runtime
           requires:
             - Install NPM packages
           <<: *filter-non-main-branches
