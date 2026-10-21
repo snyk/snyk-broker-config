@@ -4,6 +4,20 @@
     "API_VERSION_TENANTS": "2024-10-14~experimental",
     "APP_INSTALL_API_VERSION": "2024-05-31",
     "APP_SECRET_API_VERSION": "2024-05-23",
+    "MULTIPLE_PROFILE_CONNECTION_TYPES": [
+        "acr",
+        "artifactory-cr",
+        "digitalocean-cr",
+        "docker-hub",
+        "ecr",
+        "gcr",
+        "github-cr",
+        "gitlab-cr",
+        "google-artifact-cr",
+        "harbor-cr",
+        "nexus-cr",
+        "quay-cr"
+    ],
     "MAX_RETRY": 3,
     "LOG_LEVEL": "info"
 

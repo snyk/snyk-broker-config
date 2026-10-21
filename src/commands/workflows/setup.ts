@@ -1,11 +1,13 @@
 import {ux} from '@oclif/core'
 import {commonApiRelatedArgs} from '../../common/args.js'
-import {confirm, select} from '@inquirer/prompts'
+import {confirm, input, select} from '@inquirer/prompts'
 import {BaseCommand} from '../../base-command.js'
 import {connectionTypes} from '../../command-helpers/connections/type-params-mapping.js'
 import {createIntegrationForConnection} from '../../api/integrations.js'
 import {getExistingAppInstalledOnOrgId, replaceClientSecret} from '../../api/apps.js'
 import {validatedInput, ValidationType} from '../../utils/input-validation.js'
+import {isValidUUID} from '../../utils/validation.js'
+import {supportsMultipleProfiles} from '../../command-helpers/connections/multiple-profiles.js'
 import {STATUS} from '../../utils/display.js'
 import {getConfig} from '../../config/config.js'
 
@@ -132,7 +134,32 @@ export default class Setup extends BaseCommand<typeof Setup> {
     const integratedOrgs: string[] = []
     do {
       const orgId = await validatedInput({message: 'Enter the OrgID to integrate.'}, ValidationType.UUID)
-      const integration = await createIntegrationForConnection(tenantId, connectionId, connectionType, orgId)
+      // Bind this Connection to a specific existing integration (org_source /
+      // profile) by its Integration ID. This disambiguates when the Org already
+      // holds more than one integration of the same type — multiple container
+      // registries, say — where resolving by type alone binds to (and
+      // overwrites) the wrong org_source. Only asked for types that can have
+      // several: elsewhere an Org holds one integration per type, so there is
+      // nothing to choose between. Blank leaves the server to resolve by type.
+      let integrationId: string | undefined
+      if (supportsMultipleProfiles(connectionType)) {
+        const integrationIdInput = (
+          await input({
+            message:
+              'Enter the Integration ID to bind to (leave blank to associate by type). Required when the Org already has multiple integrations of this type.',
+            validate: (value: string) =>
+              value.trim() === '' || isValidUUID(value.trim()) ? true : 'Please enter a valid UUID or leave blank.',
+          })
+        ).trim()
+        integrationId = integrationIdInput === '' ? undefined : integrationIdInput
+      }
+      const integration = await createIntegrationForConnection(
+        tenantId,
+        connectionId,
+        connectionType,
+        orgId,
+        integrationId,
+      )
       if (integration.errors) {
         this.logStatus(
           ux.colorize(
