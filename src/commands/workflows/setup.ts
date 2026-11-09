@@ -145,7 +145,8 @@ export default class Setup extends BaseCommand<typeof Setup> {
       if (supportsMultipleProfiles(connectionType)) {
         integrationId = (
           await input({
-            message: 'Enter the Integration ID (profile) to bind to.',
+            message:
+              'Enter the ID of the existing Integration (profile) to bind this Connection to. Create the profile in Snyk first.',
             validate: (value: string) => (isValidUUID(value.trim()) ? true : 'Please enter a valid UUID.'),
           })
         ).trim()

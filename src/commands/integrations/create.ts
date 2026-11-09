@@ -39,7 +39,7 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
 
     if (supportsMultipleProfiles(args.type) && !isValidUUID(args.integrationId ?? '')) {
       this.error(
-        `Connection type "${args.type}" supports multiple profiles, so a valid INTEGRATIONID (UUID) is required.`,
+        `Connection type "${args.type}" supports multiple profiles, so a valid INTEGRATIONID (UUID) of an existing Integration (profile) is required. Create the profile in Snyk first, then pass its ID.`,
       )
     }
 
