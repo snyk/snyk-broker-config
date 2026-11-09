@@ -82,7 +82,7 @@ describe('setup workflow', () => {
     expect(stderr).to.contain(`export CLIENT_ID=${clientId}`)
   })
 
-  it('prompts for and submits an integration id for a container registry connection', async () => {
+  it('prompts for and submits an integration id for a connection type that supports multiple profiles', async () => {
     let integrationRequestBody: unknown
     const integrationScope = nock('https://api.snyk.io')
       .post(
@@ -161,7 +161,7 @@ describe('setup workflow', () => {
     integrationScope.done()
   })
 
-  it('does not accept a blank integration id for a container registry connection', async () => {
+  it('does not accept a blank integration id for a connection type that supports multiple profiles', async () => {
     let integrationRequestBody: unknown
     const integrationScope = nock('https://api.snyk.io')
       .post(

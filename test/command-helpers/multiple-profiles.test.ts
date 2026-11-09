@@ -2,11 +2,11 @@ import {supportsMultipleProfiles} from '../../src/command-helpers/connections/mu
 import {expect} from 'chai'
 
 describe('supportsMultipleProfiles', () => {
-  it('is true for a container registry type', () => {
+  it('is true for a type that supports multiple profiles', () => {
     expect(supportsMultipleProfiles('ecr')).to.be.true
   })
 
-  it('is false for an SCM type', () => {
+  it('is false for a type with a single integration per Org', () => {
     // An Org holds one github integration, so there is nothing to disambiguate
     // and the guided flow should not ask for an integration id.
     expect(supportsMultipleProfiles('github')).to.be.false
@@ -16,8 +16,8 @@ describe('supportsMultipleProfiles', () => {
     expect(supportsMultipleProfiles('not-a-real-type')).to.be.false
   })
 
-  it('covers every container registry type shipped in config', () => {
-    const containerRegistryTypes = [
+  it('covers every type currently listed in the default config', () => {
+    const multipleProfileTypes = [
       'acr',
       'artifactory-cr',
       'digitalocean-cr',
@@ -31,7 +31,7 @@ describe('supportsMultipleProfiles', () => {
       'nexus-cr',
       'quay-cr',
     ]
-    for (const type of containerRegistryTypes) {
+    for (const type of multipleProfileTypes) {
       expect(supportsMultipleProfiles(type), type).to.be.true
     }
   })

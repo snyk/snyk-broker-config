@@ -136,10 +136,9 @@ export default class Setup extends BaseCommand<typeof Setup> {
       const orgId = await validatedInput({message: 'Enter the OrgID to integrate.'}, ValidationType.UUID)
       // Bind this Connection to a specific existing integration (org_source /
       // profile) by its Integration ID. This disambiguates when the Org already
-      // holds more than one integration of the same type — multiple container
-      // registries, say — where resolving by type alone binds to (and
-      // overwrites) the wrong org_source. Required, and always sent, for types
-      // that can have several; elsewhere an Org holds one integration per type,
+      // holds more than one integration of the same type, where resolving by
+      // type alone binds to (and overwrites) the wrong org_source. Required,
+      // and always sent, for types that support multiple profiles; elsewhere an Org holds one integration per type,
       // so there is nothing to choose between and the server resolves by type.
       let integrationId: string | undefined
       if (supportsMultipleProfiles(connectionType)) {
