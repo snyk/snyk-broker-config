@@ -161,6 +161,81 @@ describe('setup workflow', () => {
     integrationScope.done()
   })
 
+  it('does not accept a blank integration id for a container registry connection', async () => {
+    let integrationRequestBody: unknown
+    const integrationScope = nock('https://api.snyk.io')
+      .post(
+        `/rest/tenants/00000000-0000-0000-0000-000000000000/brokers/connections/00000000-0000-0000-0000-000000000000/orgs/${orgId3}/integration`,
+        (body) => {
+          integrationRequestBody = body
+          return true
+        },
+      )
+      .query({version: '2024-10-15'})
+      .reply(201, {
+        data: {id: integrationId3, integration_type: 'artifactory-cr', org_id: orgId3, type: 'broker_integration'},
+        jsonapi: {version: '1.0'},
+        links: {},
+      })
+
+    // @ts-ignore
+    const cfg: Config = {}
+    const setup = new Setup([], cfg)
+    const {stderr, stdout, error} = await captureOutput(
+      async () => {
+        sendScenarioWithOutAutoEnter(stdin, [
+          snykToken,
+          '\n',
+          orgId,
+          '\n',
+          'n',
+          '\n',
+          'y',
+          '\n',
+          downArrow,
+          downArrow,
+          downArrow,
+          '\n',
+          'test-conn',
+          '\n',
+          'http://broker.client.url/',
+          '\n',
+          'http://artifactory.hostname/',
+          '\n',
+          'artifactory-crbase.hostname',
+          '\n',
+          'username',
+          '\n',
+          '\n',
+          'ARTIFACTORY_PASSWORD',
+          '\n',
+          'dummy comment',
+          '\n',
+          'y',
+          '\n',
+          orgId3,
+          '\n',
+          '\n', // blank Integration ID -> rejected, re-prompted
+          integrationId3,
+          '\n',
+          'n',
+          '\n',
+          'n',
+          '\n',
+        ])
+        return setup.run()
+      },
+      {print: false},
+    )
+
+    expect(error).to.be.undefined
+    expect(stdout + stderr).to.contain('Please enter a valid UUID.')
+    expect(integrationRequestBody).to.deep.equal({
+      data: {type: 'artifactory-cr', integration_id: integrationId3},
+    })
+    integrationScope.done()
+  })
+
   it('regenerates the client secret on resume and shows it in the closing block', async () => {
     // @ts-ignore
     const cfg: Config = {}

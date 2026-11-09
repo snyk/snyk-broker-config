@@ -138,20 +138,17 @@ export default class Setup extends BaseCommand<typeof Setup> {
       // profile) by its Integration ID. This disambiguates when the Org already
       // holds more than one integration of the same type — multiple container
       // registries, say — where resolving by type alone binds to (and
-      // overwrites) the wrong org_source. Only asked for types that can have
-      // several: elsewhere an Org holds one integration per type, so there is
-      // nothing to choose between. Blank leaves the server to resolve by type.
+      // overwrites) the wrong org_source. Required, and always sent, for types
+      // that can have several; elsewhere an Org holds one integration per type,
+      // so there is nothing to choose between and the server resolves by type.
       let integrationId: string | undefined
       if (supportsMultipleProfiles(connectionType)) {
-        const integrationIdInput = (
+        integrationId = (
           await input({
-            message:
-              'Enter the Integration ID to bind to (leave blank to associate by type). Required when the Org already has multiple integrations of this type.',
-            validate: (value: string) =>
-              value.trim() === '' || isValidUUID(value.trim()) ? true : 'Please enter a valid UUID or leave blank.',
+            message: 'Enter the Integration ID (profile) to bind to.',
+            validate: (value: string) => (isValidUUID(value.trim()) ? true : 'Please enter a valid UUID.'),
           })
         ).trim()
-        integrationId = integrationIdInput === '' ? undefined : integrationIdInput
       }
       const integration = await createIntegrationForConnection(
         tenantId,

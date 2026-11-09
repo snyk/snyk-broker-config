@@ -10,6 +10,8 @@ import {
 import {printFormattedJSON} from '../../utils/display.js'
 import {createIntegrationForConnection} from '../../api/integrations.js'
 import {BaseCommand} from '../../base-command.js'
+import {supportsMultipleProfiles} from '../../command-helpers/connections/multiple-profiles.js'
+import {isValidUUID} from '../../utils/validation.js'
 
 export default class Integrations extends BaseCommand<typeof Integrations> {
   static args = {
@@ -34,6 +36,12 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
     const {args} = await this.parse(Integrations)
 
     const {tenantId} = getCommonIds(args)
+
+    if (supportsMultipleProfiles(args.type) && !isValidUUID(args.integrationId ?? '')) {
+      this.error(
+        `Connection type "${args.type}" supports multiple profiles, so a valid INTEGRATIONID (UUID) is required.`,
+      )
+    }
 
     const integration = await createIntegrationForConnection(
       tenantId,
