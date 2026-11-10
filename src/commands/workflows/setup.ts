@@ -1,13 +1,12 @@
 import {ux} from '@oclif/core'
 import {commonApiRelatedArgs} from '../../common/args.js'
-import {confirm, input, select} from '@inquirer/prompts'
+import {confirm, select} from '@inquirer/prompts'
 import {BaseCommand} from '../../base-command.js'
 import {connectionTypes} from '../../command-helpers/connections/type-params-mapping.js'
 import {createIntegrationForConnection} from '../../api/integrations.js'
 import {getExistingAppInstalledOnOrgId, replaceClientSecret} from '../../api/apps.js'
 import {validatedInput, ValidationType} from '../../utils/input-validation.js'
-import {isValidUUID} from '../../utils/validation.js'
-import {supportsMultipleProfiles} from '../../command-helpers/connections/multiple-profiles.js'
+import {promptForIntegrationId} from '../../command-helpers/connections/multiple-profiles.js'
 import {STATUS} from '../../utils/display.js'
 import {getConfig} from '../../config/config.js'
 
@@ -137,19 +136,8 @@ export default class Setup extends BaseCommand<typeof Setup> {
       // Bind this Connection to a specific existing integration (org_source /
       // profile) by its Integration ID. This disambiguates when the Org already
       // holds more than one integration of the same type, where resolving by
-      // type alone binds to (and overwrites) the wrong org_source. Required,
-      // and always sent, for types that support multiple profiles; elsewhere an Org holds one integration per type,
-      // so there is nothing to choose between and the server resolves by type.
-      let integrationId: string | undefined
-      if (supportsMultipleProfiles(connectionType)) {
-        integrationId = (
-          await input({
-            message:
-              'Enter the ID of the existing Integration (profile) to bind this Connection to. Create the profile in Snyk first.',
-            validate: (value: string) => (isValidUUID(value.trim()) ? true : 'Please enter a valid UUID.'),
-          })
-        ).trim()
-      }
+      // type alone binds to (and overwrites) the wrong org_source.
+      const integrationId = await promptForIntegrationId(connectionType)
       const integration = await createIntegrationForConnection(
         tenantId,
         connectionId,

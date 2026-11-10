@@ -5,6 +5,10 @@ import {HttpRequest, makeRequest} from '../utils/http-request.js'
 import {ApiError} from '../utils/errors.js'
 import {createLogger} from '../utils/logger.js'
 import {getDummyCredentialsForIntegrationType} from './integrations-utils.js'
+import {
+  isMissingRequiredIntegrationId,
+  missingIntegrationIdMessage,
+} from '../command-helpers/connections/multiple-profiles.js'
 import {IntegrationResponse, IntegrationsResponse} from './types.js'
 
 const logger = createLogger()
@@ -66,6 +70,12 @@ export const createIntegrationForConnection = async (
   orgId: string,
   integrationId?: string,
 ): Promise<IntegrationResponse> => {
+  // Without an ID the server resolves by (org, type), which binds to (and can
+  // overwrite) an arbitrary profile when the Org holds several of this type.
+  if (isMissingRequiredIntegrationId(type, integrationId)) {
+    throw new Error(missingIntegrationIdMessage(type))
+  }
+
   const headers = {...getCommonHeaders(), ...getAuthHeader()}
   const apiPath = `rest/tenants/${tenantId}/brokers/connections/${connectionId}/orgs/${orgId}/integration`
   const config = getConfig()
@@ -76,7 +86,7 @@ export const createIntegrationForConnection = async (
     },
   }
   if (integrationId) {
-    body.data.integration_id = integrationId
+    body.data.integration_id = integrationId.trim()
   }
   const req: HttpRequest = {
     url: `${config.API_HOSTNAME}/${apiPath}?version=${config.API_VERSION}`,

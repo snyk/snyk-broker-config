@@ -129,7 +129,7 @@ describe('createIntegrationForConnection - integration_id binding', () => {
   const tenantId = '00000000-0000-0000-0000-0000000000aa'
   const connectionId = '00000000-0000-0000-0000-0000000000bb'
   const orgId = '00000000-0000-0000-0000-0000000000cc'
-  const integrationId = '00000000-0000-0000-0000-0000000000dd'
+  const integrationId = '3a7c1ab9-8914-4f39-a8c0-5752af653add'
   const apiPath = `/rest/tenants/${tenantId}/brokers/connections/${connectionId}/orgs/${orgId}/integration`
   const okResponse = {
     data: {org_id: orgId, id: integrationId, type: 'ecr', integration_type: 'ecr'},
@@ -161,7 +161,7 @@ describe('createIntegrationForConnection - integration_id binding', () => {
     expect(capturedBody).to.deep.equal({data: {type: 'ecr', integration_id: integrationId}})
   })
 
-  it('omits integration_id from the request body when none is provided', async () => {
+  it('omits integration_id for a type with a single integration per Org when none is provided', async () => {
     let capturedBody: unknown
     nock('https://api.snyk.io')
       .post(apiPath, (body) => {
@@ -171,8 +171,24 @@ describe('createIntegrationForConnection - integration_id binding', () => {
       .query(true)
       .reply(201, okResponse)
 
-    await createIntegrationForConnection(tenantId, connectionId, 'ecr', orgId)
+    await createIntegrationForConnection(tenantId, connectionId, 'github', orgId)
 
-    expect(capturedBody).to.deep.equal({data: {type: 'ecr'}})
+    expect(capturedBody).to.deep.equal({data: {type: 'github'}})
   })
+
+  for (const missing of [undefined, '', 'not-a-uuid']) {
+    it(`refuses a multiple-profile type without a valid integration_id (${JSON.stringify(missing)}) and sends nothing`, async () => {
+      const scope = nock('https://api.snyk.io').post(apiPath).query(true).reply(201, okResponse)
+
+      let thrown: Error | undefined
+      try {
+        await createIntegrationForConnection(tenantId, connectionId, 'ecr', orgId, missing)
+      } catch (error) {
+        thrown = error as Error
+      }
+
+      expect(thrown?.message).to.contain('Connection type "ecr" supports multiple profiles')
+      expect(scope.isDone()).to.be.false
+    })
+  }
 })

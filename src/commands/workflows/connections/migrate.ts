@@ -3,6 +3,7 @@ import {commonApiRelatedArgs} from '../../../common/args.js'
 import {confirm} from '@inquirer/prompts'
 import {BaseCommand} from '../../../base-command.js'
 import {createIntegrationForConnection} from '../../../api/integrations.js'
+import {promptForIntegrationId} from '../../../command-helpers/connections/multiple-profiles.js'
 import {validatedInput, ValidationType} from '../../../utils/input-validation.js'
 import {STATUS} from '../../../utils/display.js'
 
@@ -36,9 +37,16 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         ),
       )
       const orgId = await validatedInput({message: 'Enter the OrgID you want to migrate.'}, ValidationType.UUID)
+      const integrationId = await promptForIntegrationId(
+        selectedConnection.type,
+        'Enter the ID of the existing Integration (profile) to migrate to this Connection.',
+      )
+      const integrationLabel = integrationId
+        ? `integration ${integrationId} (type ${selectedConnection.type})`
+        : `integration of type ${selectedConnection.type}`
 
       const isMigrationConfirmed = await confirm({
-        message: `[CAUTION!] Are you sure you want to migrate the integration of type ${selectedConnection.type} in org ${orgId}? Existing service could be impacted.`,
+        message: `[CAUTION!] Are you sure you want to migrate the ${integrationLabel} in org ${orgId}? Existing service could be impacted.`,
       })
       if (!isMigrationConfirmed) {
         this.logStatus(ux.colorize('yellow', `${STATUS.WARN} Cancelling Connection migration.`))
@@ -49,6 +57,7 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
         selectedConnection.id,
         selectedConnection.type,
         orgId,
+        integrationId,
       )
       if (connectionIntegration.errors) {
         this.error(JSON.stringify(connectionIntegration.errors))
