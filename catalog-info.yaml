@@ -4,8 +4,8 @@ metadata:
   name: snyk-broker-config
   annotations:
     github.com/project-slug: snyk/snyk-broker-config
-    github.com/team-slug: snyk/hybrid
+    github.com/team-slug: snyk/access
 spec:
   type: external-tooling
   lifecycle: "-"
-  owner: hybrid
+  owner: access
