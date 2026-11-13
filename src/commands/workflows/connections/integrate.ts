@@ -2,6 +2,7 @@ import {ux} from '@oclif/core'
 import {commonApiRelatedArgs} from '../../../common/args.js'
 import {BaseCommand} from '../../../base-command.js'
 import {createIntegrationForConnection} from '../../../api/integrations.js'
+import {promptForIntegrationId} from '../../../command-helpers/connections/multiple-profiles.js'
 import {validatedInput, ValidationType} from '../../../utils/input-validation.js'
 import {STATUS} from '../../../utils/display.js'
 
@@ -35,11 +36,13 @@ export default class Workflows extends BaseCommand<typeof Workflows> {
       )
 
       const orgId = await validatedInput({message: 'Enter the OrgID you want to integrate.'}, ValidationType.UUID)
+      const integrationId = await promptForIntegrationId(selectedConnection.type)
       const connectionIntegration = await createIntegrationForConnection(
         tenantId,
         selectedConnection.id,
         selectedConnection.type,
         orgId,
+        integrationId,
       )
       if (connectionIntegration.errors) {
         this.error(JSON.stringify(connectionIntegration.errors))

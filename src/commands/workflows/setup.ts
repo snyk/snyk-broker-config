@@ -6,6 +6,7 @@ import {connectionTypes} from '../../command-helpers/connections/type-params-map
 import {createIntegrationForConnection} from '../../api/integrations.js'
 import {getExistingAppInstalledOnOrgId, replaceClientSecret} from '../../api/apps.js'
 import {validatedInput, ValidationType} from '../../utils/input-validation.js'
+import {promptForIntegrationId} from '../../command-helpers/connections/multiple-profiles.js'
 import {STATUS} from '../../utils/display.js'
 import {getConfig} from '../../config/config.js'
 
@@ -132,7 +133,18 @@ export default class Setup extends BaseCommand<typeof Setup> {
     const integratedOrgs: string[] = []
     do {
       const orgId = await validatedInput({message: 'Enter the OrgID to integrate.'}, ValidationType.UUID)
-      const integration = await createIntegrationForConnection(tenantId, connectionId, connectionType, orgId)
+      // Bind this Connection to a specific existing integration (org_source /
+      // profile) by its Integration ID. This disambiguates when the Org already
+      // holds more than one integration of the same type, where resolving by
+      // type alone binds to (and overwrites) the wrong org_source.
+      const integrationId = await promptForIntegrationId(connectionType)
+      const integration = await createIntegrationForConnection(
+        tenantId,
+        connectionId,
+        connectionType,
+        orgId,
+        integrationId,
+      )
       if (integration.errors) {
         this.logStatus(
           ux.colorize(

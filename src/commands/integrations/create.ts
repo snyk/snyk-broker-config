@@ -10,6 +10,7 @@ import {
 import {printFormattedJSON} from '../../utils/display.js'
 import {createIntegrationForConnection} from '../../api/integrations.js'
 import {BaseCommand} from '../../base-command.js'
+import {isMissingRequiredIntegrationId} from '../../command-helpers/connections/multiple-profiles.js'
 
 export default class Integrations extends BaseCommand<typeof Integrations> {
   static args = {
@@ -34,6 +35,12 @@ export default class Integrations extends BaseCommand<typeof Integrations> {
     const {args} = await this.parse(Integrations)
 
     const {tenantId} = getCommonIds(args)
+
+    if (isMissingRequiredIntegrationId(args.type, args.integrationId)) {
+      this.error(
+        `Connection type "${args.type}" supports multiple profiles, so a valid INTEGRATIONID (UUID) of an existing Integration (profile) is required. Create the profile in Snyk first, then pass its ID.`,
+      )
+    }
 
     const integration = await createIntegrationForConnection(
       tenantId,
